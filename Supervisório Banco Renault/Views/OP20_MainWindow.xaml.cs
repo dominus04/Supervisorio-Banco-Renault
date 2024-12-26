@@ -20,10 +20,10 @@ namespace Supervisório_Banco_Renault.Views
         }
 
         // Function to change the view on menu pageSelected
-        private void OnPageSelected(string viewName)
+        public void OnPageSelected(object sender, string viewName)
         {
 
-            OP10_MainWindowVM vm = DataContext as OP10_MainWindowVM;
+            OP20_MainWindowVM vm = DataContext as OP20_MainWindowVM;
 
             vm.CurrentPage = viewName;
             _windowManager.ShowPage(viewName, MainGridView);

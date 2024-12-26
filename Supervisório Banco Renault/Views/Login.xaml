@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
              mc:Ignorable="d" 
              d:DesignHeight="980" d:DesignWidth="1620" Width="1620" Height="980"
-             Loaded="UserControl_Loaded">
+             Loaded="UserControl_Loaded" GotFocus="UserControl_GotFocus" Focusable="True">
     <Grid Background="White">
-        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Content="Aproxime seu crachá do leitor para efetuar o login" FontSize="64"/>
+        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Clique na tela e aproxime seu crachá do leitor para fazer login." FontSize="64" TextWrapping="Wrap" Width="1300" TextAlignment="Center"/>
+        <TextBox x:Name="RFIDInputTextBox" Height="0" Width="0" Margin="0,200,0,0" KeyDown="TextBoxOnKeyDown" Text="{Binding RFID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>

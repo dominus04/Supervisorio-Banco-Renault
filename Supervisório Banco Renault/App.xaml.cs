@@ -14,7 +14,6 @@ namespace Supervisório_Banco_Renault
     /// </summary>
     public partial class App : Application
     {
-
         private DispatcherTimer _watchTimer;
         public OP10_MainWindow? _mainWindowOP10;
         public OP20_MainWindow? _mainWindowOP20;
@@ -26,12 +25,13 @@ namespace Supervisório_Banco_Renault
             // Adding the OP10 VMs to the service
             services.AddSingleton<OP10_MainWindowVM>();
             services.AddSingleton<OP10_AutomaticVM>();
-            services.AddSingleton<LoginVM>();
             services.AddSingleton<OP10_ManualVM>();
 
             // Adding the OP20 VMs to service
             services.AddSingleton<OP20_MainWindowVM>();
             services.AddSingleton<OP20_AutomaticVM>();
+            
+            services.AddTransient<LoginVM>();
 
             // Adding the injected classes to service
             services.AddSingleton<ViewModelLocator>();
@@ -40,7 +40,7 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<WindowManager>();
 
             // Adding the services functions to the service
-            services.AddSingleton<ReadRFIDService>();
+            
 
             // Building the service
             serviceProvider = services.BuildServiceProvider();

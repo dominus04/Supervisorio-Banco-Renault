@@ -31,6 +31,14 @@ namespace Supervisório_Banco_Renault.Services
                 var window = Activator.CreateInstance(windowType, this) as Window;
                 window.DataContext = windowVM;
 
+                if (window is OP10_MainWindow)
+                {
+                    windowVM.PageChanged += ((OP10_MainWindow)window).OnPageSelected;
+                }else if(window is OP20_MainWindow)
+                {
+                    windowVM.PageChanged += ((OP20_MainWindow)window).OnPageSelected;
+                }
+
                 if (windowType == typeof(OP10_MainWindow))
                 {
                     window.Left = -1920;

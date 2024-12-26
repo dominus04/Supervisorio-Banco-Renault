@@ -1,6 +1,8 @@
-﻿using Supervisório_Banco_Renault.ViewModels;
+﻿using Supervisório_Banco_Renault.Models;
+using Supervisório_Banco_Renault.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Supervisório_Banco_Renault.Views
 {
@@ -9,14 +11,36 @@ namespace Supervisório_Banco_Renault.Views
     /// </summary>
     public partial class Login : UserControl
     {
+
         public Login()
         {
             InitializeComponent();
+            
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             LoginVM? vm = DataContext as LoginVM;
+            RFIDInputTextBox.Focus();
         }
+
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            RFIDInputTextBox.Focus();
+        }
+
+        private void TextBoxOnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Enter)
+            {
+                var vm = DataContext as LoginVM;
+
+                vm.Login(this);
+
+                RFIDInputTextBox.Clear();
+            }
+        }
+
+        
     }
 }

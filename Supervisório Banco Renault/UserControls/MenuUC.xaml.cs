@@ -17,7 +17,7 @@ namespace Supervisório_Banco_Renault.UserControls
         }
 
         // The event that controls the change of the view on the mainview
-        public event Action<string>? PageSelected;
+        public event Action<object, string>? PageSelected;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged(string propertyChanged)
@@ -88,7 +88,7 @@ namespace Supervisório_Banco_Renault.UserControls
             var selectedItem = MenuList.SelectedItem as MenuItemModel;
             if (selectedItem != null)
             {
-                PageSelected?.Invoke(selectedItem.ViewName);
+                PageSelected?.Invoke(sender, selectedItem.ViewName);
             }
         }
 

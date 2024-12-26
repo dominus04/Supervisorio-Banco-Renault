@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="300" Width="300">
+             d:DesignHeight="1080" d:DesignWidth="300" Width="300" BorderBrush="#AFAFAF" BorderThickness="0,0,.5,0" Background="Aqua">
     <UserControl.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">

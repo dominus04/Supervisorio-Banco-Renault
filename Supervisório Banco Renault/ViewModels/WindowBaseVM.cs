@@ -52,5 +52,12 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
+        public event EventHandler<string>? PageChanged;
+
+        public void ChangePage(string page)
+        {
+            PageChanged?.Invoke(this, page);
+        }
+
     }
 }
