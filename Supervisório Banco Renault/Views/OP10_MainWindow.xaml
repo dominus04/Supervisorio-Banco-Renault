@@ -1,0 +1,15 @@
+﻿<Window x:Class="Supervisório_Banco_Renault.Views.OP10_MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
+        mc:Ignorable="d"
+        xmlns:uc="clr-namespace:Supervisório_Banco_Renault.UserControls"
+        Title="MainWindowOP10" Height="1080" Width="1920" WindowStyle="None">
+    <DockPanel>
+        <uc:MainHeaderUC x:Name="HeaderUC" HeaderTitle="Banco de Teste do Módulo OP10" VerticalAlignment="Top" DockPanel.Dock="Top"/>
+        <uc:MenuUC x:Name="MainMenu" DockPanel.Dock="Left" MenuItems="{Binding MenuItems}" PageSelected="OnPageSelected" LoggedUser="{Binding Path=LoggedUser, Mode=OneWay}"/>
+            <Grid x:Name="MainGridView" Background="#3E4095"/>
+    </DockPanel>
+</Window>

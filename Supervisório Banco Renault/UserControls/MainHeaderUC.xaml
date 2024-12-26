@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="Supervisório_Banco_Renault.UserControls.MainHeaderUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Supervisório_Banco_Renault.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="1920" Height="100">
+    <Grid>
+        <!--Cabeçalho-->
+        <DockPanel DockPanel.Dock="Top" Height="100px" VerticalAlignment="Top">
+            <Image Width="170" DockPanel.Dock="Left" Source="/Images/Logo Denso Resized.png" HorizontalAlignment="Left" Margin="32,0,0,0"/>
+            <Image Width="180" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,32,0" Source="/Images/Logo Indusbras Resized.png"/>
+            <DockPanel Margin="48,0">
+                <Label DockPanel.Dock="Top" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="30" Content="{Binding HeaderTitle, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="0,8,0,0"/>
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label x:Name="currentTime" Content="00:00" FontSize="22" FontFamily="Arial" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0"/>
+
+                    <Grid Grid.Column="1" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Content="Usuário:" FontSize="24" FontFamily="Arial" VerticalAlignment="Bottom" Grid.Column="0" HorizontalAlignment="Right"/>
+                        <Label x:Name="currentUser" DataContext="{Binding LoggedUser}" Content="{Binding Name}" FontSize="24" FontFamily="Arial" VerticalAlignment="Bottom"  Grid.Column="1" HorizontalAlignment="Left"/>
+                    </Grid>
+
+                    <Label x:Name="currentDate" Content="00/00/00" FontSize="22" FontFamily="Arial" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="2"/>
+                </Grid>
+            </DockPanel>
+
+        </DockPanel>
+        <Border BorderThickness=".5" BorderBrush="#AFAFAF" DockPanel.Dock="Top"/>
+    </Grid>
+</UserControl>
