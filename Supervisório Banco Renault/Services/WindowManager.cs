@@ -34,7 +34,8 @@ namespace Supervisório_Banco_Renault.Services
                 if (window is OP10_MainWindow)
                 {
                     windowVM.PageChanged += ((OP10_MainWindow)window).OnPageSelected;
-                }else if(window is OP20_MainWindow)
+                }
+                else if (window is OP20_MainWindow)
                 {
                     windowVM.PageChanged += ((OP20_MainWindow)window).OnPageSelected;
                 }

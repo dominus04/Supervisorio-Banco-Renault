@@ -1,11 +1,5 @@
-﻿using Supervisório_Banco_Renault.Models.Enums;
-using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Supervisório_Banco_Renault.Models;
+using Supervisório_Banco_Renault.Models.Enums;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {

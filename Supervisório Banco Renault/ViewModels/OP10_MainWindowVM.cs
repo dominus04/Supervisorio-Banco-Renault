@@ -8,7 +8,7 @@ namespace Supervisório_Banco_Renault.ViewModels
     public class OP10_MainWindowVM : WindowBaseVM
     {
 
-        public RelayCommand CommandTest {  get; set; }
+        public RelayCommand CommandTest { get; set; }
 
         public OP10_MainWindowVM()
         {
@@ -24,4 +24,3 @@ namespace Supervisório_Banco_Renault.ViewModels
         }
     }
 }
-    

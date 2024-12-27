@@ -1,24 +1,7 @@
-﻿using Supervisório_Banco_Renault.Models;
-using Supervisório_Banco_Renault.Models.Enums;
-using Supervisório_Banco_Renault.Services;
-using Supervisório_Banco_Renault.UserControls;
+﻿using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Supervisório_Banco_Renault.Views
 {
@@ -47,7 +30,7 @@ namespace Supervisório_Banco_Renault.Views
 
         private void MainGridView_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(MainGridView.Children.Count > 0)
+            if (MainGridView.Children.Count > 0)
                 MainGridView.Children[0].Focus();
         }
     }

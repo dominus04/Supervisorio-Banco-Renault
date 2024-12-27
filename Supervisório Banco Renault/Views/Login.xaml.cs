@@ -1,8 +1,6 @@
-﻿using Supervisório_Banco_Renault.Models;
-using Supervisório_Banco_Renault.ViewModels;
+﻿using Supervisório_Banco_Renault.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Supervisório_Banco_Renault.Views
 {
@@ -15,7 +13,7 @@ namespace Supervisório_Banco_Renault.Views
         public Login()
         {
             InitializeComponent();
-            
+
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -31,7 +29,7 @@ namespace Supervisório_Banco_Renault.Views
 
         private void TextBoxOnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == System.Windows.Input.Key.Enter)
             {
                 var vm = DataContext as LoginVM;
 
@@ -41,6 +39,6 @@ namespace Supervisório_Banco_Renault.Views
             }
         }
 
-        
+
     }
 }

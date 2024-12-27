@@ -1,12 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Supervisório_Banco_Renault.Data;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
 using Supervisório_Banco_Renault.Views;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -52,7 +49,7 @@ namespace Supervisório_Banco_Renault
             _mainWindowOP20.HeaderUC.UpdateHourAndDate();
         }
 
-        private  void ConfigureServices()
+        private void ConfigureServices()
         {
             // Adding the injected DB classes to service
             services.AddDbContext<AppDbContext>();

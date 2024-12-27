@@ -1,12 +1,5 @@
-﻿using Supervisório_Banco_Renault.Core;
-using Supervisório_Banco_Renault.Models;
-using Supervisório_Banco_Renault.Services;
-using System;
-using System.Collections.Generic;
+﻿using Supervisório_Banco_Renault.Models;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
@@ -31,7 +24,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public User LoggedUser
         {
-            get { return _loggedUser; }
+            get => _loggedUser;
             set
             {
                 _loggedUser = value;
@@ -44,7 +37,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public string? CurrentPage
         {
-            get { return _currentPage; }
+            get => _currentPage;
             set
             {
                 _currentPage = value;

@@ -1,9 +1,4 @@
 ﻿using Supervisório_Banco_Renault.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Supervisório_Banco_Renault.Models
 {
@@ -24,5 +19,9 @@ namespace Supervisório_Banco_Renault.Models
             AccessLevel = accessLevel;
         }
 
+        public static User GetNullUser()
+        {
+            return new User(string.Empty, string.Empty, AccessLevel.None);
+        }
     }
 }
