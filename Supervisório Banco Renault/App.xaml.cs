@@ -18,32 +18,15 @@ namespace Supervisório_Banco_Renault
         public OP10_MainWindow? _mainWindowOP10;
         public OP20_MainWindow? _mainWindowOP20;
         private readonly IServiceCollection services = new ServiceCollection();
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public App()
         {
-            // Adding the OP10 VMs to the service
-            services.AddSingleton<OP10_MainWindowVM>();
-            services.AddSingleton<OP10_AutomaticVM>();
-            services.AddSingleton<OP10_ManualVM>();
 
-            // Adding the OP20 VMs to service
-            services.AddSingleton<OP20_MainWindowVM>();
-            services.AddSingleton<OP20_AutomaticVM>();
-            
-            services.AddTransient<LoginVM>();
-
-            // Adding the injected classes to service
-            services.AddSingleton<ViewModelLocator>();
-            services.AddSingleton<WindowMapper>();
-            services.AddSingleton<UserControlMapper>();
-            services.AddSingleton<WindowManager>();
-
-            // Adding the services functions to the service
-            
+            ConfigureServices();
 
             // Building the service
-            serviceProvider = services.BuildServiceProvider();
+            _serviceProvider = services.BuildServiceProvider();
 
             // Timer responsible for update hour and date each one minute
             _watchTimer = new DispatcherTimer();
@@ -52,9 +35,9 @@ namespace Supervisório_Banco_Renault
             _watchTimer.Start();
 
             // Getting the injected WindowManager from the service provider and opening the two screens
-            var windowManager = serviceProvider.GetRequiredService<WindowManager>();
-            _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(serviceProvider.GetRequiredService<OP10_MainWindowVM>());
-            _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(serviceProvider.GetRequiredService<OP20_MainWindowVM>());
+            var windowManager = _serviceProvider.GetRequiredService<WindowManager>();
+            _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP10_MainWindowVM>());
+            _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP20_MainWindowVM>());
 
             WatchTimerTick(this, EventArgs.Empty);
         }
@@ -65,6 +48,31 @@ namespace Supervisório_Banco_Renault
             _mainWindowOP10.HeaderUC.UpdateHourAndDate();
             _mainWindowOP20.HeaderUC.UpdateHourAndDate();
         }
+
+        private  void ConfigureServices()
+        {
+            // Adding the OP10 VMs to the service
+            services.AddSingleton<OP10_MainWindowVM>();
+            services.AddSingleton<OP10_AutomaticVM>();
+            services.AddSingleton<OP10_ManualVM>();
+
+            // Adding the OP20 VMs to service
+            services.AddSingleton<OP20_MainWindowVM>();
+            services.AddSingleton<OP20_AutomaticVM>();
+
+            services.AddTransient<LoginVM>();
+
+            // Adding the injected classes to service
+            services.AddSingleton<ViewModelLocator>();
+            services.AddSingleton<WindowMapper>();
+            services.AddSingleton<UserControlMapper>();
+            services.AddSingleton<WindowManager>();
+
+            
+
+            // Adding the services functions to the service
+        }
+
     }
 
 }
