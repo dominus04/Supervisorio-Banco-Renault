@@ -1,20 +1,17 @@
-﻿using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using Supervisório_Banco_Renault.Models;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Supervisório_Banco_Renault.Data.Repositories
 {
     public interface IUserRepository
     {
-        bool AddUser(User user);
-        ObservableCollection<User> GetAllActiveUsers();
-        User? GetUserById(Guid id);
-        bool DeleteUserById(Guid id);
-        bool UpdateUser(User user);
+        Task<ObservableCollection<User>> GetAllActiveUsers();
+        Task<User?> GetUserById(Guid id);
+        Task<User?> GetUserByRFID(string tagRFID);
+        Task<bool> AddUser(User user);
+        Task<bool> DeleteUserById(Guid id);
+        Task<bool> UpdateUser(User user);
     }
 
     public class UserRepository : IUserRepository
@@ -27,38 +24,44 @@ namespace Supervisório_Banco_Renault.Data.Repositories
             _context = context;
         }
 
-        public bool AddUser(User user)
+        public async Task<ObservableCollection<User>> GetAllActiveUsers()
         {
-            _context.Users.Add(user);
-            return _context.SaveChanges() > 0;
+            return new ObservableCollection<User>(await _context.Users.ToListAsync());
         }
 
-        public bool DeleteUserById(Guid id)
+        public async Task<User?> GetUserById(Guid id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<User?> GetUserByRFID(string tagRFID)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.TagRFID == tagRFID);
+        }
+
+        public async Task<bool> AddUser(User user)
+        {
+            await _context.Users.AddAsync(user);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteUserById(Guid id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if (user != null)
             {
                 user.IsDeleted = true;
                 user.DeletedAt = DateTime.Now;
-                return _context.SaveChanges() > 0;
+                return await _context.SaveChangesAsync() > 0;
             }
             return false;
         }
 
-        public ObservableCollection<User> GetAllActiveUsers()
-        {
-            return new ObservableCollection<User>(_context.Users.ToList());
-        }
-
-        public User? GetUserById(Guid id)
-        {
-            return _context.Users.FirstOrDefault(x => x.Id == id);
-        }
-
-        public bool UpdateUser(User user)
+        public async Task<bool> UpdateUser(User user)
         {
             _context.Users.Update(user);
-            return _context.SaveChanges() > 0;
+            return await _context.SaveChangesAsync() > 0;
         }
+
     }
 }

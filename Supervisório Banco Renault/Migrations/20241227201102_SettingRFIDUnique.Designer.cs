@@ -11,8 +11,8 @@ using Supervisório_Banco_Renault.Data;
 namespace Supervisório_Banco_Renault.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241227174733_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241227201102_SettingRFIDUnique")]
+    partial class SettingRFIDUnique
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,9 @@ namespace Supervisório_Banco_Renault.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TagRFID")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

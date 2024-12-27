@@ -38,7 +38,5 @@ namespace Supervisório_Banco_Renault.Views
                 RFIDInputTextBox.Clear();
             }
         }
-
-
     }
 }

@@ -57,12 +57,12 @@ namespace Supervisório_Banco_Renault
 
             // Adding the OP10 VMs to the service
             services.AddSingleton<OP10_MainWindowVM>();
-            services.AddSingleton<OP10_AutomaticVM>();
-            services.AddSingleton<OP10_ManualVM>();
+            services.AddScoped<OP10_AutomaticVM>();
+            services.AddScoped<OP10_ManualVM>();
 
             // Adding the OP20 VMs to service
             services.AddSingleton<OP20_MainWindowVM>();
-            services.AddSingleton<OP20_AutomaticVM>();
+            services.AddScoped<OP20_AutomaticVM>();
 
             services.AddTransient<LoginVM>();
 
