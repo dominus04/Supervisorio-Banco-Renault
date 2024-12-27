@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Supervisório_Banco_Renault.Data;
+using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
 using Supervisório_Banco_Renault.Views;
@@ -51,6 +54,10 @@ namespace Supervisório_Banco_Renault
 
         private  void ConfigureServices()
         {
+            // Adding the injected DB classes to service
+            services.AddDbContext<AppDbContext>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
             // Adding the OP10 VMs to the service
             services.AddSingleton<OP10_MainWindowVM>();
             services.AddSingleton<OP10_AutomaticVM>();
@@ -67,8 +74,6 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<WindowMapper>();
             services.AddSingleton<UserControlMapper>();
             services.AddSingleton<WindowManager>();
-
-            
 
             // Adding the services functions to the service
         }
