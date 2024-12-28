@@ -17,8 +17,9 @@ namespace Supervisório_Banco_Renault.ViewModels
             MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "I/O", "OP10_IoView"));
             MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Rastreabilidade", "OP10_Traceability"));
             MenuItems?.Add(new MenuItemModel(AccessLevel.Administrador, "Configurações", "Item3"));
+            MenuItems?.Add(new MenuItemModel(AccessLevel.Administrador, "Usuários", "UsersManager"));
             MenuItems?.Add(new MenuItemModel(AccessLevel.None, "Login", "Login"));
-            MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Logoff", "Teste"));
+            MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Logoff", "Logoff"));
 
             CommandTest = new RelayCommand(o => { MessageBox.Show(o.ToString()); }, o => true);
         }

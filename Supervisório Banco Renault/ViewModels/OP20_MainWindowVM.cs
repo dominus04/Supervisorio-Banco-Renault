@@ -13,7 +13,9 @@ namespace Supervisório_Banco_Renault.ViewModels
             MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Receitas", "OP20_Receitas"));
             MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Rastreabilidade", "OP20_Traceability"));
             MenuItems?.Add(new MenuItemModel(AccessLevel.Administrador, "Configurações", "Item3"));
+            MenuItems?.Add(new MenuItemModel(AccessLevel.Administrador, "Usuários", "UsersManager"));
             MenuItems?.Add(new MenuItemModel(AccessLevel.None, "Login", "Login"));
+            MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Logoff", "Logoff"));
         }
     }
 }

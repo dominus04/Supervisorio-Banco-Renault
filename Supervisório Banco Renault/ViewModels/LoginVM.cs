@@ -18,8 +18,6 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             _serviceProvider = serviceProvider;
             _userRepository = (UserRepository)userRepository;
-
-            OP10_MainWindowVM op10Main = _serviceProvider.GetRequiredService<OP10_MainWindowVM>();
         }
 
         // Property to bind the RFID login
@@ -35,25 +33,11 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        // Method that returns the type of main windows to choose how VM use
-        private Type GetParent(DependencyObject obj)
-        {
-            DependencyObject dependencyObject = VisualTreeHelper.GetParent(obj);
-            if (dependencyObject.GetType() == typeof(OP20_MainWindow) || dependencyObject.GetType() == typeof(OP10_MainWindow))
-            {
-                return dependencyObject.GetType();
-            }
-            else
-            {
-                return GetParent(dependencyObject);
-            }
-        }
 
+        // Method to verify the existence of the user and login in the correct main window
         public async void Login(DependencyObject obj)
         {
             Type type = GetParent(obj);
-
-            await _userRepository.DeleteUserById(new Guid("A1474C91-14E6-4F42-B66C-48AD4F08F68A"));
 
             var user = await _userRepository.GetUserByRFID(RFID);
             if (user != null)
@@ -64,7 +48,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                     vm.LoggedUser = user;
                     vm.ChangePage("OP10_Automatic");
                 }
-                else if (type == typeof(OP20_MainWindow))
+                else
                 {
                     OP20_MainWindowVM vm = _serviceProvider.GetRequiredService<OP20_MainWindowVM>();
                     vm.LoggedUser = user;

@@ -13,12 +13,10 @@ namespace Supervisório_Banco_Renault.Views
         public Login()
         {
             InitializeComponent();
-
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            LoginVM? vm = DataContext as LoginVM;
             RFIDInputTextBox.Focus();
         }
 
@@ -31,9 +29,9 @@ namespace Supervisório_Banco_Renault.Views
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                var vm = DataContext as LoginVM;
+                LoginVM? vm = DataContext as LoginVM;
 
-                vm.Login(this);
+                vm?.Login(this);
 
                 RFIDInputTextBox.Clear();
             }

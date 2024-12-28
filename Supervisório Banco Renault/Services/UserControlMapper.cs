@@ -11,9 +11,14 @@ namespace Supervisório_Banco_Renault.Services
 
         public UserControlMapper()
         {
+
+            //Defining the shared views
+            RegisterMapping<LoginVM, Login>();
+            RegisterMapping<LogoffVM, Logoff>();
+            RegisterMapping<UsersManagerVM, UsersManager>();
+
             //Defining the view for each OP10 VM
             RegisterMapping<OP10_AutomaticVM, OP10_Automatic>();
-            RegisterMapping<LoginVM, Login>();
             RegisterMapping<OP10_ManualVM, OP10_Manual>();
 
             //Defining the view for each OP20 VM
