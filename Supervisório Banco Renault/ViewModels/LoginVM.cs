@@ -2,6 +2,7 @@
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Models.Enums;
+using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
 using System.Windows;
 using System.Windows.Media;
@@ -37,7 +38,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         // Method to verify the existence of the user and login in the correct main window
         public async void Login(DependencyObject obj)
         {
-            Type type = GetParent(obj);
+            Type type = GetParentService.GetParent(obj);
 
             var user = await _userRepository.GetUserByRFID(RFID);
             if (user != null)

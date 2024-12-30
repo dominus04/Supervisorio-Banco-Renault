@@ -20,7 +20,7 @@
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label x:Name="currentTime" Content="00:00" FontSize="22" FontFamily="Arial" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0"/>
+                    <Label x:Name="currentDate" Content="00/00/00" FontSize="22" FontFamily="Arial" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0"/>
 
                     <Grid Grid.Column="1" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
@@ -32,7 +32,7 @@
                         <Label x:Name="currentUser" DataContext="{Binding LoggedUser}" Content="{Binding Name}" FontSize="24" FontFamily="Arial" VerticalAlignment="Bottom"  Grid.Column="1" HorizontalAlignment="Left"/>
                     </Grid>
 
-                    <Label x:Name="currentDate" Content="00/00/00" FontSize="22" FontFamily="Arial" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="2"/>
+                    <Label x:Name="currentTime" Content="00:00" FontSize="22" FontFamily="Arial" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="2"/>
                 </Grid>
             </DockPanel>
 

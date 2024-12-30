@@ -29,5 +29,9 @@ namespace Supervisório_Banco_Renault.Views
             _windowManager.ShowPage(viewName, MainGridView);
         }
 
+        private void OnContentRendered(object sender, EventArgs e)
+        {
+            OnPageSelected(this, "Login");
+        }
     }
 }

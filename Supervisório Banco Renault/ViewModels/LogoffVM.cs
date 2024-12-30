@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
+using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public void Logoff(DependencyObject obj)
         {
-            Type type = GetParent(obj);
+            Type type = GetParentService.GetParent(obj);
             WindowBaseVM vm;
 
                 if (type == typeof(OP10_MainWindow))

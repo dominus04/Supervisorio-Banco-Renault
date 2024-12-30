@@ -10,8 +10,9 @@ namespace Supervisório_Banco_Renault.Data.Repositories
         Task<User?> GetUserById(Guid id);
         Task<User?> GetUserByRFID(string tagRFID);
         Task<bool> AddUser(User user);
-        Task<bool> DeleteUserById(Guid id);
+        Task<bool> RemoveUser(User user);
         Task<bool> UpdateUser(User user);
+        Task<bool> VerifyData(User user);
     }
 
     public class UserRepository : IUserRepository
@@ -37,17 +38,18 @@ namespace Supervisório_Banco_Renault.Data.Repositories
         public async Task<User?> GetUserByRFID(string tagRFID)
         {
             return await _context.Users.FirstOrDefaultAsync(x => x.TagRFID == tagRFID);
+            
         }
 
         public async Task<bool> AddUser(User user)
         {
+            await VerifyData(user);
             await _context.Users.AddAsync(user);
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteUserById(Guid id)
+        public async Task<bool> RemoveUser(User user)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if (user != null)
             {
                 user.IsDeleted = true;
@@ -59,9 +61,25 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
         public async Task<bool> UpdateUser(User user)
         {
+            await VerifyData(user);
             _context.Users.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> VerifyData(User user)
+        {
+            User userByRFID = await GetUserByRFID(user.TagRFID);
+
+            if (userByRFID != null && userByRFID.Id != user.Id)
+                throw new System.Exception("Já existe um usuário com essa tag RFID");
+            else if (user.TagRFID == string.Empty)
+                throw new System.Exception("Tag RFID não pode ser nula");
+            else if (user.Name == string.Empty)
+                throw new System.Exception("Nome não pode ser nulo");
+
+            return true;
+        }
+
 
     }
 }

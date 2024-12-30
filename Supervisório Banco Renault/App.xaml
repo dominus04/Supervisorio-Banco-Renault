@@ -4,5 +4,12 @@
              xmlns:local="clr-namespace:Supervisório_Banco_Renault">
     <Application.Resources>
 
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/GlobalDictionary.xaml"/>
+                <ResourceDictionary Source="Styles/DataGrid.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
     </Application.Resources>
 </Application>

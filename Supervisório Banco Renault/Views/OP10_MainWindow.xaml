@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         mc:Ignorable="d"
         xmlns:uc="clr-namespace:Supervisório_Banco_Renault.UserControls"
-        Title="MainWindowOP10" Height="1080" Width="1920" WindowStyle="None">
+        Title="MainWindowOP10" Height="1080" Width="1920" WindowStyle="None" ContentRendered="OnContentRendered">
     <DockPanel>
         <uc:MainHeaderUC x:Name="HeaderUC" HeaderTitle="Banco de Teste do Módulo OP10" VerticalAlignment="Top" DockPanel.Dock="Top"/>
         <uc:MenuUC x:Name="MainMenu" DockPanel.Dock="Left" MenuItems="{Binding MenuItems}" PageSelected="OnPageSelected" LoggedUser="{Binding Path=LoggedUser, Mode=OneWay}" BorderBrush="#AFAFAF" BorderThickness="0,0,1,0"/>
-        <Grid x:Name="MainGridView" Background="#3E4095" Focusable="True" MouseDown="MainGridView_MouseDown" />
+        <Grid x:Name="MainGridView" Background="#3E4095" Focusable="True"/>
     </DockPanel>
 </Window>

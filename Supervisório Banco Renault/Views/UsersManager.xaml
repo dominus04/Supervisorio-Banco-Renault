@@ -4,9 +4,64 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
+             xmlns:enum="clr-namespace:Supervisório_Banco_Renault.Models.Enums"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="980" d:DesignWidth="1620" Width="1620" Height="980">
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="EnumDataProvider" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enum:AccessLevel"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    
     <Grid Background="White">
-        <TextBlock Text="Usuarios" FontSize="54"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+
+        <DataGrid CellStyle="{DynamicResource DataGridCellStyle1}" Style="{DynamicResource DataGridStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" x:Name="UsersDataGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" SelectionMode="Single" SelectionUnit="FullRow" ItemsSource="{Binding Users, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedUser}" FontSize="18" VerticalAlignment="Stretch" RowHeight="30" ScrollViewer.VerticalScrollBarVisibility="Auto" RowEditEnding="OnRowEditEnding" BeginningEdit="OnBegginingEdit" RowHeaderWidth="0" GridLinesVisibility="None">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nome" Binding="{Binding Name}" Width="*"/>
+                <DataGridComboBoxColumn Header="Tipo" ItemsSource="{Binding Source={StaticResource EnumDataProvider}}" SelectedItemBinding="{Binding AccessLevel}" Width="200"/>
+                <DataGridTemplateColumn Header="Crachá" Width="200" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Ler Crachá" Click="DataGridTagButtonClick" Style="{StaticResource DataGridTagButton}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding TagRFID}" Width="0" Foreground="Transparent">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="TextBlock.Background" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseCaptured" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="25"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="1" Content="Adicionar Usuário" FontSize="18" Style="{StaticResource HoverableLabelGreenButton}" MouseDown="AddUserMouseDown" Cursor="Hand"/>
+            <Label Grid.Column="3" Content="Remover Usuário" FontSize="18" Style="{StaticResource HoverableLabelRedButton}" MouseDown="RemoveUserMouseDown" Cursor="Hand"/>
+
+        </Grid>
     </Grid>
 </UserControl>

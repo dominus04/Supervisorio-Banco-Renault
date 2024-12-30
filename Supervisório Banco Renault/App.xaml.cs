@@ -36,8 +36,8 @@ namespace Supervisório_Banco_Renault
 
             // Getting the injected WindowManager from the service provider and opening the two screens
             var windowManager = _serviceProvider.GetRequiredService<WindowManager>();
-            _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP10_MainWindowVM>());
             _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP20_MainWindowVM>());
+            _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP10_MainWindowVM>());
 
             WatchTimerTick(this, EventArgs.Empty);
         }
@@ -45,8 +45,8 @@ namespace Supervisório_Banco_Renault
         // Function to send to the header the command to update hour and date
         private void WatchTimerTick(object? sender, EventArgs e)
         {
-            _mainWindowOP10.HeaderUC.UpdateHourAndDate();
             _mainWindowOP20.HeaderUC.UpdateHourAndDate();
+            _mainWindowOP10.HeaderUC.UpdateHourAndDate();
         }
 
         private void ConfigureServices()

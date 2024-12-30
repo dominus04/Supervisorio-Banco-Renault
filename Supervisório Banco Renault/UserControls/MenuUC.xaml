@@ -74,7 +74,7 @@
         <ListView x:Name="MenuList" DockPanel.Dock="Top" ItemsSource="{Binding FilteredMenu, RelativeSource={RelativeSource AncestorType=UserControl}}" BorderThickness="0" HorizontalContentAlignment="Stretch" ItemContainerStyle="{DynamicResource ListViewItemStyle1}" SelectionChanged="ChangeView">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding MenuItemText}" Height="45" FontSize="18" VerticalAlignment="Center" VerticalContentAlignment="Center" FontWeight="SemiBold" Margin="16,0,0,0"/>
+                    <Label Content="{Binding MenuItemText}" Height="50" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" FontWeight="SemiBold" Margin="16,0,0,0"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

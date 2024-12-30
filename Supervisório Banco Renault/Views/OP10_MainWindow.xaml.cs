@@ -28,10 +28,9 @@ namespace Supervisório_Banco_Renault.Views
             _windowManager.ShowPage(viewName, MainGridView);
         }
 
-        private void MainGridView_MouseDown(object sender, MouseButtonEventArgs e)
+        private void OnContentRendered(object sender, EventArgs e)
         {
-            if (MainGridView.Children.Count > 0)
-                MainGridView.Children[0].Focus();
+            OnPageSelected(this, "Login");
         }
     }
 }

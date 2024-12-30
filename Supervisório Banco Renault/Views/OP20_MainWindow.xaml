@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         mc:Ignorable="d"
         xmlns:uc="clr-namespace:Supervisório_Banco_Renault.UserControls"
-        Title="MainWindowOP20" Height="1080" Width="1920" WindowStyle="None">
+        Title="MainWindowOP20" Height="1080" Width="1920" WindowStyle="None" ContentRendered="OnContentRendered">
     <DockPanel>
         <uc:MainHeaderUC x:Name="HeaderUC" HeaderTitle="Banco de Teste do Módulo OP20" VerticalAlignment="Top" DockPanel.Dock="Top"/>
         <uc:MenuUC x:Name="MainMenu" DockPanel.Dock="Left" MenuItems="{Binding MenuItems}" PageSelected="OnPageSelected" LoggedUser="{Binding Path=LoggedUser, Mode=OneWay}" BorderBrush="#AFAFAF" BorderThickness="0,0,1,0"/>
