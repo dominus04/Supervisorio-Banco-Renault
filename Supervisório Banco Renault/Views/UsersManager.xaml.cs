@@ -28,6 +28,8 @@ namespace Supervisório_Banco_Renault.Views
     public partial class UsersManager : UserControl
     {
 
+        public object? _edittedItem = null;
+
         public UsersManager()
         {
             InitializeComponent();
@@ -37,11 +39,14 @@ namespace Supervisório_Banco_Renault.Views
         {
             UsersManagerVM vm = (UsersManagerVM)DataContext;
 
-            if (MessageBox.Show("Deseja salvar as alterações?", "Salvar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Deseja salvar as alterações?", "Salvar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes && _edittedItem != null)
             {
-                Dispatcher.BeginInvoke(new Action(() =>
+                Dispatcher.BeginInvoke(new  Action(async () =>
                 {
-                    vm.UpdateUser(UsersDataGrid.SelectedItem);
+                    if(await vm.UpdateUser(_edittedItem))
+                    {
+                        _edittedItem = null;
+                    }
                 }), System.Windows.Threading.DispatcherPriority.Background);
             }
             else
@@ -83,6 +88,7 @@ namespace Supervisório_Banco_Renault.Views
                 Type t = GetParentService.GetParent(this);
                 Libraries.Keyboard.start(t);
             }
+            _edittedItem = UsersDataGrid.SelectedItem;
         }
     }
 }

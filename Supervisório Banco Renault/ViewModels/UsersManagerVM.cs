@@ -33,20 +33,21 @@ namespace Supervisório_Banco_Renault.ViewModels
             Users.Add(User.GetNullUser());
         }
 
-        public async void UpdateUser(object obj)
+        public async Task<bool> UpdateUser(object obj)
         {
             var user = (User)obj;
             try
             {
                 if(await _userRepository.GetUserById(user.Id) == null)
-                    await _userRepository.AddUser(user);
+                    return await _userRepository.AddUser(user);
                 else
-                    await _userRepository.UpdateUser(user);
+                    return await _userRepository.UpdateUser(user);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            return false;
         }
 
         public async void RemoveUser()

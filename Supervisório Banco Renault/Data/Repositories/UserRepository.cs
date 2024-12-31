@@ -71,11 +71,13 @@ namespace Supervisório_Banco_Renault.Data.Repositories
             User userByRFID = await GetUserByRFID(user.TagRFID);
 
             if (userByRFID != null && userByRFID.Id != user.Id)
-                throw new System.Exception("Já existe um usuário com essa tag RFID");
+                throw new System.Exception("Já existe um usuário com essa tag RFID.");
             else if (user.TagRFID == string.Empty)
-                throw new System.Exception("Tag RFID não pode ser nula");
+                throw new System.Exception("Tag RFID não pode ser nula.");
             else if (user.Name == string.Empty)
-                throw new System.Exception("Nome não pode ser nulo");
+                throw new System.Exception("Nome não pode ser nulo.");
+            else if(user.AccessLevel == Models.Enums.AccessLevel.None)
+                throw new System.Exception("O nível de acesso precisa ser definido.");
 
             return true;
         }
