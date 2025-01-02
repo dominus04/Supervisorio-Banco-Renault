@@ -43,10 +43,9 @@ namespace Supervisório_Banco_Renault.Views
             {
                 Dispatcher.BeginInvoke(new  Action(async () =>
                 {
-                    if(await vm.UpdateUser(_edittedItem))
-                    {
-                        _edittedItem = null;
-                    }
+                    await vm.UpdateUser(_edittedItem);
+                    _edittedItem = null;
+                    
                 }), System.Windows.Threading.DispatcherPriority.Background);
             }
             else
@@ -90,5 +89,6 @@ namespace Supervisório_Banco_Renault.Views
             }
             _edittedItem = UsersDataGrid.SelectedItem;
         }
+
     }
 }
