@@ -35,40 +35,17 @@ namespace Supervisório_Banco_Renault.Views
             InitializeComponent();
         }
 
-        private void OnRowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            UsersManagerVM vm = (UsersManagerVM)DataContext;
-
-            if (MessageBox.Show("Deseja salvar as alterações?", "Salvar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes && _edittedItem != null)
-            {
-                Dispatcher.BeginInvoke(new  Action(async () =>
-                {
-                    await vm.UpdateUser(_edittedItem);
-                    _edittedItem = null;
-                    
-                }), System.Windows.Threading.DispatcherPriority.Background);
-            }
-            else
-            {
-                e.Cancel = true;
-                vm.LoadUsers();
-            }
-        }
-
-        private void DataGridTagButtonClick(object sender, RoutedEventArgs e)
-        {
-            UsersDataGrid.CurrentCell = new DataGridCellInfo(UsersDataGrid.SelectedItem, UsersDataGrid.Columns[3]);
-            UsersDataGrid.BeginEdit();
-        }
 
         private void AddUserMouseDown(object sender, MouseButtonEventArgs e)
         {
             UsersManagerVM vm = (UsersManagerVM)DataContext;
             vm.AddUser();
-            UsersDataGrid.Focus();
-            UsersDataGrid.SelectedIndex = UsersDataGrid.Items.Count - 1;
-            UsersDataGrid.CurrentCell = new DataGridCellInfo(UsersDataGrid.SelectedItem, UsersDataGrid.Columns[0]);
-            UsersDataGrid.BeginEdit();
+        }
+
+        private void EditUserMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            UsersManagerVM vm = (UsersManagerVM)DataContext;
+            vm.UpdateUser();
         }
 
         private void RemoveUserMouseDown(object sender, MouseButtonEventArgs e)
@@ -80,15 +57,7 @@ namespace Supervisório_Banco_Renault.Views
             vm.RemoveUser();
         }
 
-        private void OnBegginingEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            if(UsersDataGrid.CurrentCell.Column.DisplayIndex == 0)
-            {
-                Type t = GetParentService.GetParent(this);
-                Libraries.Keyboard.start(t);
-            }
-            _edittedItem = UsersDataGrid.SelectedItem;
-        }
+
 
     }
 }

@@ -23,7 +23,6 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         // Property to bind the RFID login
         private string _rfid = string.Empty;
-
         public string RFID
         {
             get => _rfid;
@@ -34,14 +33,14 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-
         // Method to verify the existence of the user and login in the correct main window
-        public async void Login(DependencyObject obj)
+        public async void Login(DependencyObject obj, string password)
         {
             Type type = GetParentService.GetParent(obj);
 
             var user = await _userRepository.GetUserByRFID(RFID);
-            if (user != null)
+
+            if (user != null && user.TryLogin(password))
             {
                 if (type == typeof(OP10_MainWindow))
                 {
@@ -56,9 +55,13 @@ namespace Supervisório_Banco_Renault.ViewModels
                     vm.ChangePage("OP20_Automatic");
                 }
             }
+            else if(user == null)
+            {
+                MessageBox.Show("Usuário não encontrado.");
+            }
             else
             {
-                MessageBox.Show("Usuário não encontrado");
+                MessageBox.Show("Senha incorreta.");
             }
         }
     }

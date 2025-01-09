@@ -20,7 +20,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         }
 
         // Logged user for the screen
-        protected User _loggedUser = new(string.Empty, string.Empty, Models.Enums.AccessLevel.None);
+        protected User _loggedUser = User.GetNullUser();
 
         public User LoggedUser
         {

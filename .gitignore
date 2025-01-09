@@ -6,6 +6,8 @@
 # Database files
 *.db
 
+Migrations/
+
 # User-specific files
 *.rsuser
 *.suo

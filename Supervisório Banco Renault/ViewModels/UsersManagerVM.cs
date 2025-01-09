@@ -2,6 +2,7 @@
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Models.Enums;
+using Supervisório_Banco_Renault.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,34 +21,38 @@ namespace Supervisório_Banco_Renault.ViewModels
         public UsersManagerVM(IUserRepository userRepository) 
         {
             _userRepository = (UserRepository)userRepository;
+
             LoadUsers();
+        }
+
+        public void AddUser()
+        {
+            UserEditVM vm = new (_userRepository);
+            UserEdit userEdit = new();
+            userEdit.DataContext = vm;
+            userEdit.ShowDialog();
+            LoadUsers();
+        }
+
+        public void UpdateUser()
+        {
+            if (SelectedUser != null)
+            {
+                UserEditVM vm = new (_userRepository, SelectedUser);
+                UserEdit userEdit = new();
+                userEdit.DataContext = vm;
+                userEdit.ShowDialog();
+                LoadUsers();
+            }
+            else
+            {
+                MessageBox.Show("Selecione um usuário para editar", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public async void LoadUsers()
         {
             Users = await _userRepository.GetAllActiveUsers();
-        }
-
-        public void AddUser()
-        {
-            Users.Add(User.GetNullUser());
-        }
-
-        public async Task<bool> UpdateUser(object obj)
-        {
-            var user = (User)obj;
-            try
-            {
-                if(await _userRepository.GetUserById(user.Id) == null)
-                    return await _userRepository.AddUser(user);
-                else
-                    return await _userRepository.UpdateUser(user);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            return false;
         }
 
         public async void RemoveUser()
@@ -84,16 +89,6 @@ namespace Supervisório_Banco_Renault.ViewModels
             {
                 _users = value;
                 OnPropertyChanged("Users");
-            }
-        }
-
-        public IEnumerable<AccessLevel> _enums = (IEnumerable<AccessLevel>)Enum.GetValues(typeof(AccessLevel));
-
-        public IEnumerable<AccessLevel> Enums
-        {
-            get
-            {
-                return _enums;
             }
         }
 

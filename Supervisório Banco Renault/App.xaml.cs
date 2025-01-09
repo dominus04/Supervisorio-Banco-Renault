@@ -18,7 +18,7 @@ namespace Supervisório_Banco_Renault
         public OP10_MainWindow? _mainWindowOP10;
         public OP20_MainWindow? _mainWindowOP20;
         private readonly IServiceCollection services = new ServiceCollection();
-        private readonly IServiceProvider _serviceProvider;
+        public readonly IServiceProvider _serviceProvider;
 
         public App()
         {
@@ -67,6 +67,7 @@ namespace Supervisório_Banco_Renault
             services.AddTransient<LoginVM>();
             services.AddTransient<LogoffVM>();
             services.AddTransient<UsersManagerVM>();
+            services.AddTransient<UserEditVM>();
 
             // Adding the injected classes to service
             services.AddSingleton<ViewModelLocator>();

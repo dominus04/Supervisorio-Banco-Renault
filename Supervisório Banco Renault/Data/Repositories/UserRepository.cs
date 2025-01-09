@@ -38,7 +38,6 @@ namespace Supervisório_Banco_Renault.Data.Repositories
         public async Task<User?> GetUserByRFID(string tagRFID)
         {
             return await _context.Users.FirstOrDefaultAsync(x => x.TagRFID == tagRFID);
-            
         }
 
         public async Task<bool> AddUser(User user)
@@ -47,6 +46,11 @@ namespace Supervisório_Banco_Renault.Data.Repositories
             await _context.Users.AddAsync(user);
             return await _context.SaveChangesAsync() > 0;
         }
+
+        //public async Task<bool> AddOrUpdateUser(User user)
+        //{
+        //    await VerifyData(user);
+        //}
 
         public async Task<bool> RemoveUser(User user)
         {
@@ -81,7 +85,6 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
             return true;
         }
-
 
     }
 }
