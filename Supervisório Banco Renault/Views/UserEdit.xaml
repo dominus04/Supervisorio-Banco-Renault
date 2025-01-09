@@ -6,7 +6,7 @@
              xmlns:enum="clr-namespace:Supervisório_Banco_Renault.Models.Enums"
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
              mc:Ignorable="d" 
-             Height="500" Width="400" Background="White" WindowStyle="None" WindowStartupLocation="CenterScreen">
+             Height="350" Width="400" Background="White" WindowStyle="None" WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type enum:AccessLevel}">
             <ObjectDataProvider.MethodParameters>
@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
         
         
-        <StackPanel Margin="30">
+        <StackPanel Margin="30,10">
             <Label Content="Nome:" FontSize="16"/>
             <TextBox Margin="5, 0" FontSize="16" Height="27.28" VerticalContentAlignment="Center" Text="{Binding User.Name}"/>
             <Label Content="Tipo de usuário:" FontSize="16"/>
@@ -35,8 +35,8 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Label Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" Margin="10, 0" MouseDown="Cancel_MouseDown"/>
             <Label Content="Salvar usuário" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" Margin="10, 0" MouseDown="Add_MouseDown" />
+            <Label Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" Margin="10, 0" MouseDown="Cancel_MouseDown"/>
         </StackPanel>
 
     </Grid>

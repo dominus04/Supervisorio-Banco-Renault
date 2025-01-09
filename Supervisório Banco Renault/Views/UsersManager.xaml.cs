@@ -1,4 +1,5 @@
-﻿using Supervisório_Banco_Renault.Services;
+﻿using Supervisório_Banco_Renault.Libraries;
+using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -39,12 +40,16 @@ namespace Supervisório_Banco_Renault.Views
         private void AddUserMouseDown(object sender, MouseButtonEventArgs e)
         {
             UsersManagerVM vm = (UsersManagerVM)DataContext;
+            var t = GetParentService.GetParent(this);
+            VirtualKeyboard.start(t);
             vm.AddUser();
         }
 
         private void EditUserMouseDown(object sender, MouseButtonEventArgs e)
         {
             UsersManagerVM vm = (UsersManagerVM)DataContext;
+            var t = GetParentService.GetParent(this);
+            VirtualKeyboard.start(t);
             vm.UpdateUser();
         }
 

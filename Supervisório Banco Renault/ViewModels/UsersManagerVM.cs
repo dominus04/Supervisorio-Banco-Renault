@@ -2,6 +2,7 @@
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Models.Enums;
+using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {

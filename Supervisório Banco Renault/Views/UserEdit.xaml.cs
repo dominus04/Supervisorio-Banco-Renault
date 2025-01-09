@@ -1,5 +1,7 @@
 ﻿using BCrypt.Net;
+using Supervisório_Banco_Renault.Libraries;
 using Supervisório_Banco_Renault.Models;
+using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
 using System;
 using System.Collections.Generic;

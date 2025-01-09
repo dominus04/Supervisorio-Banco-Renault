@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace Supervisório_Banco_Renault.Libraries
 {
-    public class Keyboard
+    public class VirtualKeyboard
     {
         // Import necessary Windows API functions
         [DllImport("user32.dll", SetLastError = true)]
@@ -70,9 +70,9 @@ namespace Supervisório_Banco_Renault.Libraries
 
                     // Define a posição a janela do teclado virtual dependendo do tipo de janela
                     int width = 1500;
-                    int height = 400;
-                    int y = 500;
-                    int x = t == typeof(OP10_MainWindow) ? -1710 : 210;
+                    int height = 350;
+                    int y = 700;
+                    int x = t == typeof(OP20_MainWindow) ? -1710 : 210;
 
 
                     // Move o teclado virtual
