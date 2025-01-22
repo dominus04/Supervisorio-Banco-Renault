@@ -47,11 +47,6 @@ namespace Supervisório_Banco_Renault.Data.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        //public async Task<bool> AddOrUpdateUser(User user)
-        //{
-        //    await VerifyData(user);
-        //}
-
         public async Task<bool> RemoveUser(User user)
         {
             if (user != null)

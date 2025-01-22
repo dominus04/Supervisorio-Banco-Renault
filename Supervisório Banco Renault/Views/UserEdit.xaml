@@ -19,19 +19,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         
         
-        <StackPanel Margin="30,10">
+        <StackPanel Margin="30,10" VerticalAlignment="Center">
             <Label Content="Nome:" FontSize="16"/>
             <TextBox Margin="5, 0" FontSize="16" Height="27.28" VerticalContentAlignment="Center" Text="{Binding User.Name}"/>
             <Label Content="Tipo de usuário:" FontSize="16"/>
             <ComboBox x:Name="userLevelComboBox" Margin="5, 0" FontSize="16" ItemsSource="{Binding Source={StaticResource dataFromEnum}}" SelectedItem="{Binding User.AccessLevel}"/>
             <TextBox Height="0" Width="0" Text="{Binding User.TagRFID}" x:Name="tagTextBox"/>
             <Button Content="Ler Crachá" FontSize="16" Margin="5,30,5,0" Click="OnClickButtonReadTag" Height="27.28"/>
-            <Label Content="Senha:" FontSize="16"/>
-            <PasswordBox x:Name="passwordBox" Margin="5, 0" FontSize="16" Height="27.28" VerticalContentAlignment="Center" PasswordChanged="OnPassChanged"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">

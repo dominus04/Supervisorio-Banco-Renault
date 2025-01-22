@@ -19,15 +19,10 @@ namespace Supervisório_Banco_Renault.Views
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                LoginPasswordBox.Focus();
+                LoginVM vm = (LoginVM)DataContext;
+
+                vm.Login(this);
             }
-        }
-
-        private void OnLoginButtonClick(object sender, RoutedEventArgs e)
-        {
-            LoginVM vm = (LoginVM)DataContext;
-
-            vm.Login(this, LoginPasswordBox.Password);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -36,12 +36,6 @@ namespace Supervisório_Banco_Renault.Views
             tagTextBox.Focus();
         }
 
-        private void OnPassChanged(object sender, RoutedEventArgs e)
-        {
-            UserEditVM vm = (UserEditVM)DataContext;
-            vm.User.HashedPassword = BCrypt.Net.BCrypt.HashPassword(passwordBox.Password);
-        }
-
         private void Cancel_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (MessageBox.Show("Todos os dados serão perdidos. Deseja cancelar?", "Cancelar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)

@@ -9,11 +9,6 @@
              >
     <Grid Background="White">
         <TextBox x:Name="RFIDInputTextBox" Height="0" Width="0" Margin="0,200,0,0" KeyDown="TextBoxOnKeyDown" Text="{Binding RFID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <StackPanel VerticalAlignment="Center" Width="250">
-            <Button Content="Ler Crachá" FontSize="24" HorizontalAlignment="Stretch" Height="50" Margin="0, 20" Click="Button_Click"/>
-            <Label Content="Senha:"  FontSize="24" HorizontalAlignment="Center"/>
-            <PasswordBox x:Name="LoginPasswordBox" FontSize="32" HorizontalAlignment="Stretch"/>
-            <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Stretch" Height="50" FontSize="24" Click="OnLoginButtonClick" Margin="0, 20"/>
-        </StackPanel>
+        <Button Content="Ler Crachá" FontSize="48" HorizontalAlignment="Center" Height="100" Width="350" Margin="0, 20" Click="Button_Click"/>
     </Grid>
 </UserControl>

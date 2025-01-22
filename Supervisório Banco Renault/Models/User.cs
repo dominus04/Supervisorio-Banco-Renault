@@ -12,7 +12,6 @@ namespace Supervisório_Banco_Renault.Models
         public Guid Id { get; set; }
         public string? Name { get; set; }
         public string? TagRFID { get; set; }
-        public string? HashedPassword { get; set; }
         public AccessLevel AccessLevel { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
@@ -27,18 +26,10 @@ namespace Supervisório_Banco_Renault.Models
             return new User() {Id = Guid.Empty,  Name = string.Empty, AccessLevel = AccessLevel.None, TagRFID = string.Empty};
         }
 
-        public static User NewUser(string name, string tagRFID, AccessLevel accessLevel, string password)
+        public static User NewUser(string name, string tagRFID, AccessLevel accessLevel)
         {
-            return new User() { Id = new Guid(), Name = name, TagRFID = tagRFID, AccessLevel = accessLevel, HashedPassword = BCrypt.Net.BCrypt.HashPassword(password)};
+            return new User() { Id = new Guid(), Name = name, TagRFID = tagRFID, AccessLevel = accessLevel};
         }
 
-        public bool TryLogin(string password)
-        {   
-            if (BCrypt.Net.BCrypt.Verify(password, HashedPassword))
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }

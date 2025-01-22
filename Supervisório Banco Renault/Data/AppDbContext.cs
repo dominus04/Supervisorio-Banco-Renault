@@ -24,7 +24,6 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<User>().HasIndex(U => U.TagRFID).IsUnique();
             modelBuilder.Entity<User>().Property(u => u.AccessLevel).IsRequired();
             modelBuilder.Entity<User>().Property(u => u.IsDeleted).HasDefaultValue(false);
-            modelBuilder.Entity<User>().Property(u => u.HashedPassword).IsRequired();
 
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
         }
