@@ -366,3 +366,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Supervisório Banco Renault/supervisorio.db-shm
+/Supervisório Banco Renault/supervisorio.db-wal
+/Supervisório Banco Renault/supervisorio.db-shm
+/Supervisório Banco Renault/supervisorio.db-wal
