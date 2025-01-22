@@ -38,7 +38,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         public UserEditVM(IUserRepository userRepository) 
         {
             _userRepository = userRepository;
-            User = User.NewUser(string.Empty, string.Empty, Models.Enums.AccessLevel.None, string.Empty);
+            User = User.NewUser(string.Empty, string.Empty, Models.Enums.AccessLevel.None);
         }
 
         public void AddOrUpdateUser()

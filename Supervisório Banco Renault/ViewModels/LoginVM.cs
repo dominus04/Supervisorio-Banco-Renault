@@ -34,13 +34,13 @@ namespace Supervisório_Banco_Renault.ViewModels
         }
 
         // Method to verify the existence of the user and login in the correct main window
-        public async void Login(DependencyObject obj, string password)
+        public async void Login(DependencyObject obj)
         {
             Type type = GetParentService.GetParent(obj);
 
             var user = await _userRepository.GetUserByRFID(RFID);
 
-            if (user != null && user.TryLogin(password))
+            if (user != null)
             {
                 if (type == typeof(OP10_MainWindow))
                 {
