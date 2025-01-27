@@ -7,14 +7,7 @@
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
              mc:Ignorable="d" 
              Height="350" Width="400" Background="White" WindowStyle="None" WindowStartupLocation="CenterScreen" >
-    <Window.Resources>
-        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type enum:AccessLevel}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="enum:AccessLevel"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-    </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -27,13 +20,13 @@
             <Label Content="Nome:" FontSize="16"/>
             <TextBox Margin="5, 0" FontSize="16" Height="27.28" VerticalContentAlignment="Center" Text="{Binding User.Name}"/>
             <Label Content="Tipo de usuário:" FontSize="16"/>
-            <ComboBox x:Name="userLevelComboBox" Margin="5, 0" FontSize="16" ItemsSource="{Binding Source={StaticResource dataFromEnum}}" SelectedItem="{Binding User.AccessLevel}"/>
-            <TextBox Height="0" Width="0" Text="{Binding User.TagRFID}" x:Name="tagTextBox"/>
-            <Button Content="Ler Crachá" FontSize="16" Margin="5,30,5,0" Click="OnClickButtonReadTag" Height="27.28"/>
+            <ComboBox x:Name="userLevelComboBox" Margin="5, 0" FontSize="16" SelectedItem="{Binding User.AccessLevel}"/>
+            <TextBox Height="0" Width="0" Text="{Binding User.TagRFID}" x:Name="tagTextBox" KeyDown="TagRFIDTextOnKeyDown" />
+            <Button x:Name="ReadRFIDButton" Content="Ler Crachá" FontSize="16" Margin="5,30,5,0" Click="OnClickButtonReadTag" Height="27.28" Focusable="True"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Label Content="Salvar usuário" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" Margin="10, 0" MouseDown="Add_MouseDown" />
+            <Label Content="Salvar usuário" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" Margin="10, 0" MouseDown="Add_MouseDown"/>
             <Label Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" Margin="10, 0" MouseDown="Cancel_MouseDown"/>
         </StackPanel>
 

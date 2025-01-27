@@ -6,6 +6,7 @@
         Operador = 1,
         Lideranca = 2,
         Manutencao = 3,
-        Administrador = 4
+        Administrador = 4,
+        SuperUser = 5
     }
 }

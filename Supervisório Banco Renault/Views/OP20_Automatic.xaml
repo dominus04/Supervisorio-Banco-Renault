@@ -4,8 +4,226 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             d:DesignHeight="980" d:DesignWidth="1620">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderThickness="0, 0, .5, 1" BorderBrush="#AFAFAF">
+                <ComboBox FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0"/>
+            </Border>
+
+            <Border Grid.Column="1" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Label Content="PEÇAS OK:" FontSize="24" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                        <Label Content="10" FontSize="24" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Label Content="PEÇAS NOK:" FontSize="24" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                        <Label Content="10" FontSize="24" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Content="Gaiola de Refugo" FontSize="24" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Label Content="1" FontSize="24" HorizontalAlignment="Center"/>
+                            <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle x:Name="scrapCage1" Grid.Column="0" Width="20" Height="20" Fill="Lime"/>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <Label Content="2" FontSize="24" HorizontalAlignment="Center"/>
+                            <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle x:Name="scrapCage2" Grid.Column="0" Width="20" Height="20" Fill="Lime"/>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Label Content="3" FontSize="24" HorizontalAlignment="Center"/>
+                            <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle x:Name="scrapCage3" Grid.Column="0" Width="20" Height="20" Fill="Lime"/>
+                            </Border>
+                        </StackPanel>
+
+                        <Label Grid.Column="3" Content="Resetar Gaiola" Style="{StaticResource HoverableLabelGrayButton}" Margin="45,10" FontSize="16"/>
+
+                    </Grid>
+                </Grid>
+            </Border>
             
+            
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderBrush="#AFAFAF" BorderThickness="0, 0, 1, 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="250"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="1" Content="Lado 1" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="2" Content="Posicionar peça e encaixar pinças no condensador" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
+                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Margin="45, 20, 22.5, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="0">
+                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Label Content="RADIADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Margin="22.5, 20, 45, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="1">
+                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Label Content="CONDENSADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                    </Grid>
+
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" BorderBrush="#AFAFAF" BorderThickness="1, 0, 0, 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="250"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="1" Content="Lado 2" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="2" Content="Posicionar peça e encaixar pinças no condensador" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
+                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Margin="45, 20, 22.5, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="0">
+                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Label Content="RADIADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Margin="22.5, 20, 45, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="1">
+                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Label Content="CONDENSADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
+                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </Grid>
+
+                </Grid>
+            </Border>
+
+        </Grid>
     </Grid>
 </UserControl>

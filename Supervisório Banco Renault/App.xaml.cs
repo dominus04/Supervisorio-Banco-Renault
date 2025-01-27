@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Supervisório_Banco_Renault.Data;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Services;
@@ -34,6 +35,9 @@ namespace Supervisório_Banco_Renault
             _watchTimer.Tick += WatchTimerTick;
             _watchTimer.Start();
 
+            // Updating db if migration is needed
+            ApplyMigration();
+
             // Getting the injected WindowManager from the service provider and opening the two screens
             var windowManager = _serviceProvider.GetRequiredService<WindowManager>();
             _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP20_MainWindowVM>());
@@ -49,6 +53,7 @@ namespace Supervisório_Banco_Renault
             _mainWindowOP10.HeaderUC.UpdateHourAndDate();
         }
 
+        // Function to configure the services
         private void ConfigureServices()
         {
             // Adding the injected DB classes to service
@@ -76,6 +81,16 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<WindowManager>();
 
             // Adding the services functions to the service
+        }
+
+        // Function to apply migration to the DB if needed
+        private void ApplyMigration()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
         }
 
     }

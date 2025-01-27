@@ -41,23 +41,25 @@ namespace Supervisório_Banco_Renault.ViewModels
             User = User.NewUser(string.Empty, string.Empty, Models.Enums.AccessLevel.None);
         }
 
-        public void AddOrUpdateUser()
+        public async Task<bool> AddOrUpdateUser()
         { 
             try
             {
                 if (isUpdate)
                 {
-                    _userRepository.UpdateUser(User);
+                    await _userRepository.UpdateUser(User);
 
                 }
                 else
                 {
-                    _userRepository.AddUser(User);
+                    await _userRepository.AddUser(User);
                 }
+                return true;
             }
             catch (Exception ex) 
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
         }
     }

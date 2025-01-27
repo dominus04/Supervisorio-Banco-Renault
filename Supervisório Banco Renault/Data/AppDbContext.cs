@@ -10,7 +10,15 @@ namespace Supervisório_Banco_Renault.Data
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string dbPath = "D:/Indusbras/Programação/Supervisórios/Supervisório Banco Renault OP10 e OP20/Supervisório Banco Renault/Supervisório Banco Renault/supervisorio.db";
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appDataDbFolder = Path.Combine(appDataPath, "Supervisorio Banco Renault");
+            string dbPath = Path.Combine(appDataDbFolder, "supervisorio.db");
+
+            if (!Directory.Exists(appDataDbFolder))
+            {
+                Directory.CreateDirectory(appDataDbFolder);
+            }
+
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
 
@@ -26,6 +34,13 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<User>().Property(u => u.IsDeleted).HasDefaultValue(false);
 
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<User>().HasData(
+                    new User { 
+                        Id = new System.Guid("00000000-0000-0000-0000-000000000001"), 
+                        Name = "Admin", 
+                        TagRFID = "01972265660", 
+                        AccessLevel = Models.Enums.AccessLevel.SuperUser}
+                );
         }
     }
 }
