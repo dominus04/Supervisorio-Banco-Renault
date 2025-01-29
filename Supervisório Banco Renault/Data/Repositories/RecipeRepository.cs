@@ -70,7 +70,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
             if (recipeByMouleCode != null && recipeByMouleCode.Id != recipe.Id)
                 throw new Exception("Já existe uma receita para esse módulo.");
-            if (recipe.ModuleCode == string.Empty)
+            if (recipe.ModuleCode.Trim() == string.Empty)
                 throw new Exception("Código do módulo não pode ser nulo");
             if (recipe.AteqRadiatorProgram == 0 && recipe.VerifyRadiator == true)
                 throw new Exception("Verificação do radiador ativa.\nPrograma do ATEQ não pode ser nulo.");
