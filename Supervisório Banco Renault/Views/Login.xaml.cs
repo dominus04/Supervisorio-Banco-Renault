@@ -27,6 +27,7 @@ namespace Supervisório_Banco_Renault.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            RFIDInputTextBox.Text = "";
             RFIDInputTextBox.Focus();
         }
     }

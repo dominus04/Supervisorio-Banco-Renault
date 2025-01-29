@@ -7,7 +7,6 @@ namespace Supervisório_Banco_Renault.Data.Repositories
     public interface IUserRepository
     {
         Task<ObservableCollection<User>> GetAllActiveUsers();
-        Task<User?> GetUserById(Guid id);
         Task<User?> GetUserByRFID(string tagRFID);
         Task<bool> AddUser(User user);
         Task<bool> RemoveUser(User user);
@@ -28,11 +27,6 @@ namespace Supervisório_Banco_Renault.Data.Repositories
         public async Task<ObservableCollection<User>> GetAllActiveUsers()
         {
             return new ObservableCollection<User>(await _context.Users.Where(u => u.AccessLevel != Models.Enums.AccessLevel.SuperUser).ToListAsync());
-        }
-
-        public async Task<User?> GetUserById(Guid id)
-        {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User?> GetUserByRFID(string tagRFID)
@@ -67,15 +61,15 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
         public async Task<bool> VerifyData(User user)
         {
-            User userByRFID = await GetUserByRFID(user.TagRFID);
+            User? userByRFID = await GetUserByRFID(user.TagRFID);
 
             if (userByRFID != null && userByRFID.Id != user.Id)
                 throw new Exception("Já existe um usuário com essa tag RFID.");
-            else if (user.TagRFID == string.Empty)
+            if (user.TagRFID == string.Empty)
                 throw new Exception("Tag RFID não pode ser nula.");
-            else if (user.Name == string.Empty)
+            if (user.Name == string.Empty)
                 throw new Exception("Nome não pode ser nulo.");
-            else if(user.AccessLevel == Models.Enums.AccessLevel.None)
+            if(user.AccessLevel == Models.Enums.AccessLevel.None)
                 throw new Exception("O nível de acesso precisa ser definido.");
 
             return true;

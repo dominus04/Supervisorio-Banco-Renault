@@ -59,6 +59,7 @@ namespace Supervisório_Banco_Renault
             // Adding the injected DB classes to service
             services.AddDbContext<AppDbContext>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRecipeRepository, RecipeRepository>();
 
             // Adding the OP10 VMs to the service
             services.AddSingleton<OP10_MainWindowVM>();
@@ -72,7 +73,7 @@ namespace Supervisório_Banco_Renault
             services.AddTransient<LoginVM>();
             services.AddTransient<LogoffVM>();
             services.AddTransient<UsersManagerVM>();
-            services.AddTransient<UserEditVM>();
+            services.AddTransient<RecipesVM>();
 
             // Adding the injected classes to service
             services.AddSingleton<ViewModelLocator>();

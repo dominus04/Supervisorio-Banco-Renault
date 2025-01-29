@@ -19,7 +19,7 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" BorderThickness="0, 0, .5, 1" BorderBrush="#AFAFAF">
-                <ComboBox FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0"/>
+                <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0"/>
             </Border>
 
             <Border Grid.Column="1" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF">

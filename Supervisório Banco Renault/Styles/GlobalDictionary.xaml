@@ -36,4 +36,7 @@
         </Style.Triggers>
     </Style>
 
+    <DropShadowEffect x:Key="DropShadowEffect" Color="Black" BlurRadius="5" ShadowDepth="10" Opacity=".5" Direction="320"/>
+    
+
 </ResourceDictionary>

@@ -71,7 +71,7 @@ namespace Supervisório_Banco_Renault.Libraries
                     // Define a posição a janela do teclado virtual dependendo do tipo de janela
                     int width = 1500;
                     int height = 350;
-                    int y = 700;
+                    int y = 650;
                     int x = t == typeof(OP20_MainWindow) ? -1710 : 210;
 
 

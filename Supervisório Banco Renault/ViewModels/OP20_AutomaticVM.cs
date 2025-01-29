@@ -2,6 +2,10 @@
 {
     public class OP20_AutomaticVM : BaseVM
     {
+        public OP20_AutomaticVM()
+        {
+            
+        }
 
     }
 }

@@ -12,13 +12,13 @@ namespace Supervisório_Banco_Renault.ViewModels
 {
     public class UserEditVM : BaseVM
     {
-        private User _user = User.GetNullUser();
+        private User? _user;
 
         private bool isUpdate = false;
 
         private readonly IUserRepository _userRepository;
 
-        public User User
+        public User? User
         {
             get => _user;
             set
@@ -43,6 +43,10 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public async Task<bool> AddOrUpdateUser()
         { 
+
+            if (User == null)
+                return false;
+
             try
             {
                 if (isUpdate)

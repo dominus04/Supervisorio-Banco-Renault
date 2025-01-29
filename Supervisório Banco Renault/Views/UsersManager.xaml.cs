@@ -42,7 +42,7 @@ namespace Supervisório_Banco_Renault.Views
             UsersManagerVM vm = (UsersManagerVM)DataContext;
             var t = GetParentService.GetParent(this);
             VirtualKeyboard.start(t);
-            vm.AddUser();
+            vm.AddOrUpdateUser(t, false);
         }
 
         private void EditUserMouseDown(object sender, MouseButtonEventArgs e)
@@ -50,7 +50,7 @@ namespace Supervisório_Banco_Renault.Views
             UsersManagerVM vm = (UsersManagerVM)DataContext;
             var t = GetParentService.GetParent(this);
             VirtualKeyboard.start(t);
-            vm.UpdateUser();
+            vm.AddOrUpdateUser(t, true);
         }
 
         private void RemoveUserMouseDown(object sender, MouseButtonEventArgs e)

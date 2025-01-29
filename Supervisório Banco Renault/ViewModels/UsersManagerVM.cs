@@ -27,29 +27,37 @@ namespace Supervisório_Banco_Renault.ViewModels
             LoadUsers();
         }
 
-        public void AddUser()
+        public void AddOrUpdateUser(Type t, bool isUpdate)
         {
-            UserEditVM vm = new (_userRepository);
-            UserEdit userEdit = new();
-            userEdit.DataContext = vm;
-            userEdit.ShowDialog();
-            LoadUsers();
-        }
+            Application.Current.Windows.OfType<UserEdit>().FirstOrDefault()?.Close();
+            UserEditVM vm = new(_userRepository);
 
-        public void UpdateUser()
-        {
-            if (SelectedUser != null)
+            if (isUpdate && SelectedUser != null) 
             {
-                UserEditVM vm = new (_userRepository, SelectedUser);
-                UserEdit userEdit = new();
-                userEdit.DataContext = vm;
-                userEdit.ShowDialog();
-                LoadUsers();
+                vm = new(_userRepository, SelectedUser);
             }
-            else
+            else if (isUpdate && SelectedUser == null)
             {
                 MessageBox.Show("Selecione um usuário para editar", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+
+            UserEdit userEdit = new();
+            userEdit.DataContext = vm;
+
+            userEdit.Top = 140;
+
+            if (t == typeof(OP20_MainWindow))
+                userEdit.Left = ((1920 - userEdit.Width) / 2) - 1920;
+            else
+                userEdit.Left = (1920 - userEdit.Width) / 2;
+
+            userEdit.Show();
+
+            userEdit.Closed += (sender, e) =>
+            {
+                LoadUsers();
+            };
         }
 
         public async void LoadUsers()
@@ -90,7 +98,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             set
             {
                 _users = value;
-                OnPropertyChanged("Users");
+                OnPropertyChanged(nameof(Users));
             }
         }
 
@@ -106,7 +114,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             set
             {
                 _selectedUser = value;
-                OnPropertyChanged("SelectedUser");
+                OnPropertyChanged(nameof(SelectedUser));
             }
         }
 

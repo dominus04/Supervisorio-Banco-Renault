@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="300" Width="300" BorderBrush="#AFAFAF" BorderThickness="0,0,.5,0" Background="Aqua">
+             d:DesignHeight="1080" d:DesignWidth="300" Width="300" BorderBrush="#AFAFAF" BorderThickness="0,0,.5,0" Background="WhiteSmoke">
     <UserControl.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -70,13 +70,22 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <DockPanel>
-        <ListView x:Name="MenuList" DockPanel.Dock="Top" ItemsSource="{Binding FilteredMenu, RelativeSource={RelativeSource AncestorType=UserControl}}" BorderThickness="0" HorizontalContentAlignment="Stretch" ItemContainerStyle="{DynamicResource ListViewItemStyle1}" SelectionChanged="ChangeView">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Label Content="{Binding MenuItemText}" Height="50" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" FontWeight="SemiBold" Margin="16,0,0,0"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+    
+        <DockPanel>
+            <ListView x:Name="MenuList" DockPanel.Dock="Top" ItemsSource="{Binding FilteredMenu, RelativeSource={RelativeSource AncestorType=UserControl}}" BorderThickness="0" HorizontalContentAlignment="Stretch" ItemContainerStyle="{DynamicResource ListViewItemStyle1}" SelectionChanged="ChangeView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding MenuItemText}" Height="50" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" FontWeight="SemiBold" Margin="16,0,0,0"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
+        <Label Content="Fechar Aplicação" Grid.Row="1" Background="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" FontWeight="Bold" MouseDown="OnCloseButtonMouseDown"/>
+    </Grid>
 </UserControl>

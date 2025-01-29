@@ -5,16 +5,28 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supervisório Banco Renault", "Supervisório Banco Renault\Supervisório Banco Renault.csproj", "{987B64F8-2FAF-4453-BF08-B09FF800A6E2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{E80704FD-458B-4BEB-8B28-FC608DC83D54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Debug|x64.Build.0 = Debug|Any CPU
 		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{987B64F8-2FAF-4453-BF08-B09FF800A6E2}.Release|x64.Build.0 = Release|Any CPU
+		{E80704FD-458B-4BEB-8B28-FC608DC83D54}.Debug|Any CPU.ActiveCfg = Debug
+		{E80704FD-458B-4BEB-8B28-FC608DC83D54}.Debug|x64.ActiveCfg = Debug
+		{E80704FD-458B-4BEB-8B28-FC608DC83D54}.Release|Any CPU.ActiveCfg = Release
+		{E80704FD-458B-4BEB-8B28-FC608DC83D54}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

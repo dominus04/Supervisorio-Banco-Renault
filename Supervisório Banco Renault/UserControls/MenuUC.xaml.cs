@@ -92,5 +92,10 @@ namespace Supervisório_Banco_Renault.UserControls
             }
         }
 
+        private void OnCloseButtonMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(MessageBox.Show("Deseja realmente fechar a aplicação?", "Sair", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                Application.Current.Shutdown();
+        }
     }
 }

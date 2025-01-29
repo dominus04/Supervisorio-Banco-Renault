@@ -23,9 +23,12 @@ namespace Supervisório_Banco_Renault.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            #region User db settings
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<User>().Property(u => u.Name).IsRequired();
             modelBuilder.Entity<User>().Property(u => u.TagRFID).IsRequired();
@@ -41,6 +44,16 @@ namespace Supervisório_Banco_Renault.Data
                         TagRFID = "01972265660", 
                         AccessLevel = Models.Enums.AccessLevel.SuperUser}
                 );
+            #endregion
+
+            #region Recipe db settings
+
+            modelBuilder.Entity<Recipe>().HasKey(r => r.Id);
+            modelBuilder.Entity<Recipe>().Property(r => r.ModuleCode).IsRequired();
+            modelBuilder.Entity<Recipe>().HasIndex(r => r.ModuleCode).IsUnique();
+
+            #endregion
+
         }
     }
 }

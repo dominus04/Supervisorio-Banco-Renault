@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="980" d:DesignWidth="1620" Width="1620" Height="980"
-             >
+             d:DesignHeight="980" d:DesignWidth="1620" Width="1620" Height="980">
+
     <Grid Background="White">
-        <TextBox x:Name="RFIDInputTextBox" Height="0" Width="0" Margin="0,200,0,0" KeyDown="TextBoxOnKeyDown" Text="{Binding RFID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox x:Name="RFIDInputTextBox" Height="0" Width="0" Margin="0,200,0,0" KeyDown="TextBoxOnKeyDown" Text="{Binding RFID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{x:Null}"/>
         <Button Content="Ler Crachá" FontSize="48" HorizontalAlignment="Center" Height="100" Width="350" Margin="0, 20" Click="Button_Click"/>
     </Grid>
 </UserControl>

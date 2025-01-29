@@ -44,7 +44,6 @@ namespace Supervisório_Banco_Renault.Views
         {
             if (MessageBox.Show("Todos os dados serão perdidos. Deseja cancelar?", "Cancelar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                UserEditVM vm = (UserEditVM)DataContext;
                 this.Close();
             }
         }

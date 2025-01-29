@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="1920" Height="100">
+             d:DesignHeight="100" d:DesignWidth="1920" Height="100" Background="WhiteSmoke">
     <Grid>
         <!--Cabeçalho-->
         <DockPanel DockPanel.Dock="Top" Height="100px" VerticalAlignment="Top">
@@ -28,7 +28,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Content="Usuário:" FontSize="24" FontFamily="Arial" VerticalAlignment="Bottom" Grid.Column="0" HorizontalAlignment="Right"/>
+                        <Label Content="Usuário: " FontSize="24" FontFamily="Arial" VerticalAlignment="Bottom" Grid.Column="0" HorizontalAlignment="Right"/>
                         <Label x:Name="currentUser" DataContext="{Binding LoggedUser}" Content="{Binding Name}" FontSize="24" FontFamily="Arial" VerticalAlignment="Bottom"  Grid.Column="1" HorizontalAlignment="Left"/>
                     </Grid>
 
