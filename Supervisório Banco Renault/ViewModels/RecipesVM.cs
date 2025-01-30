@@ -43,10 +43,10 @@ namespace Supervisório_Banco_Renault.ViewModels
             recipeEdit.DataContext = vm;
             recipeEdit.Top = 140;
 
-            if (t == typeof(OP20_MainWindow))
-                recipeEdit.Left = ((1920 - recipeEdit.Width) / 2) - 1920;
-            else
-                recipeEdit.Left = (1920 - recipeEdit.Width) / 2;
+            //if (t == typeof(OP20_MainWindow))
+            //    recipeEdit.Left = ((1920 - recipeEdit.Width) / 2) - 1920;
+            //else
+            //    recipeEdit.Left = (1920 - recipeEdit.Width) / 2;
 
             recipeEdit.Show();
           

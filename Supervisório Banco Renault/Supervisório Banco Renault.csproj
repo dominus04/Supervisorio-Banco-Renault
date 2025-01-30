@@ -31,6 +31,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
     <PackageReference Include="ModernWpfUI" Version="0.9.6" />
+    <PackageReference Include="S7netplus" Version="0.20.0" />
   </ItemGroup>
 
   <ItemGroup>

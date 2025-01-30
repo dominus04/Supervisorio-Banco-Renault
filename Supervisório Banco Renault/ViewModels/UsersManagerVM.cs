@@ -47,10 +47,10 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             userEdit.Top = 140;
 
-            if (t == typeof(OP20_MainWindow))
-                userEdit.Left = ((1920 - userEdit.Width) / 2) - 1920;
-            else
-                userEdit.Left = (1920 - userEdit.Width) / 2;
+            //if (t == typeof(OP20_MainWindow))
+            //    userEdit.Left = ((1920 - userEdit.Width) / 2) - 1920;
+            //else
+            //    userEdit.Left = (1920 - userEdit.Width) / 2;
 
             userEdit.Show();
 

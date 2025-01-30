@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using S7.Net;
 using Supervisório_Banco_Renault.Data;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Services;
@@ -80,6 +81,7 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<WindowMapper>();
             services.AddSingleton<UserControlMapper>();
             services.AddSingleton<WindowManager>();
+            services.AddSingleton<PlcConnection>(provider => new PlcConnection(CpuType.S71200, "192.168.1.1", 0, 1));
 
             // Adding the services functions to the service
         }
