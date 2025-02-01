@@ -42,7 +42,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="2" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF">
+            <Border Grid.Column="2" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF" DataContext="{Binding OP20AutomaticCommomR}">
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="45"/>
@@ -61,25 +61,64 @@
                         <StackPanel Grid.Column="0">
                             <Label Content="1" FontSize="24" HorizontalAlignment="Center"/>
                             <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Rectangle x:Name="scrapCage1" Grid.Column="0" Width="20" Height="20" Fill="Lime"/>
+                                <Rectangle x:Name="scrapCage1" Grid.Column="0" Width="20" Height="20">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ScrapCage1}" Value="true">
+                                                    <Setter Property="Fill" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ScrapCage1}" Value="false">
+                                                    <Setter Property="Fill" Value="Lime"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
                             </Border>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1">
                             <Label Content="2" FontSize="24" HorizontalAlignment="Center"/>
                             <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Rectangle x:Name="scrapCage2" Grid.Column="0" Width="20" Height="20" Fill="Lime"/>
+                                <Rectangle x:Name="scrapCage2" Grid.Column="0" Width="20" Height="20">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ScrapCage2}" Value="true">
+                                                    <Setter Property="Fill" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ScrapCage2}" Value="false">
+                                                    <Setter Property="Fill" Value="Lime"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
                             </Border>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
                             <Label Content="3" FontSize="24" HorizontalAlignment="Center"/>
                             <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Rectangle x:Name="scrapCage3" Grid.Column="0" Width="20" Height="20" Fill="Lime"/>
+                                <Rectangle x:Name="scrapCage3" Grid.Column="0" Width="20" Height="20">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ScrapCage3}" Value="true">
+                                                    <Setter Property="Fill" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ScrapCage3}" Value="false">
+                                                    <Setter Property="Fill" Value="Lime"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
                             </Border>
                         </StackPanel>
 
-                        <Label Grid.Column="3" Content="Resetar Gaiola" Style="{StaticResource HoverableLabelGrayButton}" Margin="45,10" FontSize="16"/>
+                        <Label Grid.Column="3" Content="Resetar Gaiola" Style="{StaticResource HoverableLabelGrayButton}" Margin="45,10" FontSize="16" MouseDown="ResetScrapCageMouseDown" />
 
                     </Grid>
                 </Grid>

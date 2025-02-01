@@ -61,16 +61,14 @@ namespace Supervisório_Banco_Renault.Services
             return true;
         }
 
-        public async Task<bool> ActivateOP20Automatic()
+        public async Task ActivateOP20Automatic()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, true);
-            return true;
         }
 
-        public async Task<bool> DeactivateOP20Automatic()
+        public async Task DeactivateOP20Automatic()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, false);
-            return true;
         }
 
         public async Task<OP20_Automatic_Read> ReadOP20AutomaticL1()
@@ -81,6 +79,16 @@ namespace Supervisório_Banco_Renault.Services
         public async Task<OP20_Automatic_Read> ReadOP20AutomaticL2()
         {
             return await Plc.ReadClassAsync<OP20_Automatic_Read>(102);
+        }
+
+        public async Task ResetScrapCage()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 5, 1, 6, true);
+        }
+
+        internal async Task<OP20_AutomaticCommomR> ReadOP20AutomaticCommon()
+        {
+            return await Plc.ReadClassAsync<OP20_AutomaticCommomR>(10);
         }
     }
 }

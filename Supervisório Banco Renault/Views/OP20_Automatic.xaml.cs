@@ -13,16 +13,27 @@ namespace Supervisório_Banco_Renault.Views
             InitializeComponent();
         }
 
+        private OP20_AutomaticVM ViewModel()
+        {
+            return (OP20_AutomaticVM)this.DataContext;
+        }
+
         private void OnPageLoad(object sender, System.Windows.RoutedEventArgs e)
         {
-            OP20_AutomaticVM vm = (OP20_AutomaticVM)this.DataContext;
+            var vm = ViewModel();
             vm.Start();
         }
 
         private void OnPageUnloaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            OP20_AutomaticVM vm = (OP20_AutomaticVM)this.DataContext;
+            var vm = ViewModel();
             vm.Stop();
+        }
+
+        private void ResetScrapCageMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var vm = ViewModel();
+            vm.ResetScrapCage();
         }
     }
 }

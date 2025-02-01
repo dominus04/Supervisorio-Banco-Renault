@@ -121,6 +121,17 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
+        private OP20_AutomaticCommomR _op20AutomaticCommomR = new();
+        public OP20_AutomaticCommomR OP20AutomaticCommomR
+        {
+            get { return _op20AutomaticCommomR; }
+            set
+            {
+                _op20AutomaticCommomR = value;
+                OnPropertyChanged(nameof(OP20AutomaticCommomR));
+            }
+        }
+
 
         #endregion
 
@@ -137,18 +148,23 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-
-                var l1Read = await _plcConnection.ReadOP20AutomaticL1();
-                var l2Read = await _plcConnection.ReadOP20AutomaticL2();
+                if(_plcConnection.Plc.IsConnected)
+                {
+                    var l1Read = await _plcConnection.ReadOP20AutomaticL1();
+                    var l2Read = await _plcConnection.ReadOP20AutomaticL2();
+                    var commonRead = await _plcConnection.ReadOP20AutomaticCommon();
  
                 
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    L1AutomaticRead = l1Read;
-                    L2AutomaticRead = l2Read;
-                    UpdateUI();
-                });
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        L1AutomaticRead = l1Read;
+                        L2AutomaticRead = l2Read;
+                        OP20AutomaticCommomR = commonRead;
+                        UpdateUI();
+                    });
+                }
+
 
                 await Task.Delay(100, cancellationToken);
             }
@@ -187,7 +203,9 @@ namespace Supervisório_Banco_Renault.ViewModels
             await _plcConnection.DeactivateOP20Automatic();
         }
 
-
-
+        internal async void ResetScrapCage()
+        {
+            await _plcConnection.ResetScrapCage();
+        }
     }
 }
