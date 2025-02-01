@@ -40,9 +40,9 @@ namespace Supervisório_Banco_Renault.Services
                     windowVM.PageChanged += ((OP20_MainWindow)window).OnPageSelected;
                 }
 
-                if (windowType == typeof(OP20_MainWindow))
+                if (windowType == typeof(OP10_MainWindow))
                 {
-                    window.Left = -1920;
+                    window.Left = 1920;
                 }
 
                 window.Show();

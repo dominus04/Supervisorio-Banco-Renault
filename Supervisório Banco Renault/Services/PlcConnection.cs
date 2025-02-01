@@ -16,18 +16,19 @@ namespace Supervisório_Banco_Renault.Services
         public PlcConnection(CpuType cpuType, string ipAdress, short rack, short slot)
         {
             Plc = new Plc(cpuType, ipAdress, rack, slot);
-            try
-            {
-                //Connect();
-            }catch(Exception e)
-            {
-                MessageBox.Show("Não foi possível se conectar ao PLC feche o sistema, regularize a situação do dispositivo e abra novamente.");
-            }
+            Connect();
         }
 
         public void Connect()
         {
-            Plc.Open();
+            try
+            {
+                Plc.Open();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Não foi possível se conectar ao PLC feche o sistema, regularize a situação do dispositivo e abra novamente.");
+            }
         }
 
         public void Disconnect()
@@ -40,24 +41,46 @@ namespace Supervisório_Banco_Renault.Services
             return Plc.IsConnected;
         }
 
-        public async void WriteOP20Recipe(Recipe recipe)
+        public async Task<bool> WriteOP20Recipe(Recipe recipe)
         {
+            await ActivateOP20Automatic();
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, true);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, recipe.VerifyModuleTag);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyTraceabilityTag);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyCondenserCovers);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyRadiator);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyCondenser);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 2, Conversion.ConvertToUshort(--recipe.AteqRadiatorProgram));
-            await Plc.WriteAsync(DataType.DataBlock, 8, 4, Conversion.ConvertToUshort(--recipe.AteqCondenserProgram));
+            ushort radiatorProgramTemp = Conversion.ConvertToUshort(recipe.AteqRadiatorProgram);
+            ushort condenserProgramTemp = Conversion.ConvertToUshort(recipe.AteqCondenserProgram);
+            await Plc.WriteAsync(DataType.DataBlock, 8, 2, --radiatorProgramTemp);
+            await Plc.WriteAsync(DataType.DataBlock, 8, 4, --condenserProgramTemp);
             await Plc.WriteAsync(DataType.DataBlock, 8, 6, (float)recipe.RadiatorPSMinimum);
             await Plc.WriteAsync(DataType.DataBlock, 8, 10, (float)recipe.RadiatorPSMaximum);
             await Plc.WriteAsync(DataType.DataBlock, 8, 14, (float)recipe.CondenserPSMinimum);
             await Plc.WriteAsync(DataType.DataBlock, 8, 18, (float)recipe.CondenserPSMaximum);
+            return true;
         }
 
+        public async Task<bool> ActivateOP20Automatic()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, true);
+            return true;
+        }
 
+        public async Task<bool> DeactivateOP20Automatic()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, false);
+            return true;
+        }
 
+        public async Task<OP20_Automatic_Read> ReadOP20AutomaticL1()
+        {
+            return  await Plc.ReadClassAsync<OP20_Automatic_Read>(100);
+        }
 
+        public async Task<OP20_Automatic_Read> ReadOP20AutomaticL2()
+        {
+            return await Plc.ReadClassAsync<OP20_Automatic_Read>(102);
+        }
     }
 }

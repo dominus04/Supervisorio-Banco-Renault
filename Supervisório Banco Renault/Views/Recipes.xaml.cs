@@ -32,7 +32,7 @@ namespace Supervisório_Banco_Renault.Views
         {
             RecipesVM vm = (RecipesVM)DataContext;
             Type t = GetParentService.GetParent(this);
-            VirtualKeyboard.start(t);
+            //VirtualKeyboard.start(t);
             vm.AddOrUpdateRecipe(t, false);
         }
 
@@ -49,7 +49,7 @@ namespace Supervisório_Banco_Renault.Views
         {
             RecipesVM vm = (RecipesVM)DataContext;
             Type t = GetParentService.GetParent(this);
-            VirtualKeyboard.start(t);
+            //VirtualKeyboard.start(t);
             vm.AddOrUpdateRecipe(t, true);
         }
     }

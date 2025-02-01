@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="980" d:DesignWidth="1620">
+             d:DesignHeight="980" d:DesignWidth="1620" Loaded="OnPageLoad" Unloaded="OnPageUnloaded">
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="120"/>
@@ -19,7 +19,7 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" BorderThickness="0, 0, .5, 1" BorderBrush="#AFAFAF">
-                <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0" ItemsSource="{Binding Recipes}" DisplayMemberPath="ModuleCode " SelectedItem="{Binding SelectedRecipe}"/>
+                <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0" ItemsSource="{Binding Recipes}" DisplayMemberPath="ModuleCode " SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}"/>
             </Border>
 
             <Border Grid.Column="1" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF">
@@ -94,7 +94,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" BorderBrush="#AFAFAF" BorderThickness="0, 0, 1, 0">
+            <Border Grid.Column="0" BorderBrush="#AFAFAF" BorderThickness="0, 0, 1, 0" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20"/>
@@ -107,51 +107,99 @@
 
                     <Label Grid.Row="1" Content="Lado 1" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Label Grid.Row="2" Content="Posicionar peça e encaixar pinças no condensador" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Row="2" Content="{Binding L1Text}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                     <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
                     <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>
 
-                    <Grid Grid.Row="4">
+                    <Grid Grid.Row="4" DataContext="{Binding L1AutomaticRead}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <Border Margin="45, 20, 22.5, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="0">
-                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RadiatorTestOK}" Value="true">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding RadiatorTestNOK}" Value="true">
+                                            <Setter Property="Background" Value="IndianRed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <UniformGrid Columns="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="30, 25">
                                 <Label Content="RADIADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding RadiatorAteqPressure, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel  HorizontalAlignment="Stretch">
                                     <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="1000 Pa" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding RadiatorAteqLeak, StringFormat='{}{0} Pa'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                            </StackPanel>
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding RadiatorPS, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                            </UniformGrid>
                         </Border>
 
                         <Border Margin="22.5, 20, 45, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="1">
-                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CondenserTestOK}" Value="true">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CondenserTestNOK}" Value="true">
+                                            <Setter Property="Background" Value="IndianRed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <UniformGrid Columns="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="30, 25">
                                 <Label Content="CONDENSADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding CondenserAteqPressure, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel  HorizontalAlignment="Stretch">
                                     <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="1000 Pa" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding CondenserAteqLeak, StringFormat='{}{0} Pa'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                            </StackPanel>
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding CondenserPS, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                            </UniformGrid>
                         </Border>
                         
                     </Grid>
@@ -172,51 +220,99 @@
 
                     <Label Grid.Row="1" Content="Lado 2" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Label Grid.Row="2" Content="Posicionar peça e encaixar pinças no condensador" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Row="2" Content="{Binding L2Text}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                     <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
                     <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>
 
-                    <Grid Grid.Row="4">
+                    <Grid Grid.Row="4" DataContext="{Binding L2AutomaticRead}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <Border Margin="45, 20, 22.5, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="0">
-                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RadiatorTestOK}" Value="true">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding RadiatorTestNOK}" Value="true">
+                                            <Setter Property="Background" Value="IndianRed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <UniformGrid Columns="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="30, 25">
                                 <Label Content="RADIADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding RadiatorAteqPressure, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel  HorizontalAlignment="Stretch">
                                     <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="1000 Pa" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding RadiatorAteqLeak, StringFormat='{}{0} Pa'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                            </StackPanel>
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding RadiatorPS, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                            </UniformGrid>
                         </Border>
 
                         <Border Margin="22.5, 20, 45, 20" BorderBrush="#AFAFAF" BorderThickness="1" Grid.Column="1">
-                            <StackPanel  Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CondenserTestOK}" Value="true">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CondenserTestNOK}" Value="true">
+                                            <Setter Property="Background" Value="IndianRed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <UniformGrid Columns="1" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="30, 25">
                                 <Label Content="CONDENSADOR" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressão:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding CondenserAteqPressure, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel  HorizontalAlignment="Stretch">
                                     <Label Content="Vazamento:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label d:Content="1000 Pa" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding CondenserAteqLeak, StringFormat='{}{0} Pa'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                                <DockPanel HorizontalAlignment="Stretch">
                                     <Label Content="Pressostato:" FontSize="24" FontWeight="SemiBold"/>
-                                    <Label Content="10" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                            </StackPanel>
+                                    <Label d:Content="10.00 bar" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                        <Label.Content>
+                                            <TextBlock Text="{Binding CondenserPS, StringFormat='{}{0:F2} bar'}" />
+                                        </Label.Content>
+                                    </Label>
+                                </DockPanel>
+                            </UniformGrid>
                         </Border>
 
                     </Grid>

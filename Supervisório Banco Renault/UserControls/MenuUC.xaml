@@ -86,6 +86,6 @@
                 </ListView.ItemTemplate>
             </ListView>
         </DockPanel>
-        <Label Content="Fechar Aplicação" Grid.Row="1" Background="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" FontWeight="Bold" MouseDown="OnCloseButtonMouseDown"/>
+        <Label Content="Fechar Aplicação" Grid.Row="1" Background="IndianRed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" FontWeight="Bold" MouseDown="OnCloseButtonMouseDown"/>
     </Grid>
 </UserControl>

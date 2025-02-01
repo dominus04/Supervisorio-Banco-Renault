@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="MySupervisory" Language="1033" Version="1.0.0.1" Manufacturer="Dominus04" UpgradeCode="307cb047-b65e-45af-9caf-8ebab2d8f127">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="SetupProject1" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="!(bind.Property.ProductName)" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents">
+      <Component Id="MySupervisory" Directory="INSTALLFOLDER" Guid="7d3f9b16-7c8b-4798-becf-a48d87152f08">
+				<File Source="../Supervisório Banco Renault/publish/D3DCompiler_47_cor3.dll" />
+				<File Source="../Supervisório Banco Renault/publish/e_sqlite3.dll" />
+				<File Source="../Supervisório Banco Renault/publish/PenImc_cor3.dll" />
+				<File Source="../Supervisório Banco Renault/publish/PresentationNative_cor3.dll" />
+				<File Source="../Supervisório Banco Renault/publish/SupervisorioBancoRenault.dll.config" />
+				<File Source="../Supervisório Banco Renault/publish/SupervisorioBancoRenault.exe" />
+				<File Source="../Supervisório Banco Renault/publish/SupervisorioBancoRenault.pdb" />
+				<File Source="../Supervisório Banco Renault/publish/vcruntime140_cor3.dll" />
+				<File Source="../Supervisório Banco Renault/publish/wpfgfx_cor3.dll" />
+        
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

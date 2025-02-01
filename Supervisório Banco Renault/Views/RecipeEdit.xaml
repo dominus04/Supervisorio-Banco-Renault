@@ -7,7 +7,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="RecipeVM" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="auto" Width="720">
+        Title="RecipeVM" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="458" Width="720">
 
     <Border BorderBrush="Gray" BorderThickness="0.5" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Margin="10">
         
@@ -30,9 +30,9 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" VerticalAlignment="Center" FontSize="14" Text="{Binding ModuleCode}" ui:ControlHelper.Header="Código do Módulo:"/>
-                <ui:NumberBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição inicial do código:" Value="{Binding InitialCharacter}" SpinButtonPlacementMode="Compact" Minimum="1"/>
-                <ui:NumberBox Grid.Column="4" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição final do código" Value="{Binding FinalCharacter}" SpinButtonPlacementMode="Compact" Minimum="1"/>
+                <TextBox Grid.Column="0" VerticalAlignment="Center" FontSize="14" Text="{Binding ModuleCode, Mode=TwoWay}" ui:ControlHelper.Header="Código do Módulo:"/>
+                <ui:NumberBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição inicial do código:" Value="{Binding InitialCharacter, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1"/>
+                <ui:NumberBox Grid.Column="4" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição final do código" Value="{Binding FinalCharacter, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1"/>
 
             </Grid>
 
@@ -47,27 +47,27 @@
 
                 <GroupBox Header="Verificações" FontSize="16" Grid.Column="0" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-                        <CheckBox Content="Etiqueta do módulo" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyModuleTag}"/>
-                        <CheckBox Content="Etiqueta final" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyTraceabilityTag}"/>
-                        <CheckBox Content="Tampões condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenserCovers}"/>
-                        <CheckBox Content="Radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiator}"/>
-                        <CheckBox Content="Condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenser}"/>
+                        <CheckBox Content="Etiqueta do módulo" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyModuleTag, Mode=TwoWay}"/>
+                        <CheckBox Content="Etiqueta final" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyTraceabilityTag, Mode=TwoWay}"/>
+                        <CheckBox Content="Tampões condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenserCovers, Mode=TwoWay}"/>
+                        <CheckBox Content="Radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiator, Mode=TwoWay}"/>
+                        <CheckBox Content="Condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenser, Mode=TwoWay}"/>
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Header="Radiador" FontSize="16" Grid.Column="2" IsEnabled="{Binding VerifyRadiator}" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-                        <ui:NumberBox ui:ControlHelper.Header="Programa ATEQ:" SpinButtonPlacementMode="Compact" Minimum="1" Value="{Binding AteqRadiatorProgram}" Margin="0,0,0,5" FontSize="14"/>
-                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding RadiatorPSMinimum}" Margin="0,0,0,5" SmallChange="0.01" LargeChange="1" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Programa ATEQ:" SpinButtonPlacementMode="Compact" Minimum="1" Value="{Binding AteqRadiatorProgram, Mode=TwoWay}" Margin="0,0,0,5" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding RadiatorPSMinimum, Mode=TwoWay}" Margin="0,0,0,5" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                         <ui:NumberBox ui:ControlHelper.Header="Pressão máxima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding RadiatorPSMaximum}" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Header="Condensador" FontSize="16" Grid.Column="4"  IsEnabled="{Binding VerifyCondenser}" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-                        <ui:NumberBox ui:ControlHelper.Header="Programa ATEQ:" SpinButtonPlacementMode="Compact" Minimum="1" Value="{Binding AteqCondenserProgram}" Margin="0,0,0,5" FontSize="14"/>
-                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMinimum}" Margin="0,0,0,5" SmallChange="0.01" LargeChange="1" FontSize="14"/>
-                        <ui:NumberBox ui:ControlHelper.Header="Pressão máxima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMaximum}" SmallChange="0.01" LargeChange="1" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Programa ATEQ:" SpinButtonPlacementMode="Compact" Minimum="1" Value="{Binding AteqCondenserProgram, Mode=TwoWay}" Margin="0,0,0,5" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMinimum, Mode=TwoWay}" Margin="0,0,0,5" SmallChange="0.01" LargeChange="1" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Pressão máxima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMaximum, Mode=TwoWay}" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                     </StackPanel>
                 </GroupBox>
 

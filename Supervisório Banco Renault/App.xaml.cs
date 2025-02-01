@@ -84,6 +84,8 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<PlcConnection>(provider => new PlcConnection(CpuType.S71200, "192.168.1.1", 0, 1));
 
             // Adding the services functions to the service
+
+
         }
 
         // Function to apply migration to the DB if needed
@@ -96,6 +98,12 @@ namespace Supervisório_Banco_Renault
             }
         }
 
+        private void OnExit(object sender, ExitEventArgs e)
+        {
+            PlcConnection plcConnection = _serviceProvider.GetService<PlcConnection>();
+            plcConnection.DeactivateOP20Automatic();
+
+        }
     }
 
 }

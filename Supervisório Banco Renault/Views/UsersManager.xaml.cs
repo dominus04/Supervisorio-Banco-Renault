@@ -41,7 +41,7 @@ namespace Supervisório_Banco_Renault.Views
         {
             UsersManagerVM vm = (UsersManagerVM)DataContext;
             var t = GetParentService.GetParent(this);
-            VirtualKeyboard.start(t);
+            //VirtualKeyboard.start(t);
             vm.AddOrUpdateUser(t, false);
         }
 
@@ -49,7 +49,7 @@ namespace Supervisório_Banco_Renault.Views
         {
             UsersManagerVM vm = (UsersManagerVM)DataContext;
             var t = GetParentService.GetParent(this);
-            VirtualKeyboard.start(t);
+            //VirtualKeyboard.start(t);
             vm.AddOrUpdateUser(t, true);
         }
 
