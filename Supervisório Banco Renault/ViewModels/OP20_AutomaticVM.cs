@@ -1,5 +1,4 @@
-﻿using S7.Net;
-using Supervisório_Banco_Renault.Data.Repositories;
+﻿using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
 using System.Collections.ObjectModel;
@@ -45,11 +44,33 @@ namespace Supervisório_Banco_Renault.ViewModels
             [1000] = "Máquina em emergência"
         };
 
+        private bool _l1Error;
+        public bool L1Error
+        {
+            get => _l1Error;
+            set
+            {
+                _l1Error = value;
+                OnPropertyChanged(nameof(L1Error));
+            }
+        }
+
+        private bool _l2Error;
+        public bool L2Error
+        {
+            get => _l2Error;
+            set
+            {
+                _l2Error = value;
+                OnPropertyChanged(nameof(L2Error));
+            }
+        }
+
         //Observable collection de recipes para binding
         private ObservableCollection<Recipe>? _recipes;
         public ObservableCollection<Recipe>? Recipes
         {
-            get { return _recipes; }
+            get => _recipes;
             set
             {
                 _recipes = value;
@@ -61,7 +82,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         private Recipe? _selectedRecipe;
         public Recipe? SelectedRecipe
         {
-            get { return _selectedRecipe; }
+            get => _selectedRecipe;
             set
             {
                 _selectedRecipe = value;
@@ -75,9 +96,9 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         //Properties from L1 Plc
         private OP20_Automatic_Read _l1AutomaticRead = new();
-        public OP20_Automatic_Read L1AutomaticRead 
+        public OP20_Automatic_Read L1AutomaticRead
         {
-            get { return _l1AutomaticRead; }
+            get => _l1AutomaticRead;
             set
             {
                 _l1AutomaticRead = value;
@@ -89,7 +110,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         private OP20_Automatic_Read _l2AutomaticRead = new();
         public OP20_Automatic_Read L2AutomaticRead
         {
-            get { return _l2AutomaticRead; }
+            get => _l2AutomaticRead;
             set
             {
                 _l2AutomaticRead = value;
@@ -101,7 +122,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         private string _l1Text = "";
         public string L1Text
         {
-            get { return _l1Text; }
+            get => _l1Text;
             set
             {
                 _l1Text = value;
@@ -113,7 +134,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         private string _l2Text = "";
         public string L2Text
         {
-            get { return _l1Text; }
+            get => _l1Text;
             set
             {
                 _l1Text = value;
@@ -124,7 +145,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         private OP20_AutomaticCommomR _op20AutomaticCommomR = new();
         public OP20_AutomaticCommomR OP20AutomaticCommomR
         {
-            get { return _op20AutomaticCommomR; }
+            get => _op20AutomaticCommomR;
             set
             {
                 _op20AutomaticCommomR = value;
@@ -148,13 +169,13 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                if(_plcConnection.Plc.IsConnected)
+                if (_plcConnection.Plc.IsConnected)
                 {
                     var l1Read = await _plcConnection.ReadOP20AutomaticL1();
                     var l2Read = await _plcConnection.ReadOP20AutomaticL2();
                     var commonRead = await _plcConnection.ReadOP20AutomaticCommon();
- 
-                
+
+
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
@@ -171,10 +192,13 @@ namespace Supervisório_Banco_Renault.ViewModels
         }
 
 
+
         private void UpdateUI()
         {
             L1Text = stepStringDict.GetValueOrDefault(L1AutomaticRead.Step, "");
+            L1Error = L1AutomaticRead.Step >= 100;
             L2Text = stepStringDict.GetValueOrDefault(L2AutomaticRead.Step, "");
+            L2Error = L2AutomaticRead.Step >= 100;
         }
 
         // Method to load recipes async
@@ -189,15 +213,15 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
 
             _ = Task.Run(() => MonitorPLCAsync(_cancellationTokenSource.Token));
-            if (SelectedRecipe != null) 
+            if (SelectedRecipe != null)
             {
-               await  _plcConnection.ActivateOP20Automatic();
+                await _plcConnection.ActivateOP20Automatic();
             }
         }
 
         public async void Stop()
         {
-            if(_cancellationTokenSource != null)
+            if (_cancellationTokenSource != null)
                 _cancellationTokenSource.Cancel();
 
             await _plcConnection.DeactivateOP20Automatic();
@@ -206,6 +230,11 @@ namespace Supervisório_Banco_Renault.ViewModels
         internal async void ResetScrapCage()
         {
             await _plcConnection.ResetScrapCage();
+        }
+
+        internal async void ResetProductsCount()
+        {
+            await _plcConnection.ResetOP20ProductsCount();
         }
     }
 }

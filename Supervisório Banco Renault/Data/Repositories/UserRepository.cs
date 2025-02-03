@@ -69,7 +69,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
                 throw new Exception("Tag RFID não pode ser nula.");
             if (user.Name == string.Empty)
                 throw new Exception("Nome não pode ser nulo.");
-            if(user.AccessLevel == Models.Enums.AccessLevel.None)
+            if (user.AccessLevel == Models.Enums.AccessLevel.None)
                 throw new Exception("O nível de acesso precisa ser definido.");
 
             return true;

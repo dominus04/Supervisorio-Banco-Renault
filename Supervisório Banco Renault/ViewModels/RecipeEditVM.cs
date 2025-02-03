@@ -1,10 +1,5 @@
 ﻿using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels

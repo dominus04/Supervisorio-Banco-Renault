@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Supervisório_Banco_Renault.Models
+﻿namespace Supervisório_Banco_Renault.Models
 {
     public class OP20_AutomaticCommomR
     {
@@ -13,5 +7,8 @@ namespace Supervisório_Banco_Renault.Models
         public bool ScrapCage3 { get; set; }
         public bool ScrapCageNOK { get; set; }
         public bool ScrapCageFull { get; set; }
+
+        public ushort ProductsOK { get; set; }
+        public ushort ProductsNOK { get; set; }
     }
 }

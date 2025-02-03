@@ -15,7 +15,7 @@ namespace Supervisório_Banco_Renault.Views
 
         private OP20_AutomaticVM ViewModel()
         {
-            return (OP20_AutomaticVM)this.DataContext;
+            return (OP20_AutomaticVM)DataContext;
         }
 
         private void OnPageLoad(object sender, System.Windows.RoutedEventArgs e)
@@ -34,6 +34,12 @@ namespace Supervisório_Banco_Renault.Views
         {
             var vm = ViewModel();
             vm.ResetScrapCage();
+        }
+
+        private void ResetProductsCount(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var vm = ViewModel();
+            vm.ResetProductsCount();
         }
     }
 }

@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="980" d:DesignWidth="1620" Width="1620" Height="980">
     <Grid Background="White">
-        <Label Content="Teste Automático" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"/>
+        
     </Grid>
 </UserControl>

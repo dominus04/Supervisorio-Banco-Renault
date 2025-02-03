@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Supervisório_Banco_Renault.Models;
 using System.IO;
-using System.Windows;
 
 namespace Supervisório_Banco_Renault.Data
 {
@@ -38,11 +36,13 @@ namespace Supervisório_Banco_Renault.Data
 
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
             modelBuilder.Entity<User>().HasData(
-                    new User { 
-                        Id = new System.Guid("00000000-0000-0000-0000-000000000001"), 
-                        Name = "Admin", 
-                        TagRFID = "01972265660", 
-                        AccessLevel = Models.Enums.AccessLevel.SuperUser}
+                    new User
+                    {
+                        Id = new System.Guid("00000000-0000-0000-0000-000000000001"),
+                        Name = "Admin",
+                        TagRFID = "01972265660",
+                        AccessLevel = Models.Enums.AccessLevel.SuperUser
+                    }
                 );
             #endregion
 

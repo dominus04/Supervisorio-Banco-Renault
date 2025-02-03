@@ -11,6 +11,7 @@
 		</Feature>
 	</Product>
 
+
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
@@ -31,7 +32,8 @@
 				<File Source="../Supervisório Banco Renault/publish/SupervisorioBancoRenault.pdb" />
 				<File Source="../Supervisório Banco Renault/publish/vcruntime140_cor3.dll" />
 				<File Source="../Supervisório Banco Renault/publish/wpfgfx_cor3.dll" />
-        
+
+        <Shortcut Id="SupervisoryRenault" Name="Supervisório Renault" Description="Supervisório do Banco Reanult" Target="[INSTALLFOLDER]SupervisorioBancoRenault.exe" WorkingDirectory="SupervisorioBancoRenault.exe"/>
       </Component>
 		</ComponentGroup>
 	</Fragment>

@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Supervisório_Banco_Renault.Data.Repositories
 {

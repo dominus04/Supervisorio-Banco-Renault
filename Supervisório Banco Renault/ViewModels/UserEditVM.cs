@@ -1,11 +1,5 @@
-﻿using Supervisório_Banco_Renault.Core;
-using Supervisório_Banco_Renault.Data.Repositories;
+﻿using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels
@@ -35,14 +29,14 @@ namespace Supervisório_Banco_Renault.ViewModels
             isUpdate = true;
         }
 
-        public UserEditVM(IUserRepository userRepository) 
+        public UserEditVM(IUserRepository userRepository)
         {
             _userRepository = userRepository;
             User = User.NewUser(string.Empty, string.Empty, Models.Enums.AccessLevel.None);
         }
 
         public async Task<bool> AddOrUpdateUser()
-        { 
+        {
 
             if (User == null)
                 return false;
@@ -60,7 +54,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                 }
                 return true;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return false;

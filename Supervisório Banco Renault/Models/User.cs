@@ -1,8 +1,4 @@
-﻿using BCrypt.Net;
-using Supervisório_Banco_Renault.Data.Repositories;
-using Supervisório_Banco_Renault.Models.Enums;
-using System.Security;
-using System.Windows;
+﻿using Supervisório_Banco_Renault.Models.Enums;
 
 
 namespace Supervisório_Banco_Renault.Models
@@ -18,17 +14,17 @@ namespace Supervisório_Banco_Renault.Models
 
         public User()
         {
-            
+
         }
 
         public static User GetNullUser()
         {
-            return new User() {Id = Guid.Empty,  Name = string.Empty, AccessLevel = AccessLevel.None, TagRFID = string.Empty};
+            return new User() { Id = Guid.Empty, Name = string.Empty, AccessLevel = AccessLevel.None, TagRFID = string.Empty };
         }
 
         public static User NewUser(string name, string tagRFID, AccessLevel accessLevel)
         {
-            return new User() { Id = new Guid(), Name = name, TagRFID = tagRFID, AccessLevel = accessLevel};
+            return new User() { Id = new Guid(), Name = name, TagRFID = tagRFID, AccessLevel = accessLevel };
         }
 
     }

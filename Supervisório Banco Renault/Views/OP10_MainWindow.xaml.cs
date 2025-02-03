@@ -1,7 +1,6 @@
 ﻿using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Supervisório_Banco_Renault.Views
 {

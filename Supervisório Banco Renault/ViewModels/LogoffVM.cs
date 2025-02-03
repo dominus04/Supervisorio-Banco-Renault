@@ -3,11 +3,6 @@ using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels
@@ -30,16 +25,16 @@ namespace Supervisório_Banco_Renault.ViewModels
             Type type = GetParentService.GetParent(obj);
             WindowBaseVM vm;
 
-                if (type == typeof(OP10_MainWindow))
-                {
-                    vm = _serviceProvider.GetRequiredService<OP10_MainWindowVM>();
-                    vm.LoggedUser = User.GetNullUser();
-                }
-                else
-                {
-                    vm = _serviceProvider.GetRequiredService<OP20_MainWindowVM>();
-                    vm.LoggedUser = User.GetNullUser();
-                }
+            if (type == typeof(OP10_MainWindow))
+            {
+                vm = _serviceProvider.GetRequiredService<OP10_MainWindowVM>();
+                vm.LoggedUser = User.GetNullUser();
+            }
+            else
+            {
+                vm = _serviceProvider.GetRequiredService<OP20_MainWindowVM>();
+                vm.LoggedUser = User.GetNullUser();
+            }
             vm.ChangePage("Login");
         }
     }

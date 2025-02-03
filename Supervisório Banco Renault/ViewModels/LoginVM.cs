@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Supervisório_Banco_Renault.Data.Repositories;
-using Supervisório_Banco_Renault.Models;
-using Supervisório_Banco_Renault.Models.Enums;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
 using System.Windows;
-using System.Windows.Media;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
@@ -55,7 +52,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                     vm.ChangePage("OP20_Automatic");
                 }
             }
-            else if(user == null)
+            else if (user == null)
             {
                 MessageBox.Show("Usuário não encontrado.");
             }

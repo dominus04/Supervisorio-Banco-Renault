@@ -22,24 +22,35 @@
                 <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0" ItemsSource="{Binding Recipes}" DisplayMemberPath="ModuleCode " SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}"/>
             </Border>
 
-            <Border Grid.Column="1" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF">
+            <Border Grid.Column="1" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF" DataContext="{Binding OP20AutomaticCommomR}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                        <Label Content="PEÇAS OK:" FontSize="24" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                        <Label Content="10" FontSize="24" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                    <Grid.ColumnDefinitions>        
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="180"/>
+                    </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <Label Content="PEÇAS NOK:" FontSize="24" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                        <Label Content="10" FontSize="24" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                    <Grid Grid.Column="0" Margin="10, 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                            <Label Content="PEÇAS OK:" FontSize="24" HorizontalAlignment="Left" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                            <Label Content="{Binding ProductsOK}" FontSize="24" d:Content="10" HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                        </DockPanel>
+
+                        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                            <Label Content="PEÇAS NOK:" FontSize="24" HorizontalAlignment="Left" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                            <Label Content="{Binding ProductsNOK}" d:Content="10" FontSize="24" HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                        </DockPanel>
+
+                    </Grid>
+
+                    <Label Grid.Column="1" Content="Resetar Contagem" Style="{StaticResource HoverableLabelGrayButton}" Width="160" Height="54" FontSize="16" MouseDown="ResetProductsCount"/>
 
                 </Grid>
+                
             </Border>
 
             <Border Grid.Column="2" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF" DataContext="{Binding OP20AutomaticCommomR}">
@@ -146,10 +157,23 @@
 
                     <Label Grid.Row="1" Content="Lado 1" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Label Grid.Row="2" Content="{Binding L1Text}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Row="2" Content="{Binding L1Text}" d:Content="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding L1Error}" Value="true">
+                                        <Setter Property="Background" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding L1Error}" Value="false">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
 
-                    <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
-                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>
+                    <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="404" Margin="45" Visibility="Hidden"/>
+                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45" Fill="LightGray" Height="404"/>
 
                     <Grid Grid.Row="4" DataContext="{Binding L1AutomaticRead}">
                         <Grid.ColumnDefinitions>
@@ -259,7 +283,20 @@
 
                     <Label Grid.Row="1" Content="Lado 2" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Label Grid.Row="2" Content="{Binding L2Text}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Row="2" Content="{Binding L2Text}" d:Content="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding L2Error}" Value="true">
+                                        <Setter Property="Background" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding L2Error}" Value="false">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
 
                     <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
                     <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>

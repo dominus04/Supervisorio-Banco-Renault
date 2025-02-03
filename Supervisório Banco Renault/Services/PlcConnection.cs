@@ -1,10 +1,5 @@
 ﻿using S7.Net;
 using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.Services
@@ -44,12 +39,11 @@ namespace Supervisório_Banco_Renault.Services
         public async Task<bool> WriteOP20Recipe(Recipe recipe)
         {
             await ActivateOP20Automatic();
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, recipe.VerifyModuleTag);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyTraceabilityTag);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyCondenserCovers);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyRadiator);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyCondenser);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyModuleTag);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityTag);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyCondenserCovers);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyRadiator);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 6, recipe.VerifyCondenser);
             ushort radiatorProgramTemp = Conversion.ConvertToUshort(recipe.AteqRadiatorProgram);
             ushort condenserProgramTemp = Conversion.ConvertToUshort(recipe.AteqCondenserProgram);
             await Plc.WriteAsync(DataType.DataBlock, 8, 2, --radiatorProgramTemp);
@@ -63,6 +57,7 @@ namespace Supervisório_Banco_Renault.Services
 
         public async Task ActivateOP20Automatic()
         {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, false);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, true);
         }
 
@@ -71,9 +66,20 @@ namespace Supervisório_Banco_Renault.Services
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, false);
         }
 
+        public async Task ActivateOP20Manual()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, false);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, true);
+        }
+
+        public async Task DeactivateOP20Manual()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, false);
+        }
+
         public async Task<OP20_Automatic_Read> ReadOP20AutomaticL1()
         {
-            return  await Plc.ReadClassAsync<OP20_Automatic_Read>(100);
+            return await Plc.ReadClassAsync<OP20_Automatic_Read>(100);
         }
 
         public async Task<OP20_Automatic_Read> ReadOP20AutomaticL2()
@@ -83,12 +89,18 @@ namespace Supervisório_Banco_Renault.Services
 
         public async Task ResetScrapCage()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 5, 1, 6, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 0, true);
         }
 
         internal async Task<OP20_AutomaticCommomR> ReadOP20AutomaticCommon()
         {
             return await Plc.ReadClassAsync<OP20_AutomaticCommomR>(10);
+        }
+
+        internal async Task ResetOP20ProductsCount()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, false);
         }
     }
 }

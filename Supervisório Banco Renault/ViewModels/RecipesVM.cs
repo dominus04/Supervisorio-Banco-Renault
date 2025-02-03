@@ -1,12 +1,7 @@
 ﻿using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels
@@ -43,13 +38,14 @@ namespace Supervisório_Banco_Renault.ViewModels
             recipeEdit.DataContext = vm;
             recipeEdit.Top = 140;
 
-            if (t == typeof(OP20_MainWindow))
-                recipeEdit.Left = (1920 - recipeEdit.Width) / 2;
-            else
-                recipeEdit.Left = ((1920 - recipeEdit.Width) / 2) + 1920;
+            recipeEdit.Left = (1920 - recipeEdit.Width) / 2;
+
+            if (t == typeof(OP10_MainWindow))
+                recipeEdit.Left += 1920;
+
 
             recipeEdit.Show();
-          
+
             recipeEdit.Closed += (sender, e) =>
             {
                 LoadRecipes();

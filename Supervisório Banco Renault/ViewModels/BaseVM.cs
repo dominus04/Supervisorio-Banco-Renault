@@ -1,7 +1,4 @@
-﻿using Supervisório_Banco_Renault.Views;
-using System.ComponentModel;
-using System.Windows.Media;
-using System.Windows;
+﻿using System.ComponentModel;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {

@@ -1,17 +1,8 @@
-﻿using Supervisório_Banco_Renault.Core;
-using Supervisório_Banco_Renault.Data.Repositories;
+﻿using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
-using Supervisório_Banco_Renault.Models.Enums;
-using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
@@ -20,7 +11,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public UserRepository _userRepository;
 
-        public UsersManagerVM(IUserRepository userRepository) 
+        public UsersManagerVM(IUserRepository userRepository)
         {
             _userRepository = (UserRepository)userRepository;
 
@@ -32,7 +23,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             Application.Current.Windows.OfType<UserEdit>().FirstOrDefault()?.Close();
             UserEditVM vm = new(_userRepository);
 
-            if (isUpdate && SelectedUser != null) 
+            if (isUpdate && SelectedUser != null)
             {
                 vm = new(_userRepository, SelectedUser);
             }
@@ -47,10 +38,10 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             userEdit.Top = 140;
 
-            if (t == typeof(OP20_MainWindow))
-                userEdit.Left = (1920 - userEdit.Width) / 2;
-            else
-                userEdit.Left = ((1920 - userEdit.Width) / 2) + 1920;
+            userEdit.Left = (1920 - userEdit.Width) / 2;
+
+            if (t == typeof(OP10_MainWindow))
+                userEdit.Left += 1920;
 
             userEdit.Show();
 
@@ -91,10 +82,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public ObservableCollection<User> Users
         {
-            get
-            {
-                return _users;
-            }
+            get => _users;
             set
             {
                 _users = value;
@@ -107,10 +95,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public User? SelectedUser
         {
-            get
-            {
-                return _selectedUser;
-            }
+            get => _selectedUser;
             set
             {
                 _selectedUser = value;
