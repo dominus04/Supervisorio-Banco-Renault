@@ -47,7 +47,7 @@
 
                 <GroupBox Header="Verificações" FontSize="16" Grid.Column="0" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-                        <CheckBox Content="Etiqueta do módulo" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyModuleTag, Mode=TwoWay}"/>
+                        <CheckBox Content="Etiqueta do radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiatorTag, Mode=TwoWay}"/>
                         <CheckBox Content="Etiqueta final" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyTraceabilityTag, Mode=TwoWay}"/>
                         <CheckBox Content="Tampões condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenserCovers, Mode=TwoWay}"/>
                         <CheckBox Content="Radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiator, Mode=TwoWay}"/>

@@ -1,6 +1,6 @@
 ﻿namespace Supervisório_Banco_Renault.Models
 {
-    public class Traceability
+    public class OP20_Traceability
     {
         public Guid Id { get; set; }
         public string TraceabilityCode { get; set; }

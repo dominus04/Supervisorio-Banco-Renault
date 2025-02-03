@@ -39,7 +39,7 @@ namespace Supervisório_Banco_Renault.Services
         public async Task<bool> WriteOP20Recipe(Recipe recipe)
         {
             await ActivateOP20Automatic();
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyModuleTag);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyRadiatorTag);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityTag);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyCondenserCovers);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyRadiator);
@@ -77,12 +77,12 @@ namespace Supervisório_Banco_Renault.Services
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, false);
         }
 
-        public async Task<OP20_Automatic_Read> ReadOP20AutomaticL1()
+        public async Task<OP20_Automatic_Read?> ReadOP20AutomaticL1()
         {
             return await Plc.ReadClassAsync<OP20_Automatic_Read>(100);
         }
 
-        public async Task<OP20_Automatic_Read> ReadOP20AutomaticL2()
+        public async Task<OP20_Automatic_Read?> ReadOP20AutomaticL2()
         {
             return await Plc.ReadClassAsync<OP20_Automatic_Read>(102);
         }
@@ -92,7 +92,7 @@ namespace Supervisório_Banco_Renault.Services
             await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 0, true);
         }
 
-        internal async Task<OP20_AutomaticCommomR> ReadOP20AutomaticCommon()
+        internal async Task<OP20_AutomaticCommomR?> ReadOP20AutomaticCommon()
         {
             return await Plc.ReadClassAsync<OP20_AutomaticCommomR>(10);
         }
@@ -101,6 +101,38 @@ namespace Supervisório_Banco_Renault.Services
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, true);
             await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, false);
+        }
+
+        public async Task<OP10_Automatic_Read?> ReadOP10Automatic()
+        {
+            return await Plc.ReadClassAsync<OP10_Automatic_Read>(110);
+        }
+
+        public async Task ActivateOP10Automatic()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, false);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, true);
+        }
+
+        public async Task DeactivateOP10Automatic()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, false);
+        }
+        public async Task ActivateOP10Manual()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, false);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, true);
+        }
+
+        public async Task DeactivateOP10Manual()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, false);
+        }
+
+        internal async Task EndCycle()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, false);
         }
     }
 }

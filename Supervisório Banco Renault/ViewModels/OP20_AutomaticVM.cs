@@ -20,9 +20,9 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             [0] = "Aguardando botão para iniciar",
             [5] = "Reiniciando as variáveis",
-            [10] = "Iniciando a leitura do código do módulo",
-            [15] = "Lendo código do módulo",
-            [20] = "Verificando código do módulo",
+            [10] = "Iniciando a leitura do código do radiador",
+            [15] = "Lendo código do radiador",
+            [20] = "Verificando código do radiador",
             [25] = "Iniciando teste do radiador",
             [30] = "Iniciando teste do condensador",
             [35] = "Produto em teste",
@@ -199,7 +199,6 @@ namespace Supervisório_Banco_Renault.ViewModels
             L1Error = L1AutomaticRead.Step >= 100;
             if(L1AutomaticRead.Step >= 100 && L1AutomaticRead.Step < 1000)
             {
-                L1Error = true;
                 L1Text += ". Insira o produto na gaiola de refugo.";
             }
             
@@ -208,7 +207,6 @@ namespace Supervisório_Banco_Renault.ViewModels
             L2Error = L2AutomaticRead.Step >= 100;
             if( L2AutomaticRead.Step >= 100 && L2AutomaticRead.Step < 1000)
             {
-                L2Error = true;
                 L2Text += ". Insira o produto na gaiola de refugo.";
             }
 

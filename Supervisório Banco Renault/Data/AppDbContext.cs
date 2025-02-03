@@ -22,6 +22,7 @@ namespace Supervisório_Banco_Renault.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<OP10_Traceability> OP10_Traceabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +52,16 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<Recipe>().HasKey(r => r.Id);
             modelBuilder.Entity<Recipe>().Property(r => r.ModuleCode).IsRequired();
             modelBuilder.Entity<Recipe>().HasIndex(r => r.ModuleCode).IsUnique();
+
+            #endregion
+
+            #region OP10_Traceability db settings
+
+            modelBuilder.Entity<OP10_Traceability>().HasKey(t => t.Id);
+            modelBuilder.Entity<OP10_Traceability>().Property(t => t.RadiatorCode).IsRequired();
+            modelBuilder.Entity<OP10_Traceability>().Property(t => t.CondenserCode).IsRequired();
+            modelBuilder.Entity<OP10_Traceability>().Property(t => t.OP20_Executed).HasDefaultValue(false);
+            modelBuilder.Entity<OP10_Traceability>().HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
 
             #endregion
 

@@ -102,7 +102,7 @@ namespace Supervisório_Banco_Renault
         {
             PlcConnection plcConnection = _serviceProvider.GetService<PlcConnection>();
             plcConnection.DeactivateOP20Automatic();
-
+            plcConnection.DeactivateOP10Automatic();
         }
     }
 

@@ -7,7 +7,7 @@
         public string? ModuleCode { get; set; }
         public short InitialCharacter { get; set; } = 1;
         public short FinalCharacter { get; set; } = 1;
-        public bool VerifyModuleTag { get; set; } = true;
+        public bool VerifyRadiatorTag { get; set; } = true;
         public bool VerifyTraceabilityTag { get; set; } = true;
         public bool VerifyCondenserCovers { get; set; } = true;
         public bool VerifyRadiator { get; set; } = true;
