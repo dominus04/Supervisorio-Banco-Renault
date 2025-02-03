@@ -157,9 +157,9 @@
 
                     <Label Grid.Row="1" Content="Lado 1" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Label Grid.Row="2" Content="{Binding L1Text}" d:Content="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Label.Style>
-                            <Style TargetType="Label">
+                    <TextBlock Grid.Row="2" Text="{Binding L1Text}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding L1Error}" Value="true">
                                         <Setter Property="Background" Value="Red"/>
@@ -169,8 +169,8 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Label.Style>
-                    </Label>
+                        </TextBlock.Style>
+                    </TextBlock>
 
                     <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="404" Margin="45" Visibility="Hidden"/>
                     <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45" Fill="LightGray" Height="404"/>
@@ -283,9 +283,9 @@
 
                     <Label Grid.Row="1" Content="Lado 2" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Label Grid.Row="2" Content="{Binding L2Text}" d:Content="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Label.Style>
-                            <Style TargetType="Label">
+                    <TextBlock Grid.Row="2" Text="{Binding L2Text}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding L2Error}" Value="true">
                                         <Setter Property="Background" Value="Red"/>
@@ -295,8 +295,8 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Label.Style>
-                    </Label>
+                        </TextBlock.Style>
+                    </TextBlock>
 
                     <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
                     <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>

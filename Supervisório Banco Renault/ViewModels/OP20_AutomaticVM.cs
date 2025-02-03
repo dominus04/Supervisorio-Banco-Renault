@@ -197,8 +197,22 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             L1Text = stepStringDict.GetValueOrDefault(L1AutomaticRead.Step, "");
             L1Error = L1AutomaticRead.Step >= 100;
+            if(L1AutomaticRead.Step >= 100 && L1AutomaticRead.Step < 1000)
+            {
+                L1Error = true;
+                L1Text += ". Insira o produto na gaiola de refugo.";
+            }
+            
+            
             L2Text = stepStringDict.GetValueOrDefault(L2AutomaticRead.Step, "");
             L2Error = L2AutomaticRead.Step >= 100;
+            if( L2AutomaticRead.Step >= 100 && L2AutomaticRead.Step < 1000)
+            {
+                L2Error = true;
+                L2Text += ". Insira o produto na gaiola de refugo.";
+            }
+
+            
         }
 
         // Method to load recipes async
