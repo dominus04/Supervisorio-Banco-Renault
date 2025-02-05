@@ -23,6 +23,7 @@ namespace Supervisório_Banco_Renault.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<OP10_Traceability> OP10_Traceabilities { get; set; }
+        public DbSet<Label> Labels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +53,7 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<Recipe>().HasKey(r => r.Id);
             modelBuilder.Entity<Recipe>().Property(r => r.ModuleCode).IsRequired();
             modelBuilder.Entity<Recipe>().HasIndex(r => r.ModuleCode).IsUnique();
+            modelBuilder.Entity<Recipe>().HasOne(r => r.Label).WithMany().HasForeignKey(r => r.LabelId);
 
             #endregion
 
@@ -62,6 +64,23 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<OP10_Traceability>().Property(t => t.CondenserCode).IsRequired();
             modelBuilder.Entity<OP10_Traceability>().Property(t => t.OP20_Executed).HasDefaultValue(false);
             modelBuilder.Entity<OP10_Traceability>().HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
+
+            #endregion
+
+            #region Labels db settings
+
+            modelBuilder.Entity<Label>().HasKey(t => t.Id);
+            modelBuilder.Entity<Label>().Property(t => t.Name).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.JulianDateFormat).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.DateFormat).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.TimeFormat).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.SequentialFormat).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.Tunr1Init).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.Tunr1End).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.Tunr2Init).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.Tunr2End).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.Tunr3Init).IsRequired();
+            modelBuilder.Entity<Label>().Property(t => t.Tunr3End).IsRequired();
 
             #endregion
 

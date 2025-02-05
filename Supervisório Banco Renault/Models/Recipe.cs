@@ -6,9 +6,9 @@
         public Guid Id { get; set; }
         public string? ModuleCode { get; set; }
         public short InitialCharacter { get; set; } = 1;
-        public short FinalCharacter { get; set; } = 1;
-        public bool VerifyRadiatorTag { get; set; } = true;
-        public bool VerifyTraceabilityTag { get; set; } = true;
+        public short CodeLength { get; set; } = 1;
+        public bool VerifyRadiatorLabel { get; set; } = true;
+        public bool VerifyTraceabilityLabel { get; set; } = true;
         public bool VerifyCondenserCovers { get; set; } = true;
         public bool VerifyRadiator { get; set; } = true;
         public short AteqRadiatorProgram { get; set; } = 1;
@@ -18,7 +18,7 @@
         public short AteqCondenserProgram { get; set; } = 1;
         public double CondenserPSMinimum { get; set; }
         public double CondenserPSMaximum { get; set; }
-
-
+        public Label? Label { get; set; }
+        public Guid LabelId { get; set; }
     }
 }

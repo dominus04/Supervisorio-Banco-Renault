@@ -33,10 +33,12 @@ namespace Supervisório_Banco_Renault.ViewModels
                 return;
             }
 
-            UserEdit userEdit = new();
-            userEdit.DataContext = vm;
+            UserEdit userEdit = new()
+            {
+                DataContext = vm,
 
-            userEdit.Top = 140;
+                Top = 140
+            };
 
             userEdit.Left = (1920 - userEdit.Width) / 2;
 

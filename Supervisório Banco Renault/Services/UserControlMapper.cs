@@ -15,8 +15,9 @@ namespace Supervisório_Banco_Renault.Services
             //Defining the shared views
             RegisterMapping<LoginVM, Login>();
             RegisterMapping<LogoffVM, Logoff>();
-            RegisterMapping<RecipesVM, Recipes>();
+            RegisterMapping<RecipesManagerVM, RecipesManager>();
             RegisterMapping<UsersManagerVM, UsersManager>();
+            RegisterMapping<LabelsManagerVM, LabelsManager>();
 
             //Defining the view for each OP10 VM
             RegisterMapping<OP10_AutomaticVM, OP10_Automatic>();

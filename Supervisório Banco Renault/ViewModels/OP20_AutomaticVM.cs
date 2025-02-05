@@ -14,6 +14,8 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private RecipeRepository _recipeRepository;
 
+        private OP10_TraceabilityRepository _op10TraceabilityRepository;
+
         private CancellationTokenSource? _cancellationTokenSource;
 
         private Dictionary<ushort, string> stepStringDict = new()
@@ -89,6 +91,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                 if (value != null)
                 {
                     _ = _plcConnection.WriteOP20Recipe(value);
+                    LabelPrinter.PrintLabel(value);
                 }
                 OnPropertyChanged(nameof(SelectedRecipe));
             }
@@ -156,10 +159,11 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         #endregion
 
-        public OP20_AutomaticVM(IRecipeRepository recipeRepository, PlcConnection plcConnection)
+        public OP20_AutomaticVM(IRecipeRepository recipeRepository, PlcConnection plcConnection, IOP10_TraceabilityRepository oP10_TraceabilityRepository)
         {
             _recipeRepository = (RecipeRepository)recipeRepository;
             _plcConnection = plcConnection;
+            _op10TraceabilityRepository = (OP10_TraceabilityRepository)oP10_TraceabilityRepository;
 
             //Initialize recipe list
         }
@@ -169,7 +173,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (_plcConnection.Plc.IsConnected)
+                if (_plcConnection.Plc.IsConnected && SelectedRecipe != null)
                 {
                     var l1Read = await _plcConnection.ReadOP20AutomaticL1();
                     var l2Read = await _plcConnection.ReadOP20AutomaticL2();
@@ -182,7 +186,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                         L1AutomaticRead = l1Read;
                         L2AutomaticRead = l2Read;
                         OP20AutomaticCommomR = commonRead;
-                        UpdateUI();
+                        ProcessRead();
                     });
                 }
 
@@ -191,27 +195,43 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-
-
-        private void UpdateUI()
+        private async void ProcessRead()
         {
-            L1Text = stepStringDict.GetValueOrDefault(L1AutomaticRead.Step, "");
-            L1Error = L1AutomaticRead.Step >= 100;
-            if(L1AutomaticRead.Step >= 100 && L1AutomaticRead.Step < 1000)
+            (L1Text, L1Error) = await ProcessStep(L1AutomaticRead, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK);
+            (L2Text, L2Error) = await ProcessStep(L2AutomaticRead, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK);
+        }
+
+        private async Task<(string, bool)> ProcessStep(OP20_Automatic_Read automaticRead, Func<Task> setLabelOK, Func<Task> setLabelNOK)
+        {
+            var stepText = stepStringDict.GetValueOrDefault(automaticRead.Step, "");
+            var error = automaticRead.Step >= 100;
+            if (automaticRead.Step >= 100 && automaticRead.Step < 1000)
             {
-                L1Text += ". Insira o produto na gaiola de refugo.";
-            }
-            
-            
-            L2Text = stepStringDict.GetValueOrDefault(L2AutomaticRead.Step, "");
-            L2Error = L2AutomaticRead.Step >= 100;
-            if( L2AutomaticRead.Step >= 100 && L2AutomaticRead.Step < 1000)
-            {
-                L2Text += ". Insira o produto na gaiola de refugo.";
+                stepText += ". Insira o produto na gaiola de refugo antes de prosseguir.";
             }
 
-            
+            if(automaticRead.Step == 20)
+            {
+                var radiatorCode = automaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength);
+                OP10_Traceability op10Data = await _op10TraceabilityRepository.GetTraceabilityByRadiatorCode(radiatorCode);
+                if (op10Data != null)
+                {
+                    op10Data.OP20_Executed = true;
+                    await setLabelOK();
+                    await _op10TraceabilityRepository.UpdateTraceability(op10Data);
+                }
+                else
+                {
+                    await setLabelNOK();
+                }
+
+            }
+
+            return (stepText, error);
+
         }
+
+
 
         // Method to load recipes async
         public async void Start()

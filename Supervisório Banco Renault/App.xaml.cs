@@ -16,7 +16,7 @@ namespace Supervisório_Banco_Renault
     /// </summary>
     public partial class App : Application
     {
-        private DispatcherTimer _watchTimer;
+        private readonly DispatcherTimer _watchTimer;
         public OP10_MainWindow? _mainWindowOP10;
         public OP20_MainWindow? _mainWindowOP20;
         private readonly IServiceCollection services = new ServiceCollection();
@@ -31,8 +31,10 @@ namespace Supervisório_Banco_Renault
             _serviceProvider = services.BuildServiceProvider();
 
             // Timer responsible for update hour and date each one minute
-            _watchTimer = new DispatcherTimer();
-            _watchTimer.Interval = TimeSpan.FromMinutes(1);
+            _watchTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMinutes(1)
+            };
             _watchTimer.Tick += WatchTimerTick;
             _watchTimer.Start();
 
@@ -41,8 +43,8 @@ namespace Supervisório_Banco_Renault
 
             // Getting the injected WindowManager from the service provider and opening the two screens
             var windowManager = _serviceProvider.GetRequiredService<WindowManager>();
-            _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP20_MainWindowVM>());
-            _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP10_MainWindowVM>());
+            _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP20_MainWindowVM>())!;
+            _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP10_MainWindowVM>())!;
 
             WatchTimerTick(this, EventArgs.Empty);
         }
@@ -50,8 +52,8 @@ namespace Supervisório_Banco_Renault
         // Function to send to the header the command to update hour and date
         private void WatchTimerTick(object? sender, EventArgs e)
         {
-            _mainWindowOP20.HeaderUC.UpdateHourAndDate();
-            _mainWindowOP10.HeaderUC.UpdateHourAndDate();
+            _mainWindowOP20?.HeaderUC.UpdateHourAndDate();
+            _mainWindowOP10?.HeaderUC.UpdateHourAndDate();
         }
 
         // Function to configure the services
@@ -61,6 +63,8 @@ namespace Supervisório_Banco_Renault
             services.AddDbContext<AppDbContext>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IOP10_TraceabilityRepository, OP10_TraceabilityRepository>();
+            services.AddScoped<ILabelRepository, LabelRepository>();
 
             // Adding the OP10 VMs to the service
             services.AddSingleton<OP10_MainWindowVM>();
@@ -74,7 +78,8 @@ namespace Supervisório_Banco_Renault
             services.AddTransient<LoginVM>();
             services.AddTransient<LogoffVM>();
             services.AddTransient<UsersManagerVM>();
-            services.AddTransient<RecipesVM>();
+            services.AddTransient<RecipesManagerVM>();
+            services.AddTransient<LabelsManagerVM>();
 
             // Adding the injected classes to service
             services.AddSingleton<ViewModelLocator>();
@@ -91,18 +96,16 @@ namespace Supervisório_Banco_Renault
         // Function to apply migration to the DB if needed
         private void ApplyMigration()
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.Migrate();
-            }
+            using var scope = _serviceProvider.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.Migrate();
         }
 
-        private void OnExit(object sender, ExitEventArgs e)
+        private async void OnExit(object sender, ExitEventArgs e)
         {
-            PlcConnection plcConnection = _serviceProvider.GetService<PlcConnection>();
-            plcConnection.DeactivateOP20Automatic();
-            plcConnection.DeactivateOP10Automatic();
+            PlcConnection plcConnection = _serviceProvider.GetService<PlcConnection>()!;
+            await plcConnection.DeactivateOP20Automatic();
+            await plcConnection.DeactivateOP10Automatic();
         }
     }
 

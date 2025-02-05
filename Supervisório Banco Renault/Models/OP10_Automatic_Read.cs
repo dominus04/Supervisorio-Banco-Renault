@@ -12,9 +12,9 @@ namespace Supervisório_Banco_Renault.Models
         public ushort Step { get; set; }
 
         [S7String(S7StringType.S7String, 50)]
-        public string RadiatorTag { get; set; }
+        public string RadiatorLabel { get; set; }
 
         [S7String(S7StringType.S7String, 50)]
-        public string CondenserTag { get; set; }
+        public string CondenserLabel { get; set; }
     }
 }

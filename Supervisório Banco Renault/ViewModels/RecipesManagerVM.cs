@@ -6,14 +6,43 @@ using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
-    public class RecipesVM : BaseVM
+    public class RecipesManagerVM : BaseVM
     {
 
-        public RecipeRepository _recipeRepository;
+        #region Properties
 
-        public RecipesVM(IRecipeRepository recipeRepository)
+        private RecipeRepository _recipeRepository;
+
+        private LabelRepository _labelRepository;
+
+        private ObservableCollection<Recipe> _recipes = [];
+        public ObservableCollection<Recipe> Recipes
+        {
+            get => _recipes;
+            set
+            {
+                _recipes = value;
+                OnPropertyChanged(nameof(Recipes));
+            }
+        }
+
+        private Recipe? _selectedRecipe;
+        public Recipe? SelectedRecipe
+        {
+            get => _selectedRecipe;
+            set
+            {
+                _selectedRecipe = value;
+                OnPropertyChanged(nameof(SelectedRecipe));
+            }
+        }
+
+        #endregion
+
+        public RecipesManagerVM(IRecipeRepository recipeRepository, ILabelRepository labelRepository)
         {
             _recipeRepository = (RecipeRepository)recipeRepository;
+            _labelRepository = (LabelRepository)labelRepository;
 
             LoadRecipes();
         }
@@ -22,11 +51,11 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             Application.Current.Windows.OfType<RecipeEdit>().FirstOrDefault()?.Close();
 
-            RecipeEditVM vm = new(_recipeRepository);
+            RecipeEditVM vm = new(_recipeRepository, _labelRepository);
 
             if (isUpdate && SelectedRecipe != null)
             {
-                vm = new(_recipeRepository, SelectedRecipe);
+                vm = new(_recipeRepository, SelectedRecipe, _labelRepository);
             }
             else if (isUpdate && SelectedRecipe == null)
             {
@@ -34,9 +63,11 @@ namespace Supervisório_Banco_Renault.ViewModels
                 return;
             }
 
-            RecipeEdit recipeEdit = new();
-            recipeEdit.DataContext = vm;
-            recipeEdit.Top = 140;
+            RecipeEdit recipeEdit = new()
+            {
+                DataContext = vm,
+                Top = 140
+            };
 
             recipeEdit.Left = (1920 - recipeEdit.Width) / 2;
 
@@ -50,11 +81,6 @@ namespace Supervisório_Banco_Renault.ViewModels
             {
                 LoadRecipes();
             };
-        }
-
-        private void ParentWindow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         public async void LoadRecipes()
@@ -81,28 +107,5 @@ namespace Supervisório_Banco_Renault.ViewModels
                 MessageBox.Show("Selecione uma receita para remover", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private ObservableCollection<Recipe> _recipes = [];
-        public ObservableCollection<Recipe> Recipes
-        {
-            get => _recipes;
-            set
-            {
-                _recipes = value;
-                OnPropertyChanged(nameof(Recipes));
-            }
-        }
-
-        private Recipe? _selectedRecipe;
-        public Recipe? SelectedRecipe
-        {
-            get => _selectedRecipe;
-            set
-            {
-                _selectedRecipe = value;
-                OnPropertyChanged(nameof(SelectedRecipe));
-            }
-        }
-
     }
 }

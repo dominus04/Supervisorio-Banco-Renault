@@ -2,6 +2,7 @@
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -19,6 +20,8 @@ namespace Supervisório_Banco_Renault.ViewModels
         private CancellationTokenSource? _cancellationTokenSource;
 
         private OP10_MainWindowVM _oP10_MainWindowVM;
+
+        private OP10_TraceabilityRepository _op10_TraceabilityRepository;
 
         private OP10_Automatic_Read _op10AutomaticRead;
         public OP10_Automatic_Read OP10AutomaticRead
@@ -89,7 +92,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             [5] = "Indexando produto",
             [10] = "Reiniciando variáveis",
             [15] = "Iniciando leitura do código do radiador",
-            [20] = "Aguardando leitura do código do radiador",
+            [20] = "Lendo código do radiador",
             [25] = "Rotacione o produto para a posição de montagem do condensador",
             [30] = "Pegue o parafuso na caixa",
             [35] = "Parafuse o condensador no módulo",
@@ -104,11 +107,12 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         #endregion
 
-        public OP10_AutomaticVM(PlcConnection plcConnection, IRecipeRepository recipeRepository, OP10_MainWindowVM oP10_MainWindowVM)
+        public OP10_AutomaticVM(PlcConnection plcConnection, IRecipeRepository recipeRepository, OP10_MainWindowVM oP10_MainWindowVM, IOP10_TraceabilityRepository oP10_TraceabilityRepository)
         {
             _plcConnection = plcConnection;
             _recipeRepository = (RecipeRepository)recipeRepository;
             _oP10_MainWindowVM = oP10_MainWindowVM;
+            _op10_TraceabilityRepository = (OP10_TraceabilityRepository)oP10_TraceabilityRepository;
         }
 
         private async Task MonitorPLCAsync(CancellationToken cancellationToken)
@@ -123,7 +127,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         OP10AutomaticRead = op10Read;
-                        UpdateUI();
+                        ProcessRead();
                     });
                 }
 
@@ -132,10 +136,23 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        private void UpdateUI()
+        private async void ProcessRead()
         {
             StepText = stepStringDict.GetValueOrDefault(OP10AutomaticRead.Step, "");
             OP10_Error = OP10AutomaticRead.Step >= 100;
+            if(OP10AutomaticRead.Step == 50)
+            {
+                var op10_Data = new OP10_Traceability 
+                {
+                    RadiatorCode = OP10AutomaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength),
+                    CondenserCode = OP10AutomaticRead.CondenserLabel,
+                    UserId = _oP10_MainWindowVM.LoggedUser.Id
+                };
+                if( await _op10_TraceabilityRepository.AddTraceability(op10_Data))
+                {
+                    await _plcConnection.SetOP10DataSaved();
+                }
+            }
         }
 
         // Method to load recipes async

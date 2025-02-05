@@ -13,13 +13,12 @@ namespace Supervisório_Banco_Renault.Data.Repositories
     public interface IOP10_TraceabilityRepository
     {
         Task<ObservableCollection<OP10_Traceability>> GetAllTraceabilities();
-        Task<OP10_Traceability> GetTraceabilityByModuleCode(int id);
+        Task<OP10_Traceability?> GetTraceabilityByRadiatorCode(string radiatorCode);
         Task<bool> AddTraceability(OP10_Traceability traceability);
         Task<bool> UpdateTraceability(OP10_Traceability traceability);
-        Task<bool> VerifyData(OP10_Traceability traceability);
     }
 
-    public class OP10_TraceabilityRepository
+    public class OP10_TraceabilityRepository : IOP10_TraceabilityRepository
     {
 
         public readonly AppDbContext _context;
@@ -31,7 +30,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
         public async Task<ObservableCollection<OP10_Traceability>> GetAllTraceabilities()
         {
-            return new ObservableCollection<OP10_Traceability>(await _context.OP10_Traceabilities.ToListAsync());
+            return new ObservableCollection<OP10_Traceability>(await _context.OP10_Traceabilities.Include(t => t.User).ToListAsync());
         }
 
         public async Task<OP10_Traceability?> GetTraceabilityByRadiatorCode(string radiatorCode)

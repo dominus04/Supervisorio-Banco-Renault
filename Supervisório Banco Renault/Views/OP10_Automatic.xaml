@@ -21,7 +21,20 @@
             <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Left" VerticalAlignment="Center" Width="610" Margin="45, 0" ItemsSource="{Binding Recipes}" DisplayMemberPath="ModuleCode " SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}"/>
         </Border>
 
-        <TextBlock Grid.Row="2" Text="{Binding StepText}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0"/>
+        <TextBlock Grid.Row="2" Text="{Binding StepText}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding OP10_Error}" Value="true">
+                            <Setter Property="Background" Value="Red"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OP10_Error}" Value="false">
+                            <Setter Property="Background" Value="Transparent"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
         <Rectangle Height="480" Width="854" Grid.Row="4" Fill="DarkGray" VerticalAlignment="Top"/>
 

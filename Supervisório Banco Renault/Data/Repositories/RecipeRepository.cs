@@ -26,7 +26,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
         public async Task<ObservableCollection<Recipe>> GetAllRecipes()
         {
-            return new ObservableCollection<Recipe>(await _context.Recipes.ToListAsync());
+            return new ObservableCollection<Recipe>(await _context.Recipes.Include(r => r.Label).ToListAsync());
         }
 
         public async Task<Recipe?> GetRecipeByModuleCode(string moduleCode)

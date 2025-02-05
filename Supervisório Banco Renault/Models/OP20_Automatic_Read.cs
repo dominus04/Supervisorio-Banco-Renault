@@ -17,9 +17,9 @@ namespace Supervisório_Banco_Renault.Models
         public bool CondenserTestNOK { get; set; }
 
         [S7String(S7StringType.S7String, 50)]
-        public string RadiatorTag;
+        public string RadiatorLabel { get; set; }
 
         [S7String(S7StringType.S7String, 50)]
-        public string TraceabilityTag;
+        public string TraceabilityLabel { get; set; }
     }
 }

@@ -39,8 +39,8 @@ namespace Supervisório_Banco_Renault.Services
         public async Task<bool> WriteOP20Recipe(Recipe recipe)
         {
             await ActivateOP20Automatic();
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyRadiatorTag);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityTag);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyRadiatorLabel);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityLabel);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyCondenserCovers);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyRadiator);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 6, recipe.VerifyCondenser);
@@ -79,7 +79,8 @@ namespace Supervisório_Banco_Renault.Services
 
         public async Task<OP20_Automatic_Read?> ReadOP20AutomaticL1()
         {
-            return await Plc.ReadClassAsync<OP20_Automatic_Read>(100);
+            var teste = await Plc.ReadClassAsync<OP20_Automatic_Read>(100);
+            return teste;
         }
 
         public async Task<OP20_Automatic_Read?> ReadOP20AutomaticL2()
@@ -129,10 +130,40 @@ namespace Supervisório_Banco_Renault.Services
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, false);
         }
 
-        internal async Task EndCycle()
+        public async Task EndCycle()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, true);
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, false);
+        }
+
+        public async Task SetOP10DataSaved()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, false);
+        }
+
+        internal async Task SetL1RadiatorLabelOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 0, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 0, false);
+        }
+
+        internal async Task SetL1RadiatorLabelNOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 1, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 1, false);
+        }
+
+        internal async Task SetL2RadiatorLabelOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 0, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 0, false);
+        }
+
+        internal async Task SetL2RadiatorLabelNOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, false);
         }
     }
 }
