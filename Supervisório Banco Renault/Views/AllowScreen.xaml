@@ -5,19 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         mc:Ignorable="d"
-        Title="AllowScreen" Height="450" Width="800">
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        Title="AllowScreen" Height="300" Width="500" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" Topmost="True">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="80"/>
-        </Grid.RowDefinitions>
+    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
-        <TextBlock Grid.Row="0" FontSize="24" Text="" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Label Grid.Row="1" FontSize="24" Content="Ler Crachá" Height="60" Width="210" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelGrayButton}"/>
-        <TextBox Text="{Binding UserTag}" Height="0" Width="0" Style="{x:Null}"/>
-        <Label Grid.Row="2" FontSize="24" Content="Cancelar" Height="60" Width="210" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelRedButton}"/>
-    </Grid>
+            <TextBlock Grid.Row="0" Text="{Binding Message}" d:Text="Para resetar a gaiola de refugo é necessária aprovação da liderança." FontSize="32" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" Margin="10" TextAlignment="Center" />
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Stretch">
+                <TextBox x:Name="textRFID" Text="{Binding UserTag, UpdateSourceTrigger=PropertyChanged}" Height="0" Width="0" Style="{x:Null}" KeyDown="OnKeyDown" />
+                <Label FontSize="32" Content="Ler Crachá" Height="60" Width="210" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelGrayButton}" Margin="20, 5, 10, 20" MouseDown="ButtonReadMouseDown" Cursor="Hand"/>
+                <Label Width="210" FontSize="32" Content="Cancelar" Height="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelRedButton}" Margin="10, 5, 20, 20" MouseDown="CancelButtonMouseDown" Cursor="Hand"/>
+            </StackPanel>
+
+        </Grid>
+
+    </Border>
 </Window>

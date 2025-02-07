@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
-        Title="RecipeVM" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="458" Width="720">
+        Title="RecipeVM" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="458" Width="720" Topmost="True">
 
     <Border BorderBrush="Gray" BorderThickness="0.5" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Margin="10">
         

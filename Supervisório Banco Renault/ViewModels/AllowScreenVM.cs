@@ -1,21 +1,36 @@
 ﻿using Supervisório_Banco_Renault.Data.Repositories;
+using Supervisório_Banco_Renault.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
-    public class AllowScreenVM : BaseVM
+    public class AllowScreenVM(IUserRepository userRepository) : BaseVM
     {
-        private UserRepository _userRepository;
 
-        private string _userTag;
+        public bool IsAllowed { get; set; } = false;
 
-        public string UserTag
+        private string? _message;
+
+        public string? Message
         {
-            get => _userTag;
+            get { return _message; }
+            set
+            {
+                _message = value;
+                OnPropertyChanged(nameof(Message));
+            }
+        }
+
+        private string? _userTag = "";
+
+        public string? UserTag
+        {
+            get { return _userTag; }
             set
             {
                 _userTag = value;
@@ -23,9 +38,20 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        public AllowScreenVM(IUserRepository userRepository)
+        public async Task TryAllow()
         {
-            _userRepository = (UserRepository)userRepository;
+            User? user = await userRepository.GetUserByRFID(UserTag);
+            if(user != null && user.AccessLevel >= Models.Enums.AccessLevel.Lideranca)
+            {
+                IsAllowed = true;
+            }
+            else 
+            {
+                MessageBox.Show("Usuário não autorizado");
+                IsAllowed = false;
+            }
+
         }
+
     }
 }

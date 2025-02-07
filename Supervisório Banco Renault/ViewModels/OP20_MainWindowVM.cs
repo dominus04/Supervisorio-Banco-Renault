@@ -5,6 +5,20 @@ namespace Supervisório_Banco_Renault.ViewModels
 {
     public class OP20_MainWindowVM : WindowBaseVM
     {
+
+        // Screen control propertie
+        private bool _screenControl = true;
+
+        public bool ScreenControl
+        {
+            get { return _screenControl; }
+            set
+            {
+                _screenControl = value;
+                OnPropertyChanged(nameof(ScreenControl));
+            }
+        }
+
         public OP20_MainWindowVM()
         {
             MenuItems?.Add(new MenuItemModel(AccessLevel.Operador, "Automático", "OP20_Automatic"));

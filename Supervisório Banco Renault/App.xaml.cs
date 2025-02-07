@@ -75,11 +75,14 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<OP20_MainWindowVM>();
             services.AddScoped<OP20_AutomaticVM>();
 
+
+            // Adding the common VMs to service
             services.AddTransient<LoginVM>();
             services.AddTransient<LogoffVM>();
             services.AddTransient<UsersManagerVM>();
             services.AddTransient<RecipesManagerVM>();
             services.AddTransient<LabelsManagerVM>();
+            services.AddTransient<AllowScreenVM>();
 
             // Adding the injected classes to service
             services.AddSingleton<ViewModelLocator>();

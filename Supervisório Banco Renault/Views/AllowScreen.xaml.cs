@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Supervisório_Banco_Renault.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,30 @@ namespace Supervisório_Banco_Renault.Views
         public AllowScreen()
         {
             InitializeComponent();
+        }
+
+        private void CancelButtonMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ButtonReadMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            textRFID.Text = "";
+            textRFID.Focus();
+        }
+
+        private async void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                AllowScreenVM vm = (AllowScreenVM)DataContext;
+                await vm.TryAllow();
+                if (vm.IsAllowed)
+                {
+                    this.Close();
+                }
+            }
         }
     }
 }

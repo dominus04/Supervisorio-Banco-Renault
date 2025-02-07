@@ -119,6 +119,7 @@ namespace Supervisório_Banco_Renault.Services
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, false);
         }
+
         public async Task ActivateOP10Manual()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, false);
@@ -164,6 +165,30 @@ namespace Supervisório_Banco_Renault.Services
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, true);
             await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, false);
+        }
+
+        internal async Task SetL1TraceabilityLabelOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 2, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 2, false);
+        }
+
+        internal async Task SetL1TraceabilityLabelNOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 3, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 3, false);
+        }
+
+        internal async Task SetL2TraceabilityLabelOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 2, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 2, false);
+        }
+
+        internal async Task SetL2TraceabilityLabelNOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 3, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 3, false);
         }
     }
 }

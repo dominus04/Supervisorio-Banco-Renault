@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -12,10 +13,10 @@ namespace Supervisório_Banco_Renault.Services
 {
     public class LabelPrinter
     {
-        static string PRINTER_IP = "192.168.1.50";
-        static int PORT = 9100;
+        static readonly string PRINTER_IP = "192.168.1.50";
+        static readonly int PORT = 9100;
 
-        public static void PrintLabel(Recipe currentRecipe)
+        public static string PrintLabelAndReturnTraceabilityCode(Recipe currentRecipe)
         {
 
             Label label = currentRecipe.Label;
@@ -48,12 +49,17 @@ namespace Supervisório_Banco_Renault.Services
             zplCommand = zplCommand.Replace("[SEQUENCIAL]", sequential);
 
 
-            using(TcpClient client = new TcpClient(PRINTER_IP, PORT))
+            using(TcpClient client = new(PRINTER_IP, PORT))
             {
                 byte[] data = Encoding.UTF8.GetBytes(zplCommand);
                 NetworkStream stream = client.GetStream();
                 stream.Write(data, 0, data.Length);
             }
+
+            var traceabilityPattern = @"(?:\^BX.*\^FD|\^BQ.*\^FD)(.*)\^FS";
+
+            return Regex.Match(zplCommand, traceabilityPattern).Groups[1].Value;
+
         }
 
         public static string GetSequential(int sequentialFormat)
@@ -74,8 +80,7 @@ namespace Supervisório_Banco_Renault.Services
 
             var limit = sequentialDict[sequentialFormat];
 
-            int number = 0;
-
+            int number;
             if (File.Exists(sequentialFilePath)) 
             {
                 number = int.Parse(File.ReadAllText(sequentialFilePath));

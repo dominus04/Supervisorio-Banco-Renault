@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
-        Title="LabelEdit" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="600" Width="720">
+        Title="LabelEdit" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="600" Width="720" Topmost="True">
 
     <Border BorderBrush="Gray" BorderThickness="0.5" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Margin="10">
         <Grid>
@@ -43,7 +43,7 @@
                 <ComboBox Grid.Column="6" SelectedValue="{Binding Label.SequentialFormat}" ui:ControlHelper.Header="Nº dígitos sequenciais:" HorizontalAlignment="Stretch" ItemsSource="{Binding SequentialFormats}"/>
             </Grid>
 
-            <TextBox Text="{Binding Label.LabelBaseLayout}" Grid.Row="3" ui:ControlHelper.Header="Layout da Etiqueta: " Margin="15, 5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+            <TextBox Text="{Binding Label.LabelBaseLayout, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" ui:ControlHelper.Header="Layout da Etiqueta: " Margin="15, 5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
 
             <Grid Grid.Row="4" Margin="15, 5">
                 <Grid.ColumnDefinitions>

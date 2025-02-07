@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
              xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d" 
-             Height="370" Width="420" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
+             Height="370" Width="420" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Topmost="True">
 
     <Border BorderBrush="Gray" BorderThickness="0.5" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Width="400" Height="350">
 
