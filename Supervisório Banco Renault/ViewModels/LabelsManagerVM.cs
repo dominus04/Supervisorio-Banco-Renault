@@ -18,6 +18,8 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         #region Properties
 
+        private readonly IServiceProvider _serviceProvider;
+
         private ObservableCollection<Label>? _labels;
         public ObservableCollection<Label>? Labels
         {
@@ -45,9 +47,10 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private readonly LabelRepository _labelRepository;
 
-        public LabelsManagerVM(ILabelRepository labelRepository)
+        public LabelsManagerVM(ILabelRepository labelRepository, IServiceProvider serviceProvider)
         {
             _labelRepository = (LabelRepository)labelRepository;
+            _serviceProvider = serviceProvider;
 
             LoadLabels();
         }
@@ -60,6 +63,8 @@ namespace Supervisório_Banco_Renault.ViewModels
         public void AddOrUpdateLabel(bool isUpdate)
         {
             LabelEditVM vm = new(_labelRepository);
+
+            OP20_MainWindowVM mainVM = (OP20_MainWindowVM)_serviceProvider.GetService(typeof(OP20_MainWindowVM))!;
 
             if (isUpdate && SelectedLabel != null)
             {
@@ -78,11 +83,14 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             labelEdit.Left = (1920 - labelEdit.Width) / 2;
 
+            mainVM.ScreenControl = false;
+
             labelEdit.Show();
 
             labelEdit.Closed += (sender, e) =>
             {
                 LoadLabels();
+                mainVM.ScreenControl = true;
             };
         }
 

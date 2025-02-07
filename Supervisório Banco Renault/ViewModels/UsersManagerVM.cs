@@ -9,11 +9,44 @@ namespace Supervisório_Banco_Renault.ViewModels
     public class UsersManagerVM : BaseVM
     {
 
+        #region Properties
+
+        //Observable collection with all active users
+        public ObservableCollection<User> _users = [];
+
+        private readonly IServiceProvider _serviceProvider;
+
+        public ObservableCollection<User> Users
+        {
+            get => _users;
+            set
+            {
+                _users = value;
+                OnPropertyChanged(nameof(Users));
+            }
+        }
+
+        //Selected User in the Users View
+        public User? _selectedUser;
+
+        public User? SelectedUser
+        {
+            get => _selectedUser;
+            set
+            {
+                _selectedUser = value;
+                OnPropertyChanged(nameof(SelectedUser));
+            }
+        }
+
         public UserRepository _userRepository;
 
-        public UsersManagerVM(IUserRepository userRepository)
+        #endregion
+
+        public UsersManagerVM(IUserRepository userRepository, IServiceProvider serviceProvider)
         {
             _userRepository = (UserRepository)userRepository;
+            _serviceProvider = serviceProvider;
 
             LoadUsers();
         }
@@ -22,6 +55,8 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             Application.Current.Windows.OfType<UserEdit>().FirstOrDefault()?.Close();
             UserEditVM vm = new(_userRepository);
+            WindowBaseVM mainVM = (WindowBaseVM)_serviceProvider.GetService(typeof(OP20_MainWindowVM))!;
+
 
             if (isUpdate && SelectedUser != null)
             {
@@ -43,13 +78,19 @@ namespace Supervisório_Banco_Renault.ViewModels
             userEdit.Left = (1920 - userEdit.Width) / 2;
 
             if (t == typeof(OP10_MainWindow))
+            {
                 userEdit.Left += 1920;
+                mainVM = (WindowBaseVM)_serviceProvider.GetService(typeof(OP10_MainWindowVM))!;
+            }
+
+            mainVM.ScreenControl = false;
 
             userEdit.Show();
 
             userEdit.Closed += (sender, e) =>
             {
                 LoadUsers();
+                mainVM.ScreenControl = true;
             };
         }
 
@@ -79,31 +120,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        //Observable collection with all active users
-        public ObservableCollection<User> _users = [];
-
-        public ObservableCollection<User> Users
-        {
-            get => _users;
-            set
-            {
-                _users = value;
-                OnPropertyChanged(nameof(Users));
-            }
-        }
-
-        //Selected User in the Users View
-        public User? _selectedUser;
-
-        public User? SelectedUser
-        {
-            get => _selectedUser;
-            set
-            {
-                _selectedUser = value;
-                OnPropertyChanged(nameof(SelectedUser));
-            }
-        }
+        
 
     }
 }

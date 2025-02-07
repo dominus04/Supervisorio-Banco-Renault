@@ -52,5 +52,18 @@ namespace Supervisório_Banco_Renault.ViewModels
             PageChanged?.Invoke(this, page);
         }
 
+        // Screen control propertie
+        private bool _screenControl = true;
+
+        public bool ScreenControl
+        {
+            get { return _screenControl; }
+            set
+            {
+                _screenControl = value;
+                OnPropertyChanged(nameof(ScreenControl));
+            }
+        }
+
     }
 }

@@ -13,6 +13,8 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private RecipeRepository _recipeRepository;
 
+        private readonly IServiceProvider _serviceProvider;
+
         private LabelRepository _labelRepository;
 
         private ObservableCollection<Recipe> _recipes = [];
@@ -39,10 +41,11 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         #endregion
 
-        public RecipesManagerVM(IRecipeRepository recipeRepository, ILabelRepository labelRepository)
+        public RecipesManagerVM(IRecipeRepository recipeRepository, ILabelRepository labelRepository, IServiceProvider serviceProvider)
         {
             _recipeRepository = (RecipeRepository)recipeRepository;
             _labelRepository = (LabelRepository)labelRepository;
+            _serviceProvider = serviceProvider;
 
             LoadRecipes();
         }
@@ -52,6 +55,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             Application.Current.Windows.OfType<RecipeEdit>().FirstOrDefault()?.Close();
 
             RecipeEditVM vm = new(_recipeRepository, _labelRepository);
+            WindowBaseVM mainVM = (WindowBaseVM)_serviceProvider.GetService(typeof(OP20_MainWindowVM))!;
 
             if (isUpdate && SelectedRecipe != null)
             {
@@ -72,14 +76,19 @@ namespace Supervisório_Banco_Renault.ViewModels
             recipeEdit.Left = (1920 - recipeEdit.Width) / 2;
 
             if (t == typeof(OP10_MainWindow))
+            {
                 recipeEdit.Left += 1920;
+                mainVM = (WindowBaseVM)_serviceProvider.GetService(typeof(OP10_MainWindowVM))!;
+            }
 
+            mainVM.ScreenControl = false;
 
             recipeEdit.Show();
 
             recipeEdit.Closed += (sender, e) =>
             {
                 LoadRecipes();
+                mainVM.ScreenControl = true;
             };
         }
 
