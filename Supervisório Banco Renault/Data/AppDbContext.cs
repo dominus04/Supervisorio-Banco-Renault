@@ -24,6 +24,7 @@ namespace Supervisório_Banco_Renault.Data
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<OP10_Traceability> OP10_Traceabilities { get; set; }
         public DbSet<Label> Labels { get; set; }
+        public DbSet<OP20_Traceability> OP20_Traceabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -81,6 +82,13 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<Label>().Property(t => t.Tunr2End).IsRequired();
             modelBuilder.Entity<Label>().Property(t => t.Tunr3Init).IsRequired();
             modelBuilder.Entity<Label>().Property(t => t.Tunr3End).IsRequired();
+
+            #endregion
+
+            #region OP20_Traceability db settings
+
+            modelBuilder.Entity<OP20_Traceability>().HasKey(t => t.Id);
+            modelBuilder.Entity<OP20_Traceability>().HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
 
             #endregion
 

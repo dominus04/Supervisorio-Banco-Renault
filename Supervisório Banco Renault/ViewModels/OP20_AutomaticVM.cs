@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
-    public class OP20_AutomaticVM(IRecipeRepository recipeRepository, PlcConnection plcConnection, IOP10_TraceabilityRepository oP10_TraceabilityRepository, IServiceProvider serviceProvider) : BaseVM
+    public class OP20_AutomaticVM(IRecipeRepository recipeRepository, PlcConnection plcConnection, IOP10_TraceabilityRepository oP10_TraceabilityRepository, IServiceProvider serviceProvider, IOP20_TraceabilityRepository oP20_TraceabilityRepository) : BaseVM
     {
 
         #region General Properties
@@ -76,16 +76,16 @@ namespace Supervisório_Banco_Renault.ViewModels
             [46] = "Aguardando giro da mesa",
             [47] = "Acione o botão para verificação das tampas do condensador",
             [55] = "Verificando tampões",
-            [60] = "Cole a etiqueta e acione o botão para verificação do código",
+            [56] = "Cole a etiqueta e acione o botão para verificação do código",
             [65] = "Lendo código de rastreabilidade",
             [70] = "Verificando código de rastreabilidade",
+            [71] = "Código da etiqueta de rastreabilidade incompatível com a impressa, cole a correta e pressione start",
             [75] = "Aguardando novo módulo e giro da mesa",
             [100] = "Falha na leitura da etiqueta do módulo",
             [101] = "Módulo com pendência na operação 10",
             [102] = "Módulo com defeito",
             [103] = "Ausência das tampas do condensador",
             [104] = "Falha na leitura da etiqueta de rastreabilidade",
-            [105] = "Código da etiqueta de rastreabilidade incompatível com a impressa",
             [1000] = "Máquina em emergência"
         };
 
@@ -105,30 +105,6 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        private bool _l1Error;
-        public bool L1Error
-        {
-            get => _l1Error;
-            set
-            {
-                _l1Error = value;
-                OnPropertyChanged(nameof(L1Error));
-            }
-        }
-
-        //Propertie to set text of step L1
-        private string _l1Text = "";
-        public string L1Text
-        {
-            get => _l1Text;
-            set
-            {
-                _l1Text = value;
-                OnPropertyChanged(nameof(L1Text));
-            }
-        }
-
-        //Properties from L2 Plc
         private OP20_Automatic_Read _l2AutomaticRead = new();
         public OP20_Automatic_Read L2AutomaticRead
         {
@@ -140,33 +116,29 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        private bool _l2Error;
-        public bool L2Error
+        private OP20_CurrentProduction _l1CurrentProduction = new();
+        public OP20_CurrentProduction L1CurrentProduction
         {
-            get => _l2Error;
+            get => _l1CurrentProduction;
             set
             {
-                _l2Error = value;
-                OnPropertyChanged(nameof(L2Error));
+                _l1CurrentProduction = value;
+                OnPropertyChanged(nameof(L1CurrentProduction));
             }
         }
 
-        //Propertie to set text of step L2
-        private string _l2Text = "";
-        public string L2Text
+        private OP20_CurrentProduction _l2CurrentProduction = new();
+        public OP20_CurrentProduction L2CurrentProduction
         {
-            get => _l2Text;
+            get => _l2CurrentProduction;
             set
             {
-                _l2Text = value;
-                OnPropertyChanged(nameof(L2Text));
+                _l2CurrentProduction = value;
+                OnPropertyChanged(nameof(L2CurrentProduction));
             }
         }
-
-        private string _currentTraceabilityCode = "";
 
         #endregion
-
 
         // Method to monitor plc async
         private async Task MonitorPLCAsync(CancellationToken cancellationToken)
@@ -197,25 +169,39 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private async void ProcessRead()
         {
-            (L1Text, L1Error) = await ProcessStep(L1AutomaticRead, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK);
+           await ProcessStep(L1AutomaticRead, L1CurrentProduction, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK);
 
-            (L2Text, L2Error) = await ProcessStep(L2AutomaticRead, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK, _plcConnection.SetL2TraceabilityLabelOK, _plcConnection.SetL2TraceabilityLabelNOK);
+            OnPropertyChanged(nameof(L1CurrentProduction));
+
+           await ProcessStep(L2AutomaticRead, L2CurrentProduction, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK, _plcConnection.SetL2TraceabilityLabelOK, _plcConnection.SetL2TraceabilityLabelNOK);
+
+            OnPropertyChanged(nameof(L2CurrentProduction));
         }
 
-        private async Task<(string, bool)> ProcessStep(OP20_Automatic_Read automaticRead, Func<Task> setRadiatorLabelOK, Func<Task> setRadiatorLabelNOK, Func<Task> setTraceabilityLabelOK, Func<Task> setTraceabilityLabelNOK)
+        private async Task ProcessStep(OP20_Automatic_Read automaticRead, OP20_CurrentProduction currentProduction, Func<Task> setRadiatorLabelOK, Func<Task> setRadiatorLabelNOK, Func<Task> setTraceabilityLabelOK, Func<Task> setTraceabilityLabelNOK)
         {
-            var stepText = stepStringDict.GetValueOrDefault(automaticRead.Step, "");
-            var error = automaticRead.Step >= 100;
+            currentProduction.StepText = stepStringDict.GetValueOrDefault(automaticRead.Step, "");
+            currentProduction.Error = automaticRead.Step >= 100;
 
             if (automaticRead.Step >= 100 && automaticRead.Step < 1000)
             {
-                stepText += ". Insira o produto na gaiola de refugo antes de prosseguir.";
+                currentProduction.StepText += ". Insira o produto na gaiola de refugo antes de prosseguir.";
             }
 
-            if(automaticRead.Step == 20)
+
+            if(automaticRead.Step == 0)
             {
-                var radiatorCode = automaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength);
-                OP10_Traceability? op10Data = await _op10TraceabilityRepository.GetTraceabilityByRadiatorCode(radiatorCode);
+                currentProduction = new OP20_CurrentProduction();
+            }
+
+            //The function verify if the step is 20 and if the code is in OP10 database, if not, the function will show a message to the user and wait for the user to allow the operation to continue
+
+            if (automaticRead.Step == 20)
+            {
+                currentProduction.RadiatorCode = automaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength);
+
+                OP10_Traceability? op10Data = await _op10TraceabilityRepository.GetTraceabilityByRadiatorCode(currentProduction.RadiatorCode);
+
                 if (op10Data != null && op10Data.OP20_Executed == false)
                 {
                     op10Data.OP20_Executed = true;
@@ -224,28 +210,69 @@ namespace Supervisório_Banco_Renault.ViewModels
                 }
                 else
                 {
-                    await setRadiatorLabelNOK();
+                    AllowScreenVM allowScreenVM = (AllowScreenVM)serviceProvider.GetService(typeof(AllowScreenVM))!;
+                    OP20_MainWindowVM mainVM = serviceProvider.GetRequiredService<OP20_MainWindowVM>();
+
+                    if (op10Data == null)
+                    {
+                        allowScreenVM.Message = "Operação 10 ainda não realizada, favor retirar o produto ou solicitar a aprovação da liderança.";
+                    }
+                    else if (op10Data.OP20_Executed == true)
+                    {
+                        allowScreenVM.Message = "Operação 20 já realizada, para repetição do teste favor solicitar aprovação da liderança";
+                    }
+
+                    AllowScreen allowScreen = new()
+                    {
+                        DataContext = allowScreenVM
+                    };
+
+                    var tsc = new TaskCompletionSource<bool>();
+
+                    allowScreen.Closed += (s, e) => tsc.SetResult(true);
+
+                    allowScreen.Show();
+
+                    mainVM.ScreenControl = false;
+
+                    await tsc.Task;
+
+                    mainVM.ScreenControl = true;
+
+                    if (allowScreenVM.IsAllowed)
+                    {
+                        await setRadiatorLabelOK();
+                    }
+                    else
+                    {
+                        await setRadiatorLabelNOK();
+                    }
+
                 }
 
             }
 
-            if(automaticRead.Step == 60)
+            if (automaticRead.Step == 56)
             {
-                _currentTraceabilityCode = LabelPrinter.PrintLabelAndReturnTraceabilityCode(SelectedRecipe);
+                currentProduction.VerifyTraceabilityCode = LabelPrinter.PrintLabelAndReturnTraceabilityCode(SelectedRecipe);
             }
 
-            if(automaticRead.Step == 70) 
+            if (automaticRead.Step == 70)
             {
-                if (_currentTraceabilityCode.Contains(automaticRead.TraceabilityLabel))
+                currentProduction.TraceabilityCode = automaticRead.TraceabilityLabel;
+
+                if (currentProduction.VerifyTraceabilityCode.Contains(automaticRead.TraceabilityLabel))
                 {
                     await setTraceabilityLabelOK();
-                }else
+                    await SaveTraceability(automaticRead, currentProduction, SelectedRecipe);
+                }
+                else
                 {
                     await setTraceabilityLabelNOK();
                 }
             }
 
-            return (stepText, error);
+
 
         }
 
@@ -290,7 +317,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             var tsc = new TaskCompletionSource<bool>();
 
             allowScreen.Closed += (s, e) => tsc.SetResult(true);
-            
+
             allowScreen.Show();
 
             mainVM.ScreenControl = false;
@@ -299,7 +326,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             mainVM.ScreenControl = true;
 
-            if(allowScreenVM.IsAllowed)
+            if (allowScreenVM.IsAllowed)
             {
                 await _plcConnection.ResetScrapCage();
             }
@@ -309,5 +336,34 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             await _plcConnection.ResetOP20ProductsCount();
         }
+
+        private async Task SaveTraceability(OP20_Automatic_Read oP20_Automatic_Read, OP20_CurrentProduction currentProduction, Recipe recipe)
+        {
+
+            OP20_MainWindowVM mainVM = serviceProvider.GetRequiredService<OP20_MainWindowVM>();
+
+            OP20_Traceability oP20_Traceability = new()
+            {
+                CondenserVerified = recipe.VerifyCondenser,
+                CondenserCoversVerified = recipe.VerifyCondenserCovers,
+                RadiatorVerified = recipe.VerifyRadiator,
+                RadiatorCodeVerified = recipe.VerifyRadiatorLabel,
+                TraceabilityCodeVerified = recipe.VerifyTraceabilityLabel,
+                DateTimeOP20 = DateTime.Now,
+                FinalCondenserPressure = oP20_Automatic_Read.CondenserAteqPressure,
+                FinalCondenserLeak = oP20_Automatic_Read.CondenserAteqLeak,
+                FinalCondenserPSRead = oP20_Automatic_Read.CondenserPS,
+                FinalRadiatorPressure = oP20_Automatic_Read.RadiatorAteqPressure,
+                FinalRadiatorLeak = oP20_Automatic_Read.RadiatorAteqLeak,
+                FinalRadiatorPSRead = oP20_Automatic_Read.RadiatorPS,
+                RadiatorCode = currentProduction.RadiatorCode,
+                TraceabilityCode = currentProduction.TraceabilityCode,
+                User = mainVM.LoggedUser
+            };
+
+            await oP20_TraceabilityRepository.AddTraceability(oP20_Traceability);
+
+        }
+
     }
 }

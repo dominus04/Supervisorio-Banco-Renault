@@ -139,7 +139,9 @@ namespace Supervisório_Banco_Renault.ViewModels
         private async void ProcessRead()
         {
             StepText = stepStringDict.GetValueOrDefault(OP10AutomaticRead.Step, "");
+
             OP10_Error = OP10AutomaticRead.Step >= 100;
+
             if(OP10AutomaticRead.Step == 50)
             {
                 var op10_Data = new OP10_Traceability 

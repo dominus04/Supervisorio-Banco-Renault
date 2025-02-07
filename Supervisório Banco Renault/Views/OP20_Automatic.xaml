@@ -157,14 +157,14 @@
 
                     <Label Grid.Row="1" Content="Lado 1" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="2" Text="{Binding L1Text}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
+                    <TextBlock Grid.Row="2" Text="{Binding L1CurrentProduction.StepText}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding L1Error}" Value="true">
+                                    <DataTrigger Binding="{Binding L1CurrentProduction.Error}" Value="true">
                                         <Setter Property="Background" Value="Red"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding L1Error}" Value="false">
+                                    <DataTrigger Binding="{Binding L1CurrentProduction.Error}" Value="false">
                                         <Setter Property="Background" Value="Transparent"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -283,14 +283,14 @@
 
                     <Label Grid.Row="1" Content="Lado 2" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="2" Text="{Binding L2Text}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
+                    <TextBlock Grid.Row="2" Text="{Binding L2CurrentProduction.StepText}" d:Text="Step" FontWeight="SemiBold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="20,0">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding L2Error}" Value="true">
+                                    <DataTrigger Binding="{Binding L2CurrentProduction.Error}" Value="true">
                                         <Setter Property="Background" Value="Red"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding L2Error}" Value="false">
+                                    <DataTrigger Binding="{Binding L2CurrentProduction.Error}" Value="false">
                                         <Setter Property="Background" Value="Transparent"/>
                                     </DataTrigger>
                                 </Style.Triggers>

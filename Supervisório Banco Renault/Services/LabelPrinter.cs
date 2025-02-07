@@ -1,13 +1,9 @@
 ﻿using Supervisório_Banco_Renault.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Windows;
 
 namespace Supervisório_Banco_Renault.Services
 {
@@ -33,11 +29,11 @@ namespace Supervisório_Banco_Renault.Services
 
             TimeSpan currentTime = DateTime.Now.TimeOfDay;
 
-            if(currentTime >= label.Tunr1Init && currentTime <= label.Tunr1End)
+            if (currentTime >= label.Tunr1Init && currentTime <= label.Tunr1End)
                 turno = "1";
-            else if(currentTime >= label.Tunr2Init && currentTime <= label.Tunr2End)
+            else if (currentTime >= label.Tunr2Init && currentTime <= label.Tunr2End)
                 turno = "2";
-            else if(currentTime >= label.Tunr3Init && currentTime <= label.Tunr3End)
+            else if (currentTime >= label.Tunr3Init && currentTime <= label.Tunr3End)
                 turno = "3";
 
             string zplCommand = currentRecipe.Label.LabelBaseLayout;
@@ -48,12 +44,35 @@ namespace Supervisório_Banco_Renault.Services
             zplCommand = zplCommand.Replace("[TURNO]", turno);
             zplCommand = zplCommand.Replace("[SEQUENCIAL]", sequential);
 
-
-            using(TcpClient client = new(PRINTER_IP, PORT))
+            while (true)
             {
-                byte[] data = Encoding.UTF8.GetBytes(zplCommand);
-                NetworkStream stream = client.GetStream();
-                stream.Write(data, 0, data.Length);
+                try
+                {
+
+                    using (TcpClient client = new(PRINTER_IP, PORT))
+                    {
+                        byte[] data = Encoding.UTF8.GetBytes(zplCommand);
+                        NetworkStream stream = client.GetStream();
+                        stream.Write(data, 0, data.Length);
+                    }
+
+                    break;
+
+                }
+                catch (Exception e)
+                {
+                    if (MessageBox.Show(
+                    $"Erro ao conectar à impressora.\n" +
+                    "Verifique a conexão e aperte 'Sim' para tentar novamente ou 'Não' para cancelar a impressão.",
+                    "Erro de Conexão",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Error) == MessageBoxResult.No)
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(2000);
+                }
             }
 
             var traceabilityPattern = @"(?:\^BX.*\^FD|\^BQ.*\^FD)(.*)\^FS";
@@ -81,7 +100,7 @@ namespace Supervisório_Banco_Renault.Services
             var limit = sequentialDict[sequentialFormat];
 
             int number;
-            if (File.Exists(sequentialFilePath)) 
+            if (File.Exists(sequentialFilePath))
             {
                 number = int.Parse(File.ReadAllText(sequentialFilePath));
             }
@@ -99,6 +118,22 @@ namespace Supervisório_Banco_Renault.Services
             return number.ToString($"D{sequentialFormat}");
 
         }
+
+        static string GetPrinterStatus()
+        {
+            using (TcpClient client = new TcpClient(PRINTER_IP, PORT))
+            using (NetworkStream stream = client.GetStream())
+            {
+                byte[] command = Encoding.ASCII.GetBytes("~HS\r\n");
+                stream.Write(command, 0, command.Length);
+
+                byte[] buffer = new byte[1024];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                return Encoding.ASCII.GetString(buffer, 0, bytesRead);
+            }
+        }
+
+
 
     }
 }

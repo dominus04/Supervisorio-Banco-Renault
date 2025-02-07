@@ -65,6 +65,7 @@ namespace Supervisório_Banco_Renault
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IOP10_TraceabilityRepository, OP10_TraceabilityRepository>();
             services.AddScoped<ILabelRepository, LabelRepository>();
+            services.AddScoped<IOP20_TraceabilityRepository, OP20_TraceabilityRepository>();
 
             // Adding the OP10 VMs to the service
             services.AddSingleton<OP10_MainWindowVM>();
