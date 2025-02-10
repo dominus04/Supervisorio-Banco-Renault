@@ -38,6 +38,7 @@ namespace Supervisório_Banco_Renault.Services
 
             string zplCommand = currentRecipe.Label.LabelBaseLayout;
             zplCommand = zplCommand.Replace("[C_INTERNO]", currentRecipe.ModuleCode);
+            zplCommand = zplCommand.Replace("[C_CLIENTE]", currentRecipe.ClientCode);
             zplCommand = zplCommand.Replace("[DATAJU]", julianDate);
             zplCommand = zplCommand.Replace("[DATA]", date);
             zplCommand = zplCommand.Replace("[HORA]", time);

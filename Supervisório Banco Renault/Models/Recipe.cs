@@ -5,6 +5,7 @@
 
         public Guid Id { get; set; }
         public string? ModuleCode { get; set; }
+        public string? ClientCode { get; set; }
         public short InitialCharacter { get; set; } = 1;
         public short CodeLength { get; set; } = 1;
         public bool VerifyRadiatorLabel { get; set; } = true;

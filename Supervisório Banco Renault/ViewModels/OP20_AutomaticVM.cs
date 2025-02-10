@@ -345,6 +345,8 @@ namespace Supervisório_Banco_Renault.ViewModels
             OP20_Traceability oP20_Traceability = new()
             {
                 CondenserVerified = recipe.VerifyCondenser,
+                ModuleCode = recipe.ModuleCode!,
+                ClientCode = recipe.ClientCode!,
                 CondenserCoversVerified = recipe.VerifyCondenserCovers,
                 RadiatorVerified = recipe.VerifyRadiator,
                 RadiatorCodeVerified = recipe.VerifyRadiatorLabel,
