@@ -75,6 +75,7 @@ namespace Supervisório_Banco_Renault
             // Adding the OP20 VMs to service
             services.AddSingleton<OP20_MainWindowVM>();
             services.AddScoped<OP20_AutomaticVM>();
+            services.AddScoped<OP20_ManualVM>();
 
 
             // Adding the common VMs to service
@@ -110,6 +111,8 @@ namespace Supervisório_Banco_Renault
             PlcConnection plcConnection = _serviceProvider.GetService<PlcConnection>()!;
             await plcConnection.DeactivateOP20Automatic();
             await plcConnection.DeactivateOP10Automatic();
+            await plcConnection.DeactivateOP20Manual();
+            await plcConnection.DeactivateOP10Manual();
         }
     }
 
