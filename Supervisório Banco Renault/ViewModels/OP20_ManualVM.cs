@@ -62,6 +62,8 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public async void Stop()
         {
+            _cancellationTokenSource?.Cancel();
+
             await plcConnection.DeactivateOP20Manual();
         }
 

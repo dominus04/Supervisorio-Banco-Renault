@@ -48,5 +48,11 @@ namespace Supervisório_Banco_Renault.Views
                 }
             }
         }
+
+        private void WindowInitialized(object sender, EventArgs e)
+        {
+            this.Left = (1920 - this.Width) / 2;
+            this.Top = (1080 - this.Height) / 2;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using S7.Net;
 using Supervisório_Banco_Renault.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.Services
@@ -163,6 +164,21 @@ namespace Supervisório_Banco_Renault.Services
         }
 
         #endregion
+
+
+        internal async Task<byte> GetAlarmsList()
+        {
+            return (await Plc.ReadBytesAsync(DataType.DataBlock, 1, 10, 1))[0];
+
+        }   
+
+        internal async Task<bool> IsPLCEmergencyOK()
+        {
+            byte alarmByte = (await Plc.ReadBytesAsync(DataType.DataBlock, 1, 10, 1))[0];
+
+            return alarmByte.SelectBit(3);
+
+        }
 
         internal async Task ResetOP20ProductsCount()
         {

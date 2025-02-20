@@ -4,7 +4,9 @@ using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
@@ -13,6 +15,8 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         #region General Properties
 
+        public string? imagesFolder;
+
         private readonly PlcConnection _plcConnection = plcConnection;
 
         private readonly RecipeRepository _recipeRepository = (RecipeRepository)recipeRepository;
@@ -20,7 +24,6 @@ namespace Supervisório_Banco_Renault.ViewModels
         private readonly OP10_TraceabilityRepository _op10TraceabilityRepository = (OP10_TraceabilityRepository)oP10_TraceabilityRepository;
 
         private CancellationTokenSource? _cancellationTokenSource;
-
 
         //Observable collection de recipes para binding
         private ObservableCollection<Recipe>? _recipes;
@@ -61,32 +64,32 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        private readonly Dictionary<ushort, string> stepStringDict = new()
+        private readonly Dictionary<ushort, string[]> stepStringDict = new()
         {
-            [0] = "Acione o botão para iniciar",
-            [5] = "Reiniciando as variáveis",
-            [10] = "Iniciando a leitura do código do radiador",
-            [15] = "Lendo código do radiador",
-            [20] = "Verificando código do radiador",
-            [25] = "Iniciando teste do radiador",
-            [30] = "Iniciando teste do condensador",
-            [35] = "Produto em teste",
-            [40] = "Recuando conjunto de vedação",
-            [45] = "Aguardando giro da mesa",
-            [46] = "Aguardando giro da mesa",
-            [47] = "Acione o botão para verificação das tampas do condensador",
-            [55] = "Verificando tampões",
-            [56] = "Cole a etiqueta e acione o botão para verificação do código",
-            [65] = "Lendo código de rastreabilidade",
-            [70] = "Verificando código de rastreabilidade",
-            [71] = "Código da etiqueta de rastreabilidade incompatível com a impressa, cole a correta e pressione start",
-            [75] = "Aguardando novo módulo e giro da mesa",
-            [100] = "Falha na leitura da etiqueta do módulo",
-            [101] = "Módulo com pendência na operação 10",
-            [102] = "Módulo com defeito",
-            [103] = "Ausência das tampas do condensador",
-            [104] = "Falha na leitura da etiqueta de rastreabilidade",
-            [1000] = "Máquina em emergência"
+            [0] = ["Posicione o módulo e acione o botão para iniciar", "modulo posicionado.jpg"],
+            [5] = ["Reiniciando as variáveis"],
+            [10] = ["Iniciando a leitura do código do radiador"],
+            [15] = ["Lendo código do radiador", "codigo de barras 1.jpg"],
+            [20] = ["Verificando código do radiador", "codigo de barras 1.jpg"],
+            [25] = ["Iniciando teste do radiador", "teste radiador.jpg"],
+            [30] = ["Iniciando teste do condensador", "teste condensador.jpg"],
+            [35] = ["Produto em teste", "teste radiador.jpg"],
+            [40] = ["Recuando conjunto de vedação", "bocais recuados.jpg"],
+            [45] = ["Retirar pinças, colocar os tampões do condensador e girar a mesa", "iserir tampas do condensador.jpg"],
+            [46] = ["Aguardando giro da mesa", "rotacionando mesa.jpg"],
+            [47] = ["Acione o botão para verificação das tampas do condensador", "tampas do condensador.jpg"],
+            [55] = ["Verificando tampões", "tampas do condensador.jpg"],
+            [56] = ["Cole a etiqueta e acione o botão para verificação do código", "colando etiqueta.jpg"],
+            [65] = ["Lendo código de rastreabilidade", "codigo de barras 2.jpg"],
+            [70] = ["Verificando código de rastreabilidade", "codigo de barras 2.jpg"],
+            [71] = ["Código da etiqueta de rastreabilidade incompatível com a impressa, cole a correta e pressione start", "etiqueta errada.jpg"],
+            [75] = ["Aguardando novo módulo e giro da mesa", "modulo posicionado.jpg"],
+            [100] = ["Peça ou etiqueta faltando", "etiqueta 1 faltando.jpg"],
+            [101] = ["Operação cancelada"],
+            [102] = ["Módulo com defeito", "produto com defeito.jpg"],
+            [103] = ["Ausência das tampas do condensador. Favor inserir e acionar o botão iniciar para verificação.", "ausencia tampas do condensador.jpg"],
+            [104] = ["Falha na leitura da etiqueta de rastreabilidade", "etiqueta 2 faltando.jpg"],
+            [1000] = ["Máquina em emergência", "emergencia.jpg"]
         };
 
         #endregion
@@ -153,12 +156,12 @@ namespace Supervisório_Banco_Renault.ViewModels
 
 
 
-                    Application.Current.Dispatcher.Invoke(() =>
+                    await Application.Current.Dispatcher.Invoke(async () =>
                     {
-                        L1AutomaticRead = l1Read;
-                        L2AutomaticRead = l2Read;
-                        OP20AutomaticCommomR = commonRead;
-                        ProcessRead();
+                        L1AutomaticRead = l1Read!;
+                        L2AutomaticRead = l2Read!;
+                        OP20AutomaticCommomR = commonRead!;
+                        await ProcessRead();
                     });
                 }
 
@@ -167,7 +170,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        private async void ProcessRead()
+        private async Task ProcessRead()
         {
            await ProcessStep(L1AutomaticRead, L1CurrentProduction, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK);
 
@@ -180,10 +183,24 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private async Task ProcessStep(OP20_Automatic_Read automaticRead, OP20_CurrentProduction currentProduction, Func<Task> setRadiatorLabelOK, Func<Task> setRadiatorLabelNOK, Func<Task> setTraceabilityLabelOK, Func<Task> setTraceabilityLabelNOK)
         {
-            currentProduction.StepText = stepStringDict.GetValueOrDefault(automaticRead.Step, "");
-            currentProduction.Error = automaticRead.Step >= 100;
+            string[] stepContent = stepStringDict.GetValueOrDefault(automaticRead.Step, Array.Empty<string>());
+            if(stepContent.Length > 0)
+            {
+                currentProduction.StepText = stepContent[0];
+                currentProduction.Error = automaticRead.Step >= 100;
+            }
 
-            if (automaticRead.Step >= 100 && automaticRead.Step < 1000)
+            try
+            {
+                currentProduction.StepImage = new BitmapImage(new Uri(Path.Combine(imagesFolder, stepContent[1])));
+            }
+            catch
+            {
+
+            }
+
+
+            if (automaticRead.Step == 102)
             {
                 currentProduction.StepText += ". Insira o produto na gaiola de refugo antes de prosseguir.";
             }
@@ -191,33 +208,35 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             if(automaticRead.Step == 0)
             {
-                currentProduction = new OP20_CurrentProduction();
+                 currentProduction = new OP20_CurrentProduction();
             }
+
 
             //The function verify if the step is 20 and if the code is in OP10 database, if not, the function will show a message to the user and wait for the user to allow the operation to continue
 
+
             if (automaticRead.Step == 20)
             {
-                currentProduction.RadiatorCode = automaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength);
+                
+                currentProduction.RadiatorCode = automaticRead.RadiatorLabel.Trim();
+                
+                currentProduction.OP10 = await _op10TraceabilityRepository.GetTraceabilityByRadiatorCode(currentProduction.RadiatorCode);
 
-                OP10_Traceability? op10Data = await _op10TraceabilityRepository.GetTraceabilityByRadiatorCode(currentProduction.RadiatorCode);
 
-                if (op10Data != null && op10Data.OP20_Executed == false)
+                if (currentProduction.OP10 != null && currentProduction.OP10.OP20_Executed == false)
                 {
-                    op10Data.OP20_Executed = true;
                     await setRadiatorLabelOK();
-                    await _op10TraceabilityRepository.UpdateTraceability(op10Data);
                 }
                 else
                 {
                     AllowScreenVM allowScreenVM = (AllowScreenVM)serviceProvider.GetService(typeof(AllowScreenVM))!;
                     OP20_MainWindowVM mainVM = serviceProvider.GetRequiredService<OP20_MainWindowVM>();
 
-                    if (op10Data == null)
+                    if (currentProduction.OP10 == null)
                     {
                         allowScreenVM.Message = "Operação 10 ainda não realizada, favor retirar o produto ou solicitar a aprovação da liderança.";
                     }
-                    else if (op10Data.OP20_Executed == true)
+                    else if (currentProduction.OP10.OP20_Executed == true)
                     {
                         allowScreenVM.Message = "Operação 20 já realizada, para repetição do teste favor solicitar aprovação da liderança";
                     }
@@ -252,25 +271,50 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             }
 
-            if (automaticRead.Step == 56)
+            if(automaticRead.Step == 47)
             {
-                currentProduction.VerifyTraceabilityCode = LabelPrinter.PrintLabelAndReturnTraceabilityCode(SelectedRecipe);
+                currentProduction.labelPrinted = false;
+            }
+
+            if (automaticRead.Step == 56 && !currentProduction.labelPrinted)
+            {
+                (currentProduction.LabelTraceabilityCode, currentProduction.ProductionDateTime) = LabelPrinter.PrintLabelAndReturnTraceabilityCode(SelectedRecipe!);
+
+                if (SelectedRecipe!.VerifyRadiatorLabel && currentProduction.OP10 != null)
+                {
+                    currentProduction.OP10!.OP20_Executed = true;
+                    await _op10TraceabilityRepository.UpdateTraceability(currentProduction.OP10);
+                }
+
+                currentProduction.labelPrinted = true;
             }
 
             if (automaticRead.Step == 70)
             {
-                currentProduction.TraceabilityCode = automaticRead.TraceabilityLabel;
+                currentProduction.TraceabilityCode = automaticRead.TraceabilityLabel.Trim();
 
-                if (currentProduction.VerifyTraceabilityCode.Contains(automaticRead.TraceabilityLabel))
+                if (currentProduction.LabelTraceabilityCode != null && currentProduction.LabelTraceabilityCode.Trim().Contains(currentProduction.TraceabilityCode))
                 {
                     await setTraceabilityLabelOK();
-                    await SaveTraceability(automaticRead, currentProduction, SelectedRecipe);
+                    currentProduction.traceabilitySaved = false;
                 }
                 else
                 {
                     await setTraceabilityLabelNOK();
                 }
             }
+
+            if (automaticRead.Step == 75 && !currentProduction.traceabilitySaved)
+            {
+                await SaveTraceability(automaticRead, currentProduction, SelectedRecipe!);
+                currentProduction.traceabilitySaved = true;
+            }
+
+            //if(automaticRead.Step == 102 && !currentProduction.traceabilitySaved)
+            //{
+            //    await SaveTraceability(automaticRead, currentProduction, SelectedRecipe!, false);
+            //    currentProduction.traceabilitySaved = true;
+            //}
 
 
 
@@ -292,6 +336,10 @@ namespace Supervisório_Banco_Renault.ViewModels
             {
                 await _plcConnection.ActivateOP20Automatic();
             }
+
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            imagesFolder = Path.Combine(appDataPath, "Supervisorio Banco Renault", "ImagesOP20");
+
         }
 
         public async void Stop()
@@ -342,7 +390,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             OP20_MainWindowVM mainVM = serviceProvider.GetRequiredService<OP20_MainWindowVM>();
 
-            OP20_Traceability oP20_Traceability = new()
+            OP20_TraceabilityModel oP20_Traceability = new()
             {
                 CondenserVerified = recipe.VerifyCondenser,
                 ModuleCode = recipe.ModuleCode!,
@@ -351,20 +399,19 @@ namespace Supervisório_Banco_Renault.ViewModels
                 RadiatorVerified = recipe.VerifyRadiator,
                 RadiatorCodeVerified = recipe.VerifyRadiatorLabel,
                 TraceabilityCodeVerified = recipe.VerifyTraceabilityLabel,
-                DateTimeOP20 = DateTime.Now,
-                FinalCondenserPressure = oP20_Automatic_Read.CondenserAteqPressure,
+                DateTimeOP20 = currentProduction.ProductionDateTime,
+                FinalCondenserPressure = (float)Math.Round(oP20_Automatic_Read.CondenserAteqPressure, 2),
                 FinalCondenserLeak = oP20_Automatic_Read.CondenserAteqLeak,
-                FinalCondenserPSRead = oP20_Automatic_Read.CondenserPS,
-                FinalRadiatorPressure = oP20_Automatic_Read.RadiatorAteqPressure,
+                FinalCondenserPSRead = (float)Math.Round(oP20_Automatic_Read.CondenserPS, 2),
+                FinalRadiatorPressure = (float)Math.Round(oP20_Automatic_Read.RadiatorAteqPressure, 2),
                 FinalRadiatorLeak = oP20_Automatic_Read.RadiatorAteqLeak,
-                FinalRadiatorPSRead = oP20_Automatic_Read.RadiatorPS,
+                FinalRadiatorPSRead = (float)Math.Round(oP20_Automatic_Read.RadiatorPS, 2),
                 RadiatorCode = currentProduction.RadiatorCode,
-                TraceabilityCode = currentProduction.TraceabilityCode,
-                User = mainVM.LoggedUser
+                TraceabilityCode = currentProduction.TraceabilityCode.Trim(),
+                UserName = mainVM.LoggedUser.Name!
             };
 
             await oP20_TraceabilityRepository.AddTraceability(oP20_Traceability);
-
         }
 
     }

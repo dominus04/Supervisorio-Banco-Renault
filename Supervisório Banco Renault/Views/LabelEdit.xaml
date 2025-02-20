@@ -15,10 +15,12 @@
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="160"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="15"/>
             </Grid.RowDefinitions>
 
             <TextBox Grid.Row="1" Text="{Binding Label.Name}" ui:ControlHelper.Header="Nome da Etiqueta: " FontSize="14" Margin="15, 5"/>
@@ -30,8 +32,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>
+                    <!--<ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>-->
                 </Grid.ColumnDefinitions>
 
                 <ComboBox Grid.Column="0" SelectedValue="{Binding Label.DateFormat}" ItemsSource="{Binding DateFormats}" ui:ControlHelper.Header="Formato da Data: " HorizontalAlignment="Stretch"/>
@@ -40,12 +42,42 @@
 
                 <ComboBox Grid.Column="4" SelectedValue="{Binding Label.TimeFormat}" ItemsSource="{Binding TimeFormats}" ui:ControlHelper.Header="Formato da Hora: " HorizontalAlignment="Stretch"/>
 
-                <ComboBox Grid.Column="6" SelectedValue="{Binding Label.SequentialFormat}" ui:ControlHelper.Header="Nº dígitos sequenciais:" HorizontalAlignment="Stretch" ItemsSource="{Binding SequentialFormats}"/>
+                <ComboBox Grid.Column="6" SelectedValue="{Binding Label.SequentialFormat}" ui:ControlHelper.Header="Nº dígitos sequenciais:" HorizontalAlignment="Stretch" ItemsSource="{Binding SequentialFormats}" Visibility="Collapsed"/>
             </Grid>
 
-            <TextBox Text="{Binding Label.LabelBaseLayout, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" ui:ControlHelper.Header="Layout da Etiqueta: " Margin="15, 5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="15, 5">
+                <Label  Content="Layout da Etiqueta:" FontSize="14" VerticalAlignment="Bottom"/>
+                <Button Content="?" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" HorizontalContentAlignment="Center" Height="25" Width="25" Margin="10, 0" Click="Button_Click" x:Name="captionButton"/>
+            </StackPanel>
 
-            <Grid Grid.Row="4" Margin="15, 5">
+            <Popup StaysOpen="False" x:Name="hintBox" PlacementTarget="{Binding ElementName=captionButton}" Placement="Top" AllowsTransparency="True">
+                <Border Background="LightGray" BorderThickness="0.5" BorderBrush="Black" Padding="10" CornerRadius="5">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <Label Content="Código do Cliente:"/>
+                            <Label Content="Código do Módulo:"/>
+                            <Label Content="Sequencial:"/>
+                            <Label Content="Data Juliana:"/>
+                            <Label Content="Turno:"/>
+                            <Label Content="Data:"/>
+                            <Label Content="Hora:"/>
+                        </StackPanel>
+                        <StackPanel Margin="20, 0, 0, 0">
+                            <Label HorizontalAlignment="Right" Content="[C__CLIENTE]"/>
+                            <Label HorizontalAlignment="Right" Content="[C__MODULO]"/>
+                            <Label HorizontalAlignment="Right" Content="[SEQUENCIAL]"/>
+                            <Label HorizontalAlignment="Right" Content="[DATAJU]"/>
+                            <Label HorizontalAlignment="Right" Content="[TURNO]"/>
+                            <Label HorizontalAlignment="Right" Content="[DATA]"/>
+                            <Label HorizontalAlignment="Right" Content="[HORA]"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Popup>
+
+            <TextBox Text="{Binding Label.LabelBaseLayout, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Margin="15, 0" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+
+            <Grid Grid.Row="5" Margin="15, 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="10"/>
@@ -77,11 +109,18 @@
 
             </Grid>
 
-            <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,5" Height="50">
-                
-                <Label Content="Salvar etiqueta" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" MouseDown="Add_MouseDown"/>
-                <Label Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" Margin="25,0,0,0" MouseDown="Cancel_MouseDown"/>
-            </StackPanel>
+            <Grid Grid.Row="7" HorizontalAlignment="Stretch" Margin="15,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="1" Content="Salvar etiqueta" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" MouseDown="Add_MouseDown"/>
+                <Label Grid.Column="3" Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" MouseDown="Cancel_MouseDown"/>
+            </Grid>
         </Grid>
     </Border>
 </Window>

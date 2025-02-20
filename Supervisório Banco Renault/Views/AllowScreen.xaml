@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         mc:Ignorable="d"
-        Title="AllowScreen" Height="300" Width="500" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" Topmost="True">
+        Title="AllowScreen" Height="300" Width="500" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="Manual" Topmost="True" Initialized="WindowInitialized">
 
     <Border BorderBrush="Black" BorderThickness="1" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         

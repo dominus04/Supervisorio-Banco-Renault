@@ -22,10 +22,12 @@ namespace Supervisório_Banco_Renault.Services
             //Defining the view for each OP10 VM
             RegisterMapping<OP10_AutomaticVM, OP10_Automatic>();
             RegisterMapping<OP10_ManualVM, OP10_Manual>();
+            RegisterMapping<OP10_TraceabilityVM, OP10_Traceability>();
 
             //Defining the view for each OP20 VM
             RegisterMapping<OP20_AutomaticVM, OP20_Automatic>();
             RegisterMapping<OP20_ManualVM, OP20_Manual>();
+            RegisterMapping<OP20_TraceabilityVM, OP20_Traceability>();
         }
 
         private void RegisterMapping<TViewModel, TWindow>() where TViewModel : BaseVM where TWindow : UserControl

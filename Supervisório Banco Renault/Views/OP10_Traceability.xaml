@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Supervisório_Banco_Renault.Views.OP10_Traceability"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
+             xmlns:services="clr-namespace:Supervisório_Banco_Renault.Services" 
+             mc:Ignorable="d" 
+             xmlns:ui="http://schemas.modernwpf.com/2019"
+             d:DesignHeight="980" d:DesignWidth="1620" Background="White">
+    
+    <UserControl.Resources>
+        <services:BooleanToSimNaoConverter x:Key="BooleanToSimNaoConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="15">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox ui:ControlHelper.Header="Código do radiador" FontSize="24" VerticalAlignment="Center" Text="{Binding RadiatorCode, UpdateSourceTrigger=PropertyChanged}"/>
+            <DatePicker Grid.Column="2" ui:ControlHelper.Header="Data Inicial" FontSize="24" SelectedDate="{Binding InitialDate}"/>
+            <DatePicker Grid.Column="4" ui:ControlHelper.Header="Data Final" FontSize="24" SelectedDate="{Binding FinalDate}"/>
+            <ComboBox Grid.Column="6" FontSize="24" ui:ControlHelper.Header="Operação 20" VerticalAlignment="Bottom" Margin="0,0,0,5" HorizontalAlignment="Stretch" SelectedIndex="{Binding OP20Executed}">
+                <ComboBoxItem Content="Ambos"/>
+                <ComboBoxItem Content="Executada"/>
+                <ComboBoxItem Content="Não executada"/>
+            </ComboBox>
+            <Button Grid.Column="8" Content="Exportar" VerticalAlignment="Bottom" FontSize="24" Margin="0,0,0,5" Width="250" Click="Button_Click"/>
+        </Grid>
+
+        <DataGrid x:Name="myDataGrid" Grid.Row="1" ItemsSource="{Binding Traceabilities}" AutoGenerateColumns="False" VerticalAlignment="Stretch" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Código do radiador" Binding="{Binding RadiatorCode}"/>
+                <DataGridTextColumn Header="Código do condensador" Binding="{Binding CondenserCode}"/>
+                <DataGridTextColumn Header="Data de produção" Binding="{Binding DateTime, StringFormat=\{0 : dd/MM/yyyy HH:mm:ss\}}"/>
+                <DataGridTextColumn Header="Operador" Binding="{Binding UserName}"/>
+                <DataGridTextColumn Header="OP20 executada" Binding="{Binding OP20_Executed, Converter={StaticResource BooleanToSimNaoConverter}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</UserControl>

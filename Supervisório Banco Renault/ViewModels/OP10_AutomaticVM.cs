@@ -3,7 +3,9 @@ using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Supervisório_Banco_Renault.ViewModels
@@ -12,6 +14,10 @@ namespace Supervisório_Banco_Renault.ViewModels
     {
 
         #region Properties
+
+        private bool traceabilitySaved = false;
+
+        public string? imagesFolder;
 
         private PlcConnection _plcConnection;
 
@@ -58,6 +64,17 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
+        private BitmapImage _stepImage;
+        public BitmapImage StepImage 
+        {
+            get { return _stepImage; }
+            set 
+            {
+                _stepImage = value;
+                OnPropertyChanged(nameof(StepImage));
+            }
+        }
+
         //Observable collection de recipes para binding
         private ObservableCollection<Recipe>? _recipes;
         public ObservableCollection<Recipe>? Recipes
@@ -86,23 +103,23 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
         }
 
-        private Dictionary<ushort, string> stepStringDict = new()
+        private Dictionary<ushort, string[]> stepStringDict = new()
         {
-            [0] = "Coloque o radiador e avance alavanca para travar",
-            [5] = "Indexando produto",
-            [10] = "Reiniciando variáveis",
-            [15] = "Iniciando leitura do código do radiador",
-            [20] = "Lendo código do radiador",
-            [25] = "Rotacione o produto para a posição de montagem do condensador",
-            [30] = "Pegue o parafuso na caixa",
-            [35] = "Parafuse o condensador no módulo",
-            [40] = "Lendo código do condensador",
-            [45] = "Rotacione o produto para a posição inicial",
-            [50] = "Gravando informações no banco de dados",
-            [55] = "Recue a alavanca e retire o módulo",
-            [100] = "Falha na leitura da etiqueta do radiador",
-            [101] = "Falha na leitura da etiqueta do condensador",
-            [1000] = "Máquina em emergência"
+            [0] = ["Coloque o radiador e avance alavanca para travar", "radiador posicionado 1.jpg"],
+            [5] = ["Indexando produto"],
+            [10] = ["Reiniciando variáveis"],
+            [15] = ["Iniciando leitura do código do radiador", "etiqueta radiador.jpg"],
+            [20] = ["Lendo código do radiador", "etiqueta radiador.jpg"],
+            [25] = ["Rotacione o produto para a posição de montagem do condensador", "radiador posicionado 2.jpg"],
+            [30] = ["Pegue o parafuso na caixa", "caixa parafusos aberta.jpg"],
+            [35] = ["Parafuse o condensador no módulo", "parafusamento.jpg"],
+            [40] = ["Lendo código do condensador", "etiqueta condensador.jpg"],
+            [45] = ["Rotacione o produto para a posição inicial", "rotacionando produto.jpg"],
+            [50] = ["Gravando informações no banco de dados"],
+            [55] = ["Recue a alavanca e retire o módulo", "alavanca.jpg"],
+            [100] = ["Falha na leitura da etiqueta do radiador", "etiqueta 1 faltando.jpg"],
+            [101] = ["Falha na leitura da etiqueta do condensador", "etiqueta 2 faltando.jpg"],
+            [1000] = ["Máquina em emergência", "emergencia.jpg"]
         };
 
         #endregion
@@ -138,21 +155,37 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private async void ProcessRead()
         {
-            StepText = stepStringDict.GetValueOrDefault(OP10AutomaticRead.Step, "");
+
+            if(OP10AutomaticRead.Step == 0)
+                traceabilitySaved = false;
+
+            string[] stepContent = stepStringDict.GetValueOrDefault(OP10AutomaticRead.Step, Array.Empty<string>());
+            StepText = stepContent[0];
+
+            try
+            {
+                StepImage = new BitmapImage(new Uri(Path.Combine(imagesFolder, stepContent[1])));
+            }
+            catch
+            {
+                
+            }
 
             OP10_Error = OP10AutomaticRead.Step >= 100;
 
-            if(OP10AutomaticRead.Step == 50)
+            if(OP10AutomaticRead.Step == 50 && !traceabilitySaved)
             {
-                var op10_Data = new OP10_Traceability 
+                var op10_Data = new OP10_TraceabilityModel 
                 {
-                    RadiatorCode = OP10AutomaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength),
-                    CondenserCode = OP10AutomaticRead.CondenserLabel,
-                    UserId = _oP10_MainWindowVM.LoggedUser.Id
+                    //RadiatorCode = OP10AutomaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength),
+                    RadiatorCode = OP10AutomaticRead.RadiatorLabel.Trim(),
+                    CondenserCode = OP10AutomaticRead.CondenserLabel.Trim(),
+                    UserName = _oP10_MainWindowVM.LoggedUser.Name!
                 };
                 if( await _op10_TraceabilityRepository.AddTraceability(op10_Data))
                 {
                     await _plcConnection.SetOP10DataSaved();
+                    traceabilitySaved = true;
                 }
             }
         }
@@ -169,6 +202,9 @@ namespace Supervisório_Banco_Renault.ViewModels
             {
                 await _plcConnection.ActivateOP10Automatic();
             }
+
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            imagesFolder = Path.Combine(appDataPath, "Supervisorio Banco Renault", "ImagesOP10");
         }
 
         public async void EndCycle()

@@ -12,7 +12,7 @@ namespace Supervisório_Banco_Renault.Services
         static readonly string PRINTER_IP = "192.168.1.50";
         static readonly int PORT = 9100;
 
-        public static string PrintLabelAndReturnTraceabilityCode(Recipe currentRecipe)
+        public static (string, DateTime) PrintLabelAndReturnTraceabilityCode(Recipe currentRecipe)
         {
 
             Label label = currentRecipe.Label;
@@ -22,8 +22,10 @@ namespace Supervisório_Banco_Renault.Services
             var julianDate = label.JulianDateFormat.Replace("YY", DateTime.Now.ToString("yy"));
             julianDate = julianDate.Replace("DDD", DateTime.Now.DayOfYear.ToString("D3"));
 
-            var date = DateTime.Now.ToString(label.DateFormat);
-            var time = DateTime.Now.ToString(label.TimeFormat);
+            var currentDateTime = DateTime.Now;
+
+            var date = currentDateTime.ToString(label.DateFormat);
+            var time = currentDateTime.ToString(label.TimeFormat);
 
             var turno = "";
 
@@ -37,7 +39,7 @@ namespace Supervisório_Banco_Renault.Services
                 turno = "3";
 
             string zplCommand = currentRecipe.Label.LabelBaseLayout;
-            zplCommand = zplCommand.Replace("[C_INTERNO]", currentRecipe.ModuleCode);
+            zplCommand = zplCommand.Replace("[C_MODULO]", currentRecipe.ModuleCode);
             zplCommand = zplCommand.Replace("[C_CLIENTE]", currentRecipe.ClientCode);
             zplCommand = zplCommand.Replace("[DATAJU]", julianDate);
             zplCommand = zplCommand.Replace("[DATA]", date);
@@ -63,11 +65,11 @@ namespace Supervisório_Banco_Renault.Services
                 catch (Exception e)
                 {
                     if (MessageBox.Show(
-                    $"Erro ao conectar à impressora.\n" +
-                    "Verifique a conexão e aperte 'Sim' para tentar novamente ou 'Não' para cancelar a impressão.",
-                    "Erro de Conexão",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Error) == MessageBoxResult.No)
+                        $"Erro ao conectar à impressora.\n" +
+                        "Verifique a conexão e aperte 'Sim' para tentar novamente ou 'Não' para cancelar a impressão.",
+                        "Erro de Conexão",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Error) == MessageBoxResult.No)
                     {
                         break;
                     }
@@ -78,7 +80,7 @@ namespace Supervisório_Banco_Renault.Services
 
             var traceabilityPattern = @"(?:\^BX.*\^FD|\^BQ.*\^FD)(.*)\^FS";
 
-            return Regex.Match(zplCommand, traceabilityPattern).Groups[1].Value;
+            return (Regex.Match(zplCommand, traceabilityPattern).Groups[1].Value, currentDateTime);
 
         }
 

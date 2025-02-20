@@ -33,5 +33,11 @@ namespace Supervisório_Banco_Renault.Views
         {
             OnPageSelected(this, "Login");
         }
+
+        public async Task VerifyEmergency()
+        {
+            OP20_MainWindowVM vm = (OP20_MainWindowVM)DataContext;
+            await vm.VerifyEmergency();
+        }
     }
 }

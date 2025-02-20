@@ -45,8 +45,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
         {
             if (user != null)
             {
-                user.IsDeleted = true;
-                user.DeletedAt = DateTime.Now;
+                _context.Remove(user);
                 return await _context.SaveChangesAsync() > 0;
             }
             return false;

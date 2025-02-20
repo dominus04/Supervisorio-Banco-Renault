@@ -9,8 +9,6 @@ namespace Supervisório_Banco_Renault.Models
         public string? Name { get; set; }
         public string? TagRFID { get; set; }
         public AccessLevel AccessLevel { get; set; }
-        public bool IsDeleted { get; set; }
-        public DateTime? DeletedAt { get; set; }
 
         public User()
         {

@@ -108,6 +108,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             _labelRepository = (LabelRepository)labelRepository;
             Label = new();
+            Label.SequentialFormat = 3;
         }
 
         public async Task<bool> AddOrUpdateLabel()

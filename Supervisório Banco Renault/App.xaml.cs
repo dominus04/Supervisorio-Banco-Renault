@@ -33,7 +33,7 @@ namespace Supervisório_Banco_Renault
             // Timer responsible for update hour and date each one minute
             _watchTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMinutes(1)
+                Interval = TimeSpan.FromMilliseconds(100)
             };
             _watchTimer.Tick += WatchTimerTick;
             _watchTimer.Start();
@@ -53,6 +53,7 @@ namespace Supervisório_Banco_Renault
         private void WatchTimerTick(object? sender, EventArgs e)
         {
             _mainWindowOP20?.HeaderUC.UpdateHourAndDate();
+            _ = _mainWindowOP20?.VerifyEmergency();
             _mainWindowOP10?.HeaderUC.UpdateHourAndDate();
         }
 
@@ -71,11 +72,14 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<OP10_MainWindowVM>();
             services.AddScoped<OP10_AutomaticVM>();
             services.AddScoped<OP10_ManualVM>();
+            services.AddTransient<OP10_TraceabilityVM>();
 
             // Adding the OP20 VMs to service
             services.AddSingleton<OP20_MainWindowVM>();
             services.AddScoped<OP20_AutomaticVM>();
             services.AddScoped<OP20_ManualVM>();
+            services.AddTransient<OP20_EmergencyVM>();
+            services.AddTransient<OP20_TraceabilityVM>();
 
 
             // Adding the common VMs to service
@@ -94,8 +98,6 @@ namespace Supervisório_Banco_Renault
             services.AddSingleton<PlcConnection>(provider => new PlcConnection(CpuType.S71200, "192.168.1.1", 0, 1));
 
             // Adding the services functions to the service
-
-
         }
 
         // Function to apply migration to the DB if needed
@@ -106,14 +108,25 @@ namespace Supervisório_Banco_Renault
             db.Database.Migrate();
         }
 
-        private async void OnExit(object sender, ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
+            
+            var mre = new ManualResetEventSlim(false);
+
             PlcConnection plcConnection = _serviceProvider.GetService<PlcConnection>()!;
-            await plcConnection.DeactivateOP20Automatic();
-            await plcConnection.DeactivateOP10Automatic();
-            await plcConnection.DeactivateOP20Manual();
-            await plcConnection.DeactivateOP10Manual();
+
+            Task.Run(async () =>
+            {
+                await plcConnection.DeactivateOP20Automatic();
+                await plcConnection.DeactivateOP10Automatic();
+                await plcConnection.DeactivateOP20Manual();
+                await plcConnection.DeactivateOP10Manual();
+                mre.Set();
+            });
+
+            mre.Wait();
+
+            base.OnExit(e);
         }
     }
-
 }

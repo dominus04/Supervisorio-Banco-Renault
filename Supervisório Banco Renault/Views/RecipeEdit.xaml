@@ -30,9 +30,9 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" VerticalAlignment="Center" FontSize="14" Text="{Binding ModuleCode, Mode=TwoWay}" ui:ControlHelper.Header="Código do Módulo:"/>
-                <ui:NumberBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição inicial do código:" Value="{Binding InitialCharacter, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1"/>
-                <ui:NumberBox Grid.Column="4" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Comprimento do código:" Value="{Binding CodeLength, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1"/>
+                <TextBox Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" FontSize="14" Text="{Binding ModuleCode, Mode=TwoWay}" ui:ControlHelper.Header="Código do Módulo:"/>
+                <ui:NumberBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição inicial do código:" Value="{Binding InitialCharacter, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1" Visibility="Collapsed"/>
+                <ui:NumberBox Grid.Column="4" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Comprimento do código:" Value="{Binding CodeLength, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1" Visibility="Collapsed"/>
 
             </Grid>
 

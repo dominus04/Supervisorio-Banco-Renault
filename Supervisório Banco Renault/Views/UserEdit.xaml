@@ -22,7 +22,7 @@
             <StackPanel Margin="30,10" VerticalAlignment="Center">
                 <TextBox FontSize="16" VerticalContentAlignment="Center" Text="{Binding User.Name}" ui:ControlHelper.Header="Nome:" Margin="0,0,0,10"/>
                 <ComboBox x:Name="userLevelComboBox" FontSize="16" SelectedItem="{Binding User.AccessLevel}" HorizontalAlignment="Stretch" ui:ControlHelper.Header="Nivel de acesso:"/>
-                <TextBox Height="0" Width="0" Text="{Binding User.TagRFID}" x:Name="tagTextBox" KeyDown="TagRFIDTextOnKeyDown" Style="{x:Null}"/>
+                <TextBox Height="0" Width="0" Text="{Binding User.TagRFID, UpdateSourceTrigger=PropertyChanged}" x:Name="tagTextBox" KeyDown="TagRFIDTextOnKeyDown" Style="{x:Null}"/>
                 <Button x:Name="ReadRFIDButton" Content="Ler Crachá" FontSize="16" Margin="0,30,0,0" Click="OnClickButtonReadTag" Focusable="True" HorizontalAlignment="Stretch"/>
             </StackPanel>
 

@@ -172,8 +172,9 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="404" Margin="45" Visibility="Hidden"/>
-                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45" Fill="LightGray" Height="404"/>
+                    <Border Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="404" Margin="45" Background="LightGray">
+                        <Image Grid.Row="3" Source="{Binding L1CurrentProduction.StepImage}" Stretch="Uniform"/>
+                    </Border>
 
                     <Grid Grid.Row="4" DataContext="{Binding L1AutomaticRead}">
                         <Grid.ColumnDefinitions>
@@ -298,8 +299,9 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <Image Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Visibility="Hidden"/>
-                    <Rectangle Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="45" Fill="LightGray"/>
+                    <Border Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="404" Margin="45" Background="LightGray">
+                        <Image Grid.Row="3" Source="{Binding L2CurrentProduction.StepImage}" Stretch="Uniform"/>
+                    </Border>
 
                     <Grid Grid.Row="4" DataContext="{Binding L2AutomaticRead}">
                         <Grid.ColumnDefinitions>

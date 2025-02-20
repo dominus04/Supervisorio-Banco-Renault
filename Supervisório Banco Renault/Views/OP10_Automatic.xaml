@@ -36,7 +36,10 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <Rectangle Height="480" Width="854" Grid.Row="4" Fill="DarkGray" VerticalAlignment="Top"/>
+        <Border Height="480" Width="845" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Top" Background="LightGray">
+            <Image Source="{Binding StepImage}" Stretch="Uniform"/>
+        </Border>
+        
 
         <Label Grid.Row="6" Content="Interromper Ciclo" Height="100" Width="400" FontSize="42" FontWeight="SemiBold" VerticalContentAlignment="Center" Style="{StaticResource HoverableLabelRedButton}" HorizontalContentAlignment="Center" Margin="45, 25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Cursor="Hand" MouseDown="EndCycleMouseDown"/>
 

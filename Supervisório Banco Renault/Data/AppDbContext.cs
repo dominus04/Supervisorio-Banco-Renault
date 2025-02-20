@@ -22,9 +22,9 @@ namespace Supervisório_Banco_Renault.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<OP10_Traceability> OP10_Traceabilities { get; set; }
+        public DbSet<OP10_TraceabilityModel> OP10_Traceabilities { get; set; }
         public DbSet<Label> Labels { get; set; }
-        public DbSet<OP20_Traceability> OP20_Traceabilities { get; set; }
+        public DbSet<OP20_TraceabilityModel> OP20_Traceabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,6 @@ namespace Supervisório_Banco_Renault.Data
             modelBuilder.Entity<User>().Property(u => u.TagRFID).IsRequired();
             modelBuilder.Entity<User>().HasIndex(U => U.TagRFID).IsUnique();
             modelBuilder.Entity<User>().Property(u => u.AccessLevel).IsRequired();
-            modelBuilder.Entity<User>().Property(u => u.IsDeleted).HasDefaultValue(false);
-
-            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
             modelBuilder.Entity<User>().HasData(
                     new User
                     {
@@ -60,11 +57,10 @@ namespace Supervisório_Banco_Renault.Data
 
             #region OP10_Traceability db settings
 
-            modelBuilder.Entity<OP10_Traceability>().HasKey(t => t.Id);
-            modelBuilder.Entity<OP10_Traceability>().Property(t => t.RadiatorCode).IsRequired();
-            modelBuilder.Entity<OP10_Traceability>().Property(t => t.CondenserCode).IsRequired();
-            modelBuilder.Entity<OP10_Traceability>().Property(t => t.OP20_Executed).HasDefaultValue(false);
-            modelBuilder.Entity<OP10_Traceability>().HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
+            modelBuilder.Entity<OP10_TraceabilityModel>().HasKey(t => t.Id);
+            modelBuilder.Entity<OP10_TraceabilityModel>().Property(t => t.RadiatorCode).IsRequired();
+            modelBuilder.Entity<OP10_TraceabilityModel>().Property(t => t.CondenserCode).IsRequired();
+            modelBuilder.Entity<OP10_TraceabilityModel>().Property(t => t.OP20_Executed).HasDefaultValue(false);
 
             #endregion
 
@@ -87,8 +83,7 @@ namespace Supervisório_Banco_Renault.Data
 
             #region OP20_Traceability db settings
 
-            modelBuilder.Entity<OP20_Traceability>().HasKey(t => t.Id);
-            modelBuilder.Entity<OP20_Traceability>().HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
+            modelBuilder.Entity<OP20_TraceabilityModel>().HasKey(t => t.Id);
 
             #endregion
 
