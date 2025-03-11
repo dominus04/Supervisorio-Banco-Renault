@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:Supervisório_Banco_Renault.Views"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
-        Title="RecipeVM" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="458" Width="720" Topmost="True">
+        Title="RecipeVM" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" Height="500" Width="720" Topmost="True">
 
     <Border BorderBrush="Gray" BorderThickness="0.5" CornerRadius="10" Background="White" Effect="{StaticResource DropShadowEffect}" Margin="10">
         
         <Grid Background="Transparent"> 
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="15"/>
+                <RowDefinition Height="08"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -26,13 +26,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center" FontSize="14" Text="{Binding ModuleCode, Mode=TwoWay}" ui:ControlHelper.Header="Código do Módulo:"/>
-                <ui:NumberBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição inicial do código:" Value="{Binding InitialCharacter, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1" Visibility="Collapsed"/>
-                <ui:NumberBox Grid.Column="4" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Comprimento do código:" Value="{Binding CodeLength, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1" Visibility="Collapsed"/>
+                <TextBox Grid.Column="0" VerticalAlignment="Center" FontSize="14" Text="{Binding ModuleCode, Mode=TwoWay}" ui:ControlHelper.Header="Código do módulo:"/>
+                <TextBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" Text="{Binding RadiatorModel, Mode=TwoWay}" ui:ControlHelper.Header="Modelo do radiador:"/>
+                
+                
+                <!--<ui:NumberBox Grid.Column="2" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Posição inicial do código:" Value="{Binding InitialCharacter, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1" Visibility="Collapsed"/>
+                <ui:NumberBox Grid.Column="4" VerticalAlignment="Center" FontSize="14" ui:ControlHelper.Header="Comprimento do código:" Value="{Binding CodeLength, Mode=TwoWay}" SpinButtonPlacementMode="Compact" Minimum="1" Visibility="Collapsed"/>-->
 
             </Grid>
 
@@ -43,11 +44,11 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" VerticalAlignment="Center" FontSize="14" Text="{Binding Recipe.ClientCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Código do Cliente:"/>
+                <TextBox Grid.Column="0" VerticalAlignment="Center" FontSize="14" Text="{Binding Recipe.ClientCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Código do cliente:"/>
 
                 <ComboBox Grid.Column="2" FontSize="14" ItemsSource="{Binding Labels}" SelectedItem="{Binding Recipe.Label}" DisplayMemberPath="Name" SelectedValuePath="Id" ui:ControlHelper.Header="Modelo da etiqueta:" HorizontalAlignment="Stretch" Height="55"/>
             </Grid>
-            
+
 
             <Grid Grid.Row="3" Margin="15, 5" DataContext="{Binding Recipe}">
                 <Grid.ColumnDefinitions>
@@ -58,20 +59,27 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <GroupBox Header="Verificações" FontSize="16" Grid.Column="0" Style="{x:Null}" BorderBrush="DarkGray">
+                <GroupBox Header="Processos OP20" FontSize="16" Grid.Column="0" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
-                        <CheckBox Content="Etiqueta do radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiatorLabel, Mode=TwoWay}"/>
-                        <CheckBox Content="Etiqueta final" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyTraceabilityLabel, Mode=TwoWay}"/>
-                        <CheckBox Content="Tampões condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenserCovers, Mode=TwoWay}"/>
-                        <CheckBox Content="Radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiator, Mode=TwoWay}"/>
-                        <CheckBox Content="Condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenser, Mode=TwoWay}"/>
+                        <CheckBox IsChecked="{Binding ReadRadiatorLabel, Mode=TwoWay}" Margin="0, 5,0,0">
+                            <TextBlock Text="Ler a etiqueta do radiador" Margin="0,-9,0,0"/>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding VerifyRadiatorLabel, Mode=TwoWay}" Margin="0, 0,0,5" IsEnabled="{Binding ReadRadiatorLabel}">
+                            <TextBlock Text="Verificar status da OP10" Margin="0,0,0,0"/>
+                        </CheckBox>
+                        <CheckBox Content="Verificar etiqueta final" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyTraceabilityLabel, Mode=TwoWay}"/>
+                        <CheckBox IsChecked="{Binding VerifyCondenserCovers, Mode=TwoWay}" Margin="0, 10,0,0">
+                            <TextBlock Text="Verificar tampões condensador" Margin="0,-9,0,0"/>
+                        </CheckBox>
+                        <CheckBox Content="Testar Radiador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyRadiator, Mode=TwoWay}"/>
+                        <CheckBox Content="Testar Condensador" VerticalContentAlignment="Center"  IsChecked="{Binding VerifyCondenser, Mode=TwoWay}"/>
                     </StackPanel>
-                </GroupBox>
+                </GroupBox >
 
                 <GroupBox Header="Radiador" FontSize="16" Grid.Column="2" IsEnabled="{Binding VerifyRadiator}" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
                         <ui:NumberBox ui:ControlHelper.Header="Programa ATEQ:" SpinButtonPlacementMode="Compact" Minimum="1" Value="{Binding AteqRadiatorProgram, Mode=TwoWay}" Margin="0,0,0,5" FontSize="14"/>
-                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding RadiatorPSMinimum, Mode=TwoWay}" Margin="0,0,0,5" SmallChange="0.01" LargeChange="1" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding RadiatorPSMinimum, Mode=TwoWay}" Margin="0,10,0,15" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                         <ui:NumberBox ui:ControlHelper.Header="Pressão máxima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding RadiatorPSMaximum}" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                     </StackPanel>
                 </GroupBox>
@@ -79,19 +87,39 @@
                 <GroupBox Header="Condensador" FontSize="16" Grid.Column="4"  IsEnabled="{Binding VerifyCondenser}" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel Orientation="Vertical" Margin="5" VerticalAlignment="Center">
                         <ui:NumberBox ui:ControlHelper.Header="Programa ATEQ:" SpinButtonPlacementMode="Compact" Minimum="1" Value="{Binding AteqCondenserProgram, Mode=TwoWay}" Margin="0,0,0,5" FontSize="14"/>
-                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMinimum, Mode=TwoWay}" Margin="0,0,0,5" SmallChange="0.01" LargeChange="1" FontSize="14"/>
+                        <ui:NumberBox ui:ControlHelper.Header="Pressão mínima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMinimum, Mode=TwoWay}" Margin="0,10,0,15" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                         <ui:NumberBox ui:ControlHelper.Header="Pressão máxima pressostato:" SpinButtonPlacementMode="Compact" Minimum="0" Value="{Binding CondenserPSMaximum, Mode=TwoWay}" SmallChange="0.01" LargeChange="1" FontSize="14"/>
                     </StackPanel>
                 </GroupBox>
 
             </Grid>
 
+            <Grid Grid.Row="4" Margin="15,5,15,0" Height="60">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="130"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,15,0" Height="50">
-                <Label Content="Salvar receita" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" MouseDown="Add_MouseDown"/>
-                <Label Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" Margin="25,0,0,0" MouseDown="Cancel_MouseDown"/>
-            </StackPanel>
+                <GroupBox Header="Leituras OP10" FontSize="16" Grid.Column="0" Style="{x:Null}" BorderBrush="DarkGray" DataContext="{Binding Recipe}">
+                    <Grid Margin="5,0">
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
+                        <CheckBox Content="Radiador" VerticalContentAlignment="Center"  IsChecked="{Binding ReadRadiatorLabelOP10, Mode=TwoWay}" Grid.Column="0"/>
+                        <CheckBox Content="Condensador" VerticalContentAlignment="Center"  IsChecked="{Binding ReadCondenserLabelOP10, Mode=TwoWay}" Grid.Column="1"/>
+                        
+                    </Grid>
+                </GroupBox>
+
+                <Label Content="Salvar receita" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" MouseDown="Add_MouseDown" Grid.Column="2" Height="50" VerticalAlignment="Bottom"/>
+                <Label Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" MouseDown="Cancel_MouseDown" Grid.Column="4" Height="50" VerticalAlignment="Bottom"/>
+            </Grid>
         </Grid>
     </Border>
 </Window>

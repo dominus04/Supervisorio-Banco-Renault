@@ -53,7 +53,7 @@
                 
             </Border>
 
-            <Border Grid.Column="2" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF" DataContext="{Binding OP20AutomaticCommomR}">
+            <Border Grid.Column="2" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF" >
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="45"/>
@@ -66,10 +66,11 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0">
+                        <StackPanel Grid.Column="0" DataContext="{Binding OP20AutomaticCommomR}">
                             <Label Content="1" FontSize="24" HorizontalAlignment="Center"/>
                             <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Rectangle x:Name="scrapCage1" Grid.Column="0" Width="20" Height="20">
@@ -89,7 +90,7 @@
                             </Border>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Column="1" DataContext="{Binding OP20AutomaticCommomR}">
                             <Label Content="2" FontSize="24" HorizontalAlignment="Center"/>
                             <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Rectangle x:Name="scrapCage2" Grid.Column="0" Width="20" Height="20">
@@ -109,7 +110,7 @@
                             </Border>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2">
+                        <StackPanel Grid.Column="2" DataContext="{Binding OP20AutomaticCommomR}">
                             <Label Content="3" FontSize="24" HorizontalAlignment="Center"/>
                             <Border BorderBrush="Black" BorderThickness=".5" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Rectangle x:Name="scrapCage3" Grid.Column="0" Width="20" Height="20">
@@ -129,8 +130,10 @@
                             </Border>
                         </StackPanel>
 
-                        <Label Grid.Column="3" Content="Resetar Gaiola" Style="{StaticResource HoverableLabelGrayButton}" Margin="45,10" FontSize="16" MouseDown="ResetScrapCageMouseDown" />
+                        <Label Grid.Column="3" Content="Resetar Gaiola" Style="{StaticResource HoverableLabelGrayButton}" Margin="10,10" FontSize="16" MouseDown="ResetScrapCageMouseDown" />
 
+                        <ToggleButton Grid.Column="4" Content="{Binding ScrapButtonText, Mode=TwoWay}" Margin="0,10,20,10" FontSize="16" FontWeight="Bold" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsChecked="{Binding IsScrapEnabled, Mode=TwoWay}"/>
+                        
                     </Grid>
                 </Grid>
             </Border>
@@ -161,10 +164,13 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding L1CurrentProduction.Error}" Value="true">
+                                    <DataTrigger Binding="{Binding L1CurrentProduction.ErrorState}" Value="1">
+                                        <Setter Property="Background" Value="Yellow"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding L1CurrentProduction.ErrorState}" Value="2">
                                         <Setter Property="Background" Value="Red"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding L1CurrentProduction.Error}" Value="false">
+                                    <DataTrigger Binding="{Binding L1CurrentProduction.ErrorState}" Value="0">
                                         <Setter Property="Background" Value="Transparent"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -288,10 +294,13 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding L2CurrentProduction.Error}" Value="true">
+                                    <DataTrigger Binding="{Binding L2CurrentProduction.ErrorState}" Value="1">
+                                        <Setter Property="Background" Value="Yellow"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding L2CurrentProduction.ErrorState}" Value="2">
                                         <Setter Property="Background" Value="Red"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding L2CurrentProduction.Error}" Value="false">
+                                    <DataTrigger Binding="{Binding L2CurrentProduction.ErrorState}" Value="0">
                                         <Setter Property="Background" Value="Transparent"/>
                                     </DataTrigger>
                                 </Style.Triggers>

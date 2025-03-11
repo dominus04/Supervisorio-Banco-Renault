@@ -49,5 +49,11 @@ namespace Supervisório_Banco_Renault.Views
         {
             hintBox.IsOpen = true;
         }
+
+        private void PrintLabelMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LabelEditVM vm = (LabelEditVM)DataContext;
+            vm.PrintTestLabel();
+        }
     }
 }

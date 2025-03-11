@@ -10,7 +10,7 @@ namespace Supervisório_Banco_Renault.Models
     public class OP20_CurrentProduction
     {
         public string? StepText { get; set; }
-        public bool Error { get; set; } = false;
+        public int ErrorState { get; set; } = 0;
         public string? LabelTraceabilityCode { get; set; }
         public string? TraceabilityCode { get; set; }
         public string? RadiatorCode { get; set; }

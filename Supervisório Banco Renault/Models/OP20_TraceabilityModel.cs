@@ -6,7 +6,7 @@
         public string TraceabilityCode { get; set; }
         public string? ModuleCode { get; set; }
         public string? ClientCode { get; set; }
-        public string RadiatorCode { get; set; }
+        public string? RadiatorCode { get; set; }
         public bool RadiatorVerified { get; set; }
         public bool CondenserVerified { get; set; }
         public bool RadiatorCodeVerified { get; set; }

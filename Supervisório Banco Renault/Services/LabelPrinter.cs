@@ -12,6 +12,40 @@ namespace Supervisório_Banco_Renault.Services
         static readonly string PRINTER_IP = "192.168.1.50";
         static readonly int PORT = 9100;
 
+        static readonly Dictionary<int, string> yearCode = new Dictionary<int, string>()
+        {
+            [2024] = "H",
+            [2025] = "J",
+            [2026] = "K",
+            [2027] = "L",
+            [2028] = "M",
+            [2029] = "N",
+            [2030] = "P",
+            [2031] = "Q",
+            [2032] = "R",
+            [2033] = "S",
+            [2034] = "T",
+            [2035] = "U",
+            [2036] = "B",
+            [2037] = "C",
+            [2038] = "D",
+            [2039] = "E",
+            [2040] = "F",
+            [2041] = "G",
+            [2042] = "H",
+            [2043] = "J",
+            [2044] = "K",
+            [2045] = "L",
+            [2046] = "M",
+            [2047] = "N",
+            [2048] = "P",
+            [2049] = "Q",
+            [2050] = "R",
+            [2051] = "S",
+            [2052] = "T",
+            [2053] = "U"
+        };
+
         public static (string, DateTime) PrintLabelAndReturnTraceabilityCode(Recipe currentRecipe)
         {
 
@@ -24,7 +58,10 @@ namespace Supervisório_Banco_Renault.Services
 
             var currentDateTime = DateTime.Now;
 
-            var date = currentDateTime.ToString(label.DateFormat);
+            string pcode = currentDateTime.ToString("MM") + yearCode[currentDateTime.Year];
+
+            var dateqr = currentDateTime.ToString(label.DateFormat);
+            var date = currentDateTime.ToString("dd/MM/yyyy");
             var time = currentDateTime.ToString(label.TimeFormat);
 
             var turno = "";
@@ -43,9 +80,11 @@ namespace Supervisório_Banco_Renault.Services
             zplCommand = zplCommand.Replace("[C_CLIENTE]", currentRecipe.ClientCode);
             zplCommand = zplCommand.Replace("[DATAJU]", julianDate);
             zplCommand = zplCommand.Replace("[DATA]", date);
+            zplCommand = zplCommand.Replace("[DATAQR]", dateqr);
             zplCommand = zplCommand.Replace("[HORA]", time);
             zplCommand = zplCommand.Replace("[TURNO]", turno);
             zplCommand = zplCommand.Replace("[SEQUENCIAL]", sequential);
+            zplCommand = zplCommand.Replace("[P_CODE]", pcode);
 
             while (true)
             {

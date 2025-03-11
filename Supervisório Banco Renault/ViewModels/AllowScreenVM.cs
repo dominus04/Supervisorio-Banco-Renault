@@ -13,6 +13,7 @@ namespace Supervisório_Banco_Renault.ViewModels
     {
 
         public bool IsAllowed { get; set; } = false;
+        public Visibility QuestionVisibility { get; set; } = Visibility.Visible;
 
         private string? _message;
 

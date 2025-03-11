@@ -98,6 +98,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                 if (value != null)
                 {
                     _ = _plcConnection.ActivateOP10Automatic();
+                    _ = _plcConnection.WriteOP10Recipe(value);
                 }
                 OnPropertyChanged(nameof(SelectedRecipe));
             }
@@ -105,21 +106,23 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private Dictionary<ushort, string[]> stepStringDict = new()
         {
-            [0] = ["Coloque o radiador e avance alavanca para travar", "radiador posicionado 1.jpg"],
+            [0] = ["Coloque o radiador e avance alavanca para travar", "radiador posicionado 1"],
             [5] = ["Indexando produto"],
             [10] = ["Reiniciando variáveis"],
-            [15] = ["Iniciando leitura do código do radiador", "etiqueta radiador.jpg"],
-            [20] = ["Lendo código do radiador", "etiqueta radiador.jpg"],
-            [25] = ["Rotacione o produto para a posição de montagem do condensador", "radiador posicionado 2.jpg"],
-            [30] = ["Pegue o parafuso na caixa", "caixa parafusos aberta.jpg"],
-            [35] = ["Parafuse o condensador no módulo", "parafusamento.jpg"],
-            [40] = ["Lendo código do condensador", "etiqueta condensador.jpg"],
-            [45] = ["Rotacione o produto para a posição inicial", "rotacionando produto.jpg"],
+            [15] = ["Lendo etiqueta do radiador", "etiqueta radiador"],
+            [20] = ["Lendo etiqueta do radiador", "etiqueta radiador"],
+            [23] = ["Verificando etiqueta do radiador", "etiqueta radiador"],
+            [25] = ["Rotacione o produto para a posição de montagem do condensador", "radiador posicionado 2"],
+            [30] = ["Monte o condensador e pegue o parafuso na caixa", "caixa parafusos aberta"],
+            [35] = ["Parafuse o condensador no módulo", "parafusamento"],
+            [40] = ["Lendo código do condensador", "etiqueta condensador"],
+            [45] = ["Rotacione o produto para a posição inicial", "rotacionando produto"],
             [50] = ["Gravando informações no banco de dados"],
-            [55] = ["Recue a alavanca e retire o módulo", "alavanca.jpg"],
-            [100] = ["Falha na leitura da etiqueta do radiador", "etiqueta 1 faltando.jpg"],
-            [101] = ["Falha na leitura da etiqueta do condensador", "etiqueta 2 faltando.jpg"],
-            [1000] = ["Máquina em emergência", "emergencia.jpg"]
+            [55] = ["Recue a alavanca e retire o módulo", "alavanca"],
+            [100] = ["Falha na leitura da etiqueta do radiador", "etiqueta 1 faltando"],
+            [101] = ["Falha na leitura da etiqueta do condensador", "etiqueta 2 faltando"],
+            [102] = ["O radiador não é compatível com a receita escolhida, cancele o ciclo e reinicie com o produto correto", "etiqueta 2 faltando"],
+            [1000] = ["Máquina em emergência", "emergencia"]
         };
 
         #endregion
@@ -160,33 +163,72 @@ namespace Supervisório_Banco_Renault.ViewModels
                 traceabilitySaved = false;
 
             string[] stepContent = stepStringDict.GetValueOrDefault(OP10AutomaticRead.Step, Array.Empty<string>());
-            StepText = stepContent[0];
-
-            try
+            if (stepContent.Length > 0)
             {
-                StepImage = new BitmapImage(new Uri(Path.Combine(imagesFolder, stepContent[1])));
+                StepText = stepContent[0];
+                OP10_Error = OP10AutomaticRead.Step >= 100;
             }
-            catch
+            
+            if(stepContent.Length > 1)
             {
-                
+
+                if (stepContent.Length > 1)
+                {
+                    string imageNameWithoutExtension = stepContent[1];
+                    string jpgPath = Path.Combine(imagesFolder, imageNameWithoutExtension + ".jpg");
+                    string pngPath = Path.Combine(imagesFolder, imageNameWithoutExtension + ".png");
+
+                    string imagePath = File.Exists(jpgPath) ? jpgPath : (File.Exists(pngPath) ? pngPath : null);
+
+                    if (imagePath != null)
+                    {
+                        StepImage = new BitmapImage(new Uri(imagePath));
+                    }
+                    else
+                    {
+                        StepImage = null;
+                    }
+                }
             }
 
-            OP10_Error = OP10AutomaticRead.Step >= 100;
+            if(OP10AutomaticRead.Step == 23)
+            {
+                if (OP10AutomaticRead.RadiatorLabel.Trim().StartsWith(SelectedRecipe!.RadiatorModel.Trim()))
+                {
+                    await _plcConnection.SetOP10RadiatorLabelOK();
+                }
+                else
+                {
+                    await _plcConnection.SetOP10RadiatorLabelNOK();
+                }
+            }
 
             if(OP10AutomaticRead.Step == 50 && !traceabilitySaved)
             {
-                var op10_Data = new OP10_TraceabilityModel 
+
+                if (SelectedRecipe!.ReadRadiatorLabelOP10)
                 {
-                    //RadiatorCode = OP10AutomaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength),
-                    RadiatorCode = OP10AutomaticRead.RadiatorLabel.Trim(),
-                    CondenserCode = OP10AutomaticRead.CondenserLabel.Trim(),
-                    UserName = _oP10_MainWindowVM.LoggedUser.Name!
-                };
-                if( await _op10_TraceabilityRepository.AddTraceability(op10_Data))
+                    var op10_Data = new OP10_TraceabilityModel
+                    {
+                        //RadiatorCode = OP10AutomaticRead.RadiatorLabel.Substring(SelectedRecipe.InitialCharacter - 1, SelectedRecipe.CodeLength),
+                        RadiatorCode = OP10AutomaticRead.RadiatorLabel.Trim(),
+                        CondenserCode = OP10AutomaticRead.CondenserLabel.Trim(),
+                        UserName = _oP10_MainWindowVM.LoggedUser.Name!
+                    };
+
+
+                    if (await _op10_TraceabilityRepository.AddTraceability(op10_Data))
+                    {
+                        await _plcConnection.SetOP10DataSaved();
+                        traceabilitySaved = true;
+                    }
+                }
+                else
                 {
                     await _plcConnection.SetOP10DataSaved();
-                    traceabilitySaved = true;
                 }
+
+                
             }
         }
 

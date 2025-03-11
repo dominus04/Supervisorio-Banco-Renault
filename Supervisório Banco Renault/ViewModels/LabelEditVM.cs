@@ -48,6 +48,8 @@ namespace Supervisório_Banco_Renault.ViewModels
         
         private ObservableCollection<string> _dateFormats =
         [
+            "ddMMyy",
+            "MMddyy",
             "dd/MM/yyyy",
             "MM/dd/yyyy"
         ];
@@ -110,6 +112,18 @@ namespace Supervisório_Banco_Renault.ViewModels
             Label = new();
             Label.SequentialFormat = 3;
         }
+
+        public void PrintTestLabel()
+        {
+            var tempRecipe = new Recipe()
+            {
+                Label = this.Label,
+                ModuleCode = "XXXXXXXX",
+                ClientCode = "XXXXXXXX"
+            };
+
+            Services.LabelPrinter.PrintLabelAndReturnTraceabilityCode(tempRecipe);
+        } 
 
         public async Task<bool> AddOrUpdateLabel()
         {

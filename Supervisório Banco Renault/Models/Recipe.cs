@@ -6,8 +6,12 @@
         public Guid Id { get; set; }
         public string? ModuleCode { get; set; }
         public string? ClientCode { get; set; }
+        public string RadiatorModel { get; set; }
         public short InitialCharacter { get; set; } = 1;
         public short CodeLength { get; set; } = 1;
+        public bool ReadRadiatorLabel { get; set; } = true;
+        public bool ReadRadiatorLabelOP10 { get; set; } = true;
+        public bool ReadCondenserLabelOP10 { get; set; } = true;
         public bool VerifyRadiatorLabel { get; set; } = true;
         public bool VerifyTraceabilityLabel { get; set; } = true;
         public bool VerifyCondenserCovers { get; set; } = true;

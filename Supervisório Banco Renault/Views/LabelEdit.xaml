@@ -36,7 +36,7 @@
                     <ColumnDefinition Width="*"/>-->
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" SelectedValue="{Binding Label.DateFormat}" ItemsSource="{Binding DateFormats}" ui:ControlHelper.Header="Formato da Data: " HorizontalAlignment="Stretch"/>
+                <ComboBox Grid.Column="0" SelectedValue="{Binding Label.DateFormat}" ItemsSource="{Binding DateFormats}" ui:ControlHelper.Header="Formato da Data no QR Code: " HorizontalAlignment="Stretch"/>
 
                 <ComboBox Grid.Column="2" SelectedValue="{Binding Label.JulianDateFormat}" ItemsSource="{Binding JulianDateFormats}" ui:ControlHelper.Header="Formato da Data Juliana: " HorizontalAlignment="Stretch"/>
 
@@ -58,8 +58,10 @@
                             <Label Content="Código do Módulo:"/>
                             <Label Content="Sequencial:"/>
                             <Label Content="Data Juliana:"/>
+                            <Label Content="Production Code:"/>
                             <Label Content="Turno:"/>
                             <Label Content="Data:"/>
+                            <Label Content="Data do QR:"/>
                             <Label Content="Hora:"/>
                         </StackPanel>
                         <StackPanel Margin="20, 0, 0, 0">
@@ -67,8 +69,10 @@
                             <Label HorizontalAlignment="Right" Content="[C__MODULO]"/>
                             <Label HorizontalAlignment="Right" Content="[SEQUENCIAL]"/>
                             <Label HorizontalAlignment="Right" Content="[DATAJU]"/>
+                            <Label HorizontalAlignment="Right" Content="[P__CODE]"/>
                             <Label HorizontalAlignment="Right" Content="[TURNO]"/>
                             <Label HorizontalAlignment="Right" Content="[DATA]"/>
+                            <Label HorizontalAlignment="Right" Content="[DATAQR]"/>
                             <Label HorizontalAlignment="Right" Content="[HORA]"/>
                         </StackPanel>
                     </StackPanel>
@@ -116,10 +120,13 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="15"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="1" Content="Salvar etiqueta" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" MouseDown="Add_MouseDown"/>
-                <Label Grid.Column="3" Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" MouseDown="Cancel_MouseDown"/>
+                <Label Grid.Column="1" Content="Imprimir teste" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGrayButton}" Cursor="Hand" MouseDown="PrintLabelMouseDown"/>
+                <Label Grid.Column="3" Content="Salvar etiqueta" Width="130" FontSize="16" Style="{StaticResource HoverableLabelGreenButton}" Cursor="Hand" MouseDown="Add_MouseDown"/>
+                <Label Grid.Column="5" Content="Cancelar" Width="130" FontSize="16" Style="{StaticResource HoverableLabelRedButton}" Cursor="Hand" MouseDown="Cancel_MouseDown"/>
             </Grid>
         </Grid>
     </Border>

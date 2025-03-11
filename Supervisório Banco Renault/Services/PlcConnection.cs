@@ -47,6 +47,7 @@ namespace Supervisório_Banco_Renault.Services
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityLabel);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyCondenserCovers);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyRadiator);
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 0, recipe.ReadRadiatorLabel);
             await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 6, recipe.VerifyCondenser);
             ushort radiatorProgramTemp = Conversion.ConvertToUshort(recipe.AteqRadiatorProgram);
             ushort condenserProgramTemp = Conversion.ConvertToUshort(recipe.AteqCondenserProgram);
@@ -57,6 +58,23 @@ namespace Supervisório_Banco_Renault.Services
             await Plc.WriteAsync(DataType.DataBlock, 8, 14, (float)recipe.CondenserPSMinimum);
             await Plc.WriteAsync(DataType.DataBlock, 8, 18, (float)recipe.CondenserPSMaximum);
             return true;
+        }
+
+        internal async Task EnableScrapCage()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 1, true);
+        }
+
+        internal async Task DisableScrapCage()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 1, false);
+        }
+
+        internal async Task<bool> ReadScrapCageStatus()
+        {
+            byte alarmByte = (await Plc.ReadBytesAsync(DataType.DataBlock, 8, 22, 1))[0];
+
+            return alarmByte.SelectBit(1);
         }
 
         #region Automatic
@@ -180,6 +198,11 @@ namespace Supervisório_Banco_Renault.Services
 
         }
 
+        internal async Task SetLabelPrinted()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 2, true);
+        }
+
         internal async Task ResetOP20ProductsCount()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, true);
@@ -202,6 +225,12 @@ namespace Supervisório_Banco_Renault.Services
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, false);
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, true);
+        }
+
+        public async Task WriteOP10Recipe(Recipe recipe)
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 6, recipe.ReadRadiatorLabelOP10);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 7, recipe.ReadCondenserLabelOP10);
         }
 
         public async Task DeactivateOP10Automatic()
@@ -230,6 +259,18 @@ namespace Supervisório_Banco_Renault.Services
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, true);
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, false);
+        }
+
+        public async Task SetOP10RadiatorLabelOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 4, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 4, false);
+        }
+
+        public async Task SetOP10RadiatorLabelNOK()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 5, true);
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 5, false);
         }
 
     }

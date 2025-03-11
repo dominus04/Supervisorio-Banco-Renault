@@ -79,7 +79,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
                 query = query.Where(t => t.DateTimeOP20 <= finalDate);
             }
 
-            var result = await query.OrderBy(t => t.DateTimeOP20).ToListAsync();
+            var result = await query.OrderByDescending(t => t.DateTimeOP20).ToListAsync();
 
             return new ObservableCollection<OP20_TraceabilityModel>(result);
 

@@ -58,8 +58,6 @@ namespace Supervisório_Banco_Renault.Data
             #region OP10_Traceability db settings
 
             modelBuilder.Entity<OP10_TraceabilityModel>().HasKey(t => t.Id);
-            modelBuilder.Entity<OP10_TraceabilityModel>().Property(t => t.RadiatorCode).IsRequired();
-            modelBuilder.Entity<OP10_TraceabilityModel>().Property(t => t.CondenserCode).IsRequired();
             modelBuilder.Entity<OP10_TraceabilityModel>().Property(t => t.OP20_Executed).HasDefaultValue(false);
 
             #endregion

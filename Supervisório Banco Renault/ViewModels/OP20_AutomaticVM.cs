@@ -25,6 +25,48 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private CancellationTokenSource? _cancellationTokenSource;
 
+        private bool _isScrapEnabled;
+
+        public bool IsScrapEnabled
+        {
+            get { return _isScrapEnabled; }
+            set
+            {
+                
+                _isScrapEnabled = value;
+                if (_isScrapEnabled)
+                {
+                    ScrapButtonText = "Gaiola Habilitada";
+                    _ = _plcConnection.EnableScrapCage();
+                }
+                else
+                {
+                    if (VerifyDisableScrapCage())
+                    {
+                        ScrapButtonText = "Gaiola Desabilitada";
+                        _ = _plcConnection.DisableScrapCage();
+                    }
+                    else
+                    {
+                        IsScrapEnabled = true;
+                    }
+                }
+                OnPropertyChanged(nameof(IsScrapEnabled));
+            }
+        }
+
+        public string _scrapButtonText = "Gaiola Desabilitada";
+
+        public string ScrapButtonText
+        {
+            get { return _scrapButtonText; }
+            set
+            {
+                _scrapButtonText = value;
+                OnPropertyChanged(nameof(ScrapButtonText));
+            }
+        }
+
         //Observable collection de recipes para binding
         private ObservableCollection<Recipe>? _recipes;
         public ObservableCollection<Recipe>? Recipes
@@ -66,30 +108,31 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private readonly Dictionary<ushort, string[]> stepStringDict = new()
         {
-            [0] = ["Posicione o módulo e acione o botão para iniciar", "modulo posicionado.jpg"],
+            [0] = ["Posicione o módulo e acione o botão para iniciar", "modulo posicionado"],
             [5] = ["Reiniciando as variáveis"],
             [10] = ["Iniciando a leitura do código do radiador"],
-            [15] = ["Lendo código do radiador", "codigo de barras 1.jpg"],
-            [20] = ["Verificando código do radiador", "codigo de barras 1.jpg"],
-            [25] = ["Iniciando teste do radiador", "teste radiador.jpg"],
-            [30] = ["Iniciando teste do condensador", "teste condensador.jpg"],
-            [35] = ["Produto em teste", "teste radiador.jpg"],
-            [40] = ["Recuando conjunto de vedação", "bocais recuados.jpg"],
-            [45] = ["Retirar pinças, colocar os tampões do condensador e girar a mesa", "iserir tampas do condensador.jpg"],
-            [46] = ["Aguardando giro da mesa", "rotacionando mesa.jpg"],
-            [47] = ["Acione o botão para verificação das tampas do condensador", "tampas do condensador.jpg"],
-            [55] = ["Verificando tampões", "tampas do condensador.jpg"],
-            [56] = ["Cole a etiqueta e acione o botão para verificação do código", "colando etiqueta.jpg"],
-            [65] = ["Lendo código de rastreabilidade", "codigo de barras 2.jpg"],
-            [70] = ["Verificando código de rastreabilidade", "codigo de barras 2.jpg"],
-            [71] = ["Código da etiqueta de rastreabilidade incompatível com a impressa, cole a correta e pressione start", "etiqueta errada.jpg"],
-            [75] = ["Aguardando novo módulo e giro da mesa", "modulo posicionado.jpg"],
-            [100] = ["Peça ou etiqueta faltando", "etiqueta 1 faltando.jpg"],
+            [15] = ["Lendo código do radiador", "codigo de barras 1"],
+            [20] = ["Verificando código do radiador", "codigo de barras 1"],
+            [25] = ["Avançando conjunto de vedação", "teste radiador"],
+            [30] = ["Iniciando teste do condensador", "teste condensador"],
+            [35] = ["Produto em teste", "teste radiador"],
+            [40] = ["Recuando conjunto de vedação", "bocais recuados"],
+            [45] = ["Retirar pinças, colocar os tampões do condensador e girar a mesa", "inserir tampas do condensador"],
+            [46] = ["Aguardando giro da mesa", "rotacionando mesa"],
+            [47] = ["Acione o botão para verificação das tampas do condensador", "tampas do condensador"],
+            [55] = ["Verificando tampões", "tampas do condensador"],
+            [56] = ["Ausência das tampas do condensador. Favor inserir e acionar o botão iniciar para nova verificação ou rearme para refugar a peça.", "ausencia tampas do condensador"],
+            [57] = ["Cole a etiqueta e acione o botão para verificação do código", "colando etiqueta"],
+            [65] = ["Lendo código de rastreabilidade", "codigo de barras 2"],
+            [70] = ["Verificando código de rastreabilidade", "codigo de barras 2"],
+            [71] = ["Código da etiqueta de rastreabilidade incompatível com a impressa, cole a correta e pressione início ou rearme para refugar a peça.", "etiqueta errada"],
+            [75] = ["Aguardando novo módulo e giro da mesa", "modulo posicionado"],
+            [100] = ["Peça ou etiqueta faltando", "etiqueta 1 faltando"],
             [101] = ["Operação cancelada"],
-            [102] = ["Módulo com defeito", "produto com defeito.jpg"],
-            [103] = ["Ausência das tampas do condensador. Favor inserir e acionar o botão iniciar para verificação.", "ausencia tampas do condensador.jpg"],
-            [104] = ["Falha na leitura da etiqueta de rastreabilidade", "etiqueta 2 faltando.jpg"],
-            [1000] = ["Máquina em emergência", "emergencia.jpg"]
+            [102] = ["Módulo com defeito", "produto com defeito"],
+            [103] = ["Tampões do radiador ausentes", "etiqueta 2 faltando"],
+            [104] = ["Falha na leitura da etiqueta de rastreabilidade", "etiqueta 2 faltando"],
+            [1000] = ["Máquina em emergência", "emergencia"]
         };
 
         #endregion
@@ -145,7 +188,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         // Method to monitor plc async
         private async Task MonitorPLCAsync(CancellationToken cancellationToken)
-        {
+        {   
             while (!cancellationToken.IsCancellationRequested)
             {
                 if (_plcConnection.Plc.IsConnected && SelectedRecipe != null)
@@ -155,7 +198,6 @@ namespace Supervisório_Banco_Renault.ViewModels
                     var commonRead = await _plcConnection.ReadOP20AutomaticCommon();
 
 
-
                     await Application.Current.Dispatcher.Invoke(async () =>
                     {
                         L1AutomaticRead = l1Read!;
@@ -163,7 +205,8 @@ namespace Supervisório_Banco_Renault.ViewModels
                         OP20AutomaticCommomR = commonRead!;
                         await ProcessRead();
                     });
-                }
+                }   
+
 
 
                 await Task.Delay(100, cancellationToken);
@@ -172,11 +215,13 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         private async Task ProcessRead()
         {
-           await ProcessStep(L1AutomaticRead, L1CurrentProduction, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK);
+            ProcessScrapCage(OP20AutomaticCommomR);
+
+            await ProcessStep(L1AutomaticRead, L1CurrentProduction, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK);
 
             OnPropertyChanged(nameof(L1CurrentProduction));
 
-           await ProcessStep(L2AutomaticRead, L2CurrentProduction, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK, _plcConnection.SetL2TraceabilityLabelOK, _plcConnection.SetL2TraceabilityLabelNOK);
+            await ProcessStep(L2AutomaticRead, L2CurrentProduction, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK, _plcConnection.SetL2TraceabilityLabelOK, _plcConnection.SetL2TraceabilityLabelNOK);
 
             OnPropertyChanged(nameof(L2CurrentProduction));
         }
@@ -187,20 +232,39 @@ namespace Supervisório_Banco_Renault.ViewModels
             if(stepContent.Length > 0)
             {
                 currentProduction.StepText = stepContent[0];
-                currentProduction.Error = automaticRead.Step >= 100;
+                if(automaticRead.Step >= 100)
+                {
+                    currentProduction.ErrorState = 2;
+                }else if(automaticRead.Step == 25 || automaticRead.Step == 40)
+                {
+                    currentProduction.ErrorState = 1;
+                }
+                else
+                {
+                    currentProduction.ErrorState = 0;
+                }
             }
 
-            try
+            if (stepContent.Length > 1)
             {
-                currentProduction.StepImage = new BitmapImage(new Uri(Path.Combine(imagesFolder, stepContent[1])));
+                string imageNameWithoutExtension = stepContent[1];
+                string jpgPath = Path.Combine(imagesFolder, imageNameWithoutExtension + ".jpg");
+                string pngPath = Path.Combine(imagesFolder, imageNameWithoutExtension + ".png");
+
+                string imagePath = File.Exists(jpgPath) ? jpgPath : (File.Exists(pngPath) ? pngPath : null);
+
+                if (imagePath != null)
+                {
+                    currentProduction.StepImage = new BitmapImage(new Uri(imagePath));
+                }
+                else
+                {
+                    currentProduction.StepImage = null;
+                }
             }
-            catch
-            {
-
-            }
 
 
-            if (automaticRead.Step == 102)
+            if (automaticRead.Step == 102 || automaticRead.Step == 104 || automaticRead.Step == 103)
             {
                 currentProduction.StepText += ". Insira o produto na gaiola de refugo antes de prosseguir.";
             }
@@ -276,17 +340,18 @@ namespace Supervisório_Banco_Renault.ViewModels
                 currentProduction.labelPrinted = false;
             }
 
-            if (automaticRead.Step == 56 && !currentProduction.labelPrinted)
+            if (automaticRead.Step == 57 && !currentProduction.labelPrinted)
             {
                 (currentProduction.LabelTraceabilityCode, currentProduction.ProductionDateTime) = LabelPrinter.PrintLabelAndReturnTraceabilityCode(SelectedRecipe!);
 
-                if (SelectedRecipe!.VerifyRadiatorLabel && currentProduction.OP10 != null)
+                if (SelectedRecipe!.VerifyRadiatorLabel && currentProduction.OP10 != null && SelectedRecipe!.ReadRadiatorLabelOP10)
                 {
                     currentProduction.OP10!.OP20_Executed = true;
                     await _op10TraceabilityRepository.UpdateTraceability(currentProduction.OP10);
                 }
 
                 currentProduction.labelPrinted = true;
+                await _plcConnection.SetLabelPrinted();
             }
 
             if (automaticRead.Step == 70)
@@ -320,6 +385,57 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         }
 
+        private void ProcessScrapCage(OP20_AutomaticCommomR oP20_AutomaticCommomR)
+        {
+            if (oP20_AutomaticCommomR.ScrapCageNOK)
+            {
+                if (Application.Current.Windows.OfType<AllowScreen>().FirstOrDefault() == null)
+                {
+                    AllowScreenVM screenVM = (AllowScreenVM)serviceProvider.GetService(typeof(AllowScreenVM))!;
+                    screenVM.Message = "Produto faltando na gaiola de refugos.";
+                    screenVM.QuestionVisibility = Visibility.Hidden;
+
+                    AllowScreen allowScreen = new()
+                    {
+                        DataContext = screenVM,
+                    };
+
+                    allowScreen.Title = "ScrapCage";
+
+                    allowScreen.Show();
+                }
+            }else if (oP20_AutomaticCommomR.ScrapCageFull)
+            {
+                if (Application.Current.Windows.OfType<AllowScreen>().FirstOrDefault() == null)
+                {
+                    AllowScreenVM screenVM = (AllowScreenVM)serviceProvider.GetService(typeof(AllowScreenVM))!;
+                    screenVM.Message = "A gaiola de refugos está cheia, esvazie antes de continuar.";
+                    screenVM.QuestionVisibility = Visibility.Hidden;
+
+                    AllowScreen allowScreen = new()
+                    {
+                        DataContext = screenVM,
+                    };
+
+                    allowScreen.Title = "ScrapCage";
+
+                    allowScreen.Show();
+                }
+            }
+            else if (!OP20AutomaticCommomR.ScrapCageNOK && !oP20_AutomaticCommomR.ScrapCageFull)
+            {
+                var screens = Application.Current.Windows.OfType<AllowScreen>();
+
+                foreach (Window screen in screens)
+                {
+                    if(screen.Title == "ScrapCage")
+                        screen.Close();
+                }
+
+            }
+
+        }
+
         // Method to load recipes async
         public async void Start()
         {
@@ -336,6 +452,8 @@ namespace Supervisório_Banco_Renault.ViewModels
             {
                 await _plcConnection.ActivateOP20Automatic();
             }
+
+            IsScrapEnabled = await _plcConnection.ReadScrapCageStatus();
 
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             imagesFolder = Path.Combine(appDataPath, "Supervisorio Banco Renault", "ImagesOP20");
@@ -407,11 +525,32 @@ namespace Supervisório_Banco_Renault.ViewModels
                 FinalRadiatorLeak = oP20_Automatic_Read.RadiatorAteqLeak,
                 FinalRadiatorPSRead = (float)Math.Round(oP20_Automatic_Read.RadiatorPS, 2),
                 RadiatorCode = currentProduction.RadiatorCode,
-                TraceabilityCode = currentProduction.TraceabilityCode.Trim(),
+                TraceabilityCode = currentProduction.LabelTraceabilityCode.Trim(),
                 UserName = mainVM.LoggedUser.Name!
             };
 
             await oP20_TraceabilityRepository.AddTraceability(oP20_Traceability);
+        }
+
+        private bool VerifyDisableScrapCage()
+        {
+            AllowScreenVM allowScreenVM = (AllowScreenVM)serviceProvider.GetService(typeof(AllowScreenVM))!;
+            OP20_MainWindowVM mainVM = serviceProvider.GetRequiredService<OP20_MainWindowVM>();
+
+            allowScreenVM.Message = "Para desabilitar a gaiola de refugos é necessário a aprovação da liderança.";
+
+            AllowScreen allowScreen = new()
+            {
+                DataContext = allowScreenVM
+            };
+
+            mainVM.ScreenControl = false;
+
+            allowScreen.ShowDialog();
+
+            mainVM.ScreenControl = true;
+
+            return allowScreenVM.IsAllowed;
         }
 
     }

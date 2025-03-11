@@ -31,33 +31,31 @@ namespace Supervisório_Banco_Renault.ViewModels
         public async Task VerifyEmergency()
         {
 
-            if (Application.Current.Windows.OfType<OP20_Emergency>().FirstOrDefault() != null)
-                return;
-
-            if (await plcConnection.IsPLCEmergencyOK())
-                return;
-
-            OP20_EmergencyVM emergencyVM = serviceProvider.GetRequiredService<OP20_EmergencyVM>();
-
-            OP20_Emergency emergencyScreen = new()
+            if (Application.Current.Windows.OfType<OP20_Emergency>().FirstOrDefault() == null && !await plcConnection.IsPLCEmergencyOK())
             {
-                DataContext = emergencyVM
-            };
 
-            emergencyVM.CurrentEmergencyWindow = emergencyScreen;
+                OP20_EmergencyVM emergencyVM = serviceProvider.GetRequiredService<OP20_EmergencyVM>();
 
-            var tsc = new TaskCompletionSource<bool>();
+                OP20_Emergency emergencyScreen = new()
+                {
+                    DataContext = emergencyVM
+                };
 
-            emergencyScreen.Closed += (s, e) => tsc.SetResult(true);
+                emergencyVM.CurrentEmergencyWindow = emergencyScreen;
 
-            emergencyScreen.Show();
+                var tsc = new TaskCompletionSource<bool>();
 
-            ScreenControl = false;
+                emergencyScreen.Closed += (s, e) => tsc.SetResult(true);
 
-            await tsc.Task;
+                emergencyScreen.Show();
 
-            ScreenControl = true;
+                ScreenControl = false;
 
+                await tsc.Task;
+
+                ScreenControl = true;
+
+            }
         }
 
     }

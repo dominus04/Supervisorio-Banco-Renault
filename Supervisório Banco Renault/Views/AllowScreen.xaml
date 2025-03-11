@@ -20,8 +20,8 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Stretch">
                 <TextBox x:Name="textRFID" Text="{Binding UserTag, UpdateSourceTrigger=PropertyChanged}" Height="0" Width="0" Style="{x:Null}" KeyDown="OnKeyDown" />
-                <Label FontSize="32" Content="Ler Crachá" Height="60" Width="210" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelGrayButton}" Margin="20, 5, 10, 20" MouseDown="ButtonReadMouseDown" Cursor="Hand"/>
-                <Label Width="210" FontSize="32" Content="Cancelar" Height="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelRedButton}" Margin="10, 5, 20, 20" MouseDown="CancelButtonMouseDown" Cursor="Hand"/>
+                <Label FontSize="32" Content="Ler Crachá" Height="60" Width="210" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelGrayButton}" Margin="20, 5, 10, 20" MouseDown="ButtonReadMouseDown" Cursor="Hand" Visibility="{Binding QuestionVisibility}"/>
+                <Label Width="210" FontSize="32" Content="Cancelar" Height="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource HoverableLabelRedButton}" Margin="10, 5, 20, 20" MouseDown="CancelButtonMouseDown" Cursor="Hand" Visibility="{Binding QuestionVisibility}"/>
             </StackPanel>
 
         </Grid>
