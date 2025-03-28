@@ -3,6 +3,7 @@ using Supervisório_Banco_Renault.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,8 +44,17 @@ namespace Supervisório_Banco_Renault.Data.Repositories
 
         public async Task<bool> AddTraceability(OP10_TraceabilityModel traceability)
         {
-            await _context.OP10_Traceabilities.AddAsync(traceability);
-            return await _context.SaveChangesAsync() > 0;
+            try
+            {
+                await _context.OP10_Traceabilities.AddAsync(traceability);
+                Debug.WriteLine("Recipe added");
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex) 
+            {
+                Debug.WriteLine(ex.InnerException.ToString());
+                return false;
+            }
         }
 
         public async Task<bool> UpdateTraceability(OP10_TraceabilityModel traceability)
@@ -81,7 +91,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
                 query = query.Where(t => !t.OP20_Executed);
             }
 
-            var result = await query.OrderBy(t => t.DateTime).ToListAsync();
+            var result = await query.OrderByDescending(t => t.DateTime).ToListAsync();
 
             return new ObservableCollection<OP10_TraceabilityModel>(result);
 

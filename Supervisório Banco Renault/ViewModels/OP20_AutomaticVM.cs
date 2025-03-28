@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Microsoft.Extensions.DependencyInjection;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using Windows.System;
 
 namespace Supervisório_Banco_Renault.ViewModels
 {
@@ -32,7 +35,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             get { return _isScrapEnabled; }
             set
             {
-                
+
                 _isScrapEnabled = value;
                 if (_isScrapEnabled)
                 {
@@ -113,8 +116,8 @@ namespace Supervisório_Banco_Renault.ViewModels
             [10] = ["Iniciando a leitura do código do radiador"],
             [15] = ["Lendo código do radiador", "codigo de barras 1"],
             [20] = ["Verificando código do radiador", "codigo de barras 1"],
-            [25] = ["Avançando conjunto de vedação", "teste radiador"],
-            [30] = ["Iniciando teste do condensador", "teste condensador"],
+            [25] = ["Iniciando teste", "teste condensador"],
+            [30] = ["Avançando conjunto de vedação", "teste radiador"],
             [35] = ["Produto em teste", "teste radiador"],
             [40] = ["Recuando conjunto de vedação", "bocais recuados"],
             [45] = ["Retirar pinças, colocar os tampões do condensador e girar a mesa", "inserir tampas do condensador"],
@@ -188,7 +191,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         // Method to monitor plc async
         private async Task MonitorPLCAsync(CancellationToken cancellationToken)
-        {   
+        {
             while (!cancellationToken.IsCancellationRequested)
             {
                 if (_plcConnection.Plc.IsConnected && SelectedRecipe != null)
@@ -205,11 +208,11 @@ namespace Supervisório_Banco_Renault.ViewModels
                         OP20AutomaticCommomR = commonRead!;
                         await ProcessRead();
                     });
-                }   
+                }
 
 
 
-                await Task.Delay(100, cancellationToken);
+                await Task.Delay(10, cancellationToken);
             }
         }
 
@@ -229,13 +232,14 @@ namespace Supervisório_Banco_Renault.ViewModels
         private async Task ProcessStep(OP20_Automatic_Read automaticRead, OP20_CurrentProduction currentProduction, Func<Task> setRadiatorLabelOK, Func<Task> setRadiatorLabelNOK, Func<Task> setTraceabilityLabelOK, Func<Task> setTraceabilityLabelNOK)
         {
             string[] stepContent = stepStringDict.GetValueOrDefault(automaticRead.Step, Array.Empty<string>());
-            if(stepContent.Length > 0)
+            if (stepContent.Length > 0)
             {
                 currentProduction.StepText = stepContent[0];
-                if(automaticRead.Step >= 100)
+                if (automaticRead.Step >= 100)
                 {
                     currentProduction.ErrorState = 2;
-                }else if(automaticRead.Step == 25 || automaticRead.Step == 40)
+                }
+                else if (automaticRead.Step == 30 || automaticRead.Step == 40)
                 {
                     currentProduction.ErrorState = 1;
                 }
@@ -270,9 +274,9 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
 
 
-            if(automaticRead.Step == 0)
+            if (automaticRead.Step == 0)
             {
-                 currentProduction = new OP20_CurrentProduction();
+                currentProduction = new OP20_CurrentProduction();
             }
 
 
@@ -281,9 +285,9 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             if (automaticRead.Step == 20)
             {
-                
+
                 currentProduction.RadiatorCode = automaticRead.RadiatorLabel.Trim();
-                
+
                 currentProduction.OP10 = await _op10TraceabilityRepository.GetTraceabilityByRadiatorCode(currentProduction.RadiatorCode);
 
 
@@ -335,7 +339,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             }
 
-            if(automaticRead.Step == 47)
+            if (automaticRead.Step == 47)
             {
                 currentProduction.labelPrinted = false;
             }
@@ -400,11 +404,13 @@ namespace Supervisório_Banco_Renault.ViewModels
                         DataContext = screenVM,
                     };
 
-                    allowScreen.Title = "ScrapCage";
+                    allowScreen.Title = "ScrapCageNOK";
 
                     allowScreen.Show();
                 }
-            }else if (oP20_AutomaticCommomR.ScrapCageFull)
+            }
+            
+            if (oP20_AutomaticCommomR.ScrapCageFull)
             {
                 if (Application.Current.Windows.OfType<AllowScreen>().FirstOrDefault() == null)
                 {
@@ -417,21 +423,33 @@ namespace Supervisório_Banco_Renault.ViewModels
                         DataContext = screenVM,
                     };
 
-                    allowScreen.Title = "ScrapCage";
+                    allowScreen.Title = "ScrapCageFull";
 
                     allowScreen.Show();
                 }
             }
-            else if (!OP20AutomaticCommomR.ScrapCageNOK && !oP20_AutomaticCommomR.ScrapCageFull)
+            
+            if (!OP20AutomaticCommomR.ScrapCageNOK)
             {
                 var screens = Application.Current.Windows.OfType<AllowScreen>();
 
                 foreach (Window screen in screens)
                 {
-                    if(screen.Title == "ScrapCage")
+                    if (screen.Title == "ScrapCageNOK")
                         screen.Close();
                 }
 
+            }
+           
+            if (!oP20_AutomaticCommomR.ScrapCageFull)
+            {
+                var screens = Application.Current.Windows.OfType<AllowScreen>();
+
+                foreach (Window screen in screens)
+                {
+                    if (screen.Title == "ScrapCageFull")
+                        screen.Close();
+                }
             }
 
         }
@@ -496,6 +514,9 @@ namespace Supervisório_Banco_Renault.ViewModels
             {
                 await _plcConnection.ResetScrapCage();
             }
+
+            OP20_MainWindowVM vm = serviceProvider.GetRequiredService<OP20_MainWindowVM>();
+            vm.ChangePage("OP20_Automatic");
         }
 
         internal async void ResetProductsCount()

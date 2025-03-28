@@ -31,6 +31,7 @@ namespace Supervisório_Banco_Renault.Views
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Rastreabilidade OP20");
 
+
             // Cabeçalhos - aqui pegamos os nomes das colunas do DataGrid
             for (int col = 0; col < myDataGrid.Columns.Count; col++)
             {
@@ -38,13 +39,21 @@ namespace Supervisório_Banco_Renault.Views
             }
 
             // Dados - aqui copiamos os dados do DataGrid para o Excel
-            for (int row = 0; row < myDataGrid.Items.Count; row++)
+            var itemsSource = myDataGrid.ItemsSource.Cast<object>().ToList();
+
+            for (int row = 0; row < itemsSource.Count; row++)
             {
-                var item = myDataGrid.Items[row];
+                var item = itemsSource[row];
+
                 for (int col = 0; col < myDataGrid.Columns.Count; col++)
                 {
-                    var cellValue = myDataGrid.Columns[col].GetCellContent(item) as TextBlock;
-                    worksheet.Cell(row + 2, col + 1).Value = cellValue?.Text; // Adiciona o valor da célula
+                    var binding = (myDataGrid.Columns[col] as DataGridBoundColumn)?.Binding as System.Windows.Data.Binding;
+                    if (binding != null)
+                    {
+                        var propertyName = binding.Path.Path;
+                        var propertyValue = item.GetType().GetProperty(propertyName)?.GetValue(item, null);
+                        worksheet.Cell(row + 2, col + 1).Value = propertyValue?.ToString();
+                    }
                 }
             }
 
@@ -60,6 +69,7 @@ namespace Supervisório_Banco_Renault.Views
                 workbook.SaveAs(saveDialog.FileName);
                 MessageBox.Show("Exportação concluída com sucesso!");
             }
+
         }
     }
 }

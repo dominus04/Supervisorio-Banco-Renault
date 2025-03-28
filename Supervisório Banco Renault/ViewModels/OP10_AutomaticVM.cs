@@ -65,10 +65,10 @@ namespace Supervisório_Banco_Renault.ViewModels
         }
 
         private BitmapImage _stepImage;
-        public BitmapImage StepImage 
+        public BitmapImage StepImage
         {
             get { return _stepImage; }
-            set 
+            set
             {
                 _stepImage = value;
                 OnPropertyChanged(nameof(StepImage));
@@ -122,6 +122,7 @@ namespace Supervisório_Banco_Renault.ViewModels
             [100] = ["Falha na leitura da etiqueta do radiador", "etiqueta 1 faltando"],
             [101] = ["Falha na leitura da etiqueta do condensador", "etiqueta 2 faltando"],
             [102] = ["O radiador não é compatível com a receita escolhida, cancele o ciclo e reinicie com o produto correto", "etiqueta 2 faltando"],
+            [103] = ["Problema na gravação dos dados de rastreabilidade"],
             [1000] = ["Máquina em emergência", "emergencia"]
         };
 
@@ -152,14 +153,14 @@ namespace Supervisório_Banco_Renault.ViewModels
                 }
 
 
-                await Task.Delay(100, cancellationToken);
+                await Task.Delay(10, cancellationToken);
             }
         }
 
         private async void ProcessRead()
         {
 
-            if(OP10AutomaticRead.Step == 0)
+            if (OP10AutomaticRead.Step == 0)
                 traceabilitySaved = false;
 
             string[] stepContent = stepStringDict.GetValueOrDefault(OP10AutomaticRead.Step, Array.Empty<string>());
@@ -168,8 +169,8 @@ namespace Supervisório_Banco_Renault.ViewModels
                 StepText = stepContent[0];
                 OP10_Error = OP10AutomaticRead.Step >= 100;
             }
-            
-            if(stepContent.Length > 1)
+
+            if (stepContent.Length > 1)
             {
 
                 if (stepContent.Length > 1)
@@ -191,7 +192,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                 }
             }
 
-            if(OP10AutomaticRead.Step == 23)
+            if (OP10AutomaticRead.Step == 23)
             {
                 if (OP10AutomaticRead.RadiatorLabel.Trim().StartsWith(SelectedRecipe!.RadiatorModel.Trim()))
                 {
@@ -203,10 +204,15 @@ namespace Supervisório_Banco_Renault.ViewModels
                 }
             }
 
-            if(OP10AutomaticRead.Step == 50 && !traceabilitySaved)
+            if (OP10AutomaticRead.Step == 45)
+            {
+                traceabilitySaved = false;
+            }
+
+            if (OP10AutomaticRead.Step == 50 && !traceabilitySaved)
             {
 
-                if (SelectedRecipe!.ReadRadiatorLabelOP10)
+                if (SelectedRecipe != null && SelectedRecipe!.ReadRadiatorLabelOP10 && SelectedRecipe!.ReadCondenserLabelOP10)
                 {
                     var op10_Data = new OP10_TraceabilityModel
                     {
@@ -217,10 +223,19 @@ namespace Supervisório_Banco_Renault.ViewModels
                     };
 
 
-                    if (await _op10_TraceabilityRepository.AddTraceability(op10_Data))
+                    try
                     {
-                        await _plcConnection.SetOP10DataSaved();
-                        traceabilitySaved = true;
+                        traceabilitySaved = await _op10_TraceabilityRepository.AddTraceability(op10_Data);
+                    }
+                    catch (Exception ex)
+                    {
+                        await _plcConnection.SetOP10DataProblem();
+                        if (ex.InnerException != null)
+                        {
+                            Debug.WriteLine(ex.InnerException.ToString());
+                        }
+                        Debug.WriteLine(ex.Message);
+                        Debug.WriteLine("Erro");
                     }
                 }
                 else
@@ -228,7 +243,11 @@ namespace Supervisório_Banco_Renault.ViewModels
                     await _plcConnection.SetOP10DataSaved();
                 }
 
-                
+
+            }
+            else if (OP10AutomaticRead.Step == 50 && traceabilitySaved)
+            {
+                await _plcConnection.SetOP10DataSaved();
             }
         }
 

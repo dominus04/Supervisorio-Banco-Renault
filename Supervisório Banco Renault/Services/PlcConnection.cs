@@ -136,49 +136,41 @@ namespace Supervisório_Banco_Renault.Services
         internal async Task SetL1RadiatorLabelOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 0, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 0, false);
         }
 
         internal async Task SetL1RadiatorLabelNOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 1, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 1, false);
         }
 
         internal async Task SetL2RadiatorLabelOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 0, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 0, false);
         }
 
         internal async Task SetL2RadiatorLabelNOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, false);
         }
 
         internal async Task SetL1TraceabilityLabelOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 2, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 2, false);
         }
 
         internal async Task SetL1TraceabilityLabelNOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 3, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 3, false);
         }
 
         internal async Task SetL2TraceabilityLabelOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 2, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 2, false);
         }
 
         internal async Task SetL2TraceabilityLabelNOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 3, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 3, false);
         }
 
         #endregion
@@ -188,7 +180,7 @@ namespace Supervisório_Banco_Renault.Services
         {
             return (await Plc.ReadBytesAsync(DataType.DataBlock, 1, 10, 1))[0];
 
-        }   
+        }
 
         internal async Task<bool> IsPLCEmergencyOK()
         {
@@ -206,7 +198,6 @@ namespace Supervisório_Banco_Renault.Services
         internal async Task ResetOP20ProductsCount()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, false);
         }
 
         public async Task ResetScrapCage()
@@ -252,25 +243,26 @@ namespace Supervisório_Banco_Renault.Services
         public async Task EndCycle()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, false);
         }
 
         public async Task SetOP10DataSaved()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, false);
+        }
+
+        public async Task SetOP10DataProblem()
+        {
+            await Plc.WriteBitAsync(DataType.DataBlock, 111, 1, 0, true);
         }
 
         public async Task SetOP10RadiatorLabelOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 4, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 4, false);
         }
 
         public async Task SetOP10RadiatorLabelNOK()
         {
             await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 5, true);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 5, false);
         }
 
     }
