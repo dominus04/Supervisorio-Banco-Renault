@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Models;
 using Supervisório_Banco_Renault.Services;
@@ -17,6 +18,12 @@ namespace Supervisório_Banco_Renault.ViewModels
     {
 
         #region General Properties
+
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private string _lastLogMessageL1 = string.Empty;
+
+        private string _lastLogMessageL2 = string.Empty;
 
         public string? imagesFolder;
 
@@ -92,7 +99,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                 _selectedRecipe = value;
                 if (value != null)
                 {
-                    _ = _plcConnection.WriteOP20Recipe(value);
+                    SendRecipeToPLC(value);
                 }
                 OnPropertyChanged(nameof(SelectedRecipe));
             }
@@ -220,16 +227,16 @@ namespace Supervisório_Banco_Renault.ViewModels
         {
             ProcessScrapCage(OP20AutomaticCommomR);
 
-            await ProcessStep(L1AutomaticRead, L1CurrentProduction, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK);
-
+            
+            await ProcessStep(L1AutomaticRead, L1CurrentProduction, _plcConnection.SetL1RadiatorLabelOK, _plcConnection.SetL1RadiatorLabelNOK, _plcConnection.SetL1TraceabilityLabelOK, _plcConnection.SetL1TraceabilityLabelNOK, LogMessageL1);
             OnPropertyChanged(nameof(L1CurrentProduction));
 
-            await ProcessStep(L2AutomaticRead, L2CurrentProduction, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK, _plcConnection.SetL2TraceabilityLabelOK, _plcConnection.SetL2TraceabilityLabelNOK);
 
+            await ProcessStep(L2AutomaticRead, L2CurrentProduction, _plcConnection.SetL2RadiatorLabelOK, _plcConnection.SetL2RadiatorLabelNOK, _plcConnection.SetL2TraceabilityLabelOK, _plcConnection.SetL2TraceabilityLabelNOK, LogMessageL2);
             OnPropertyChanged(nameof(L2CurrentProduction));
         }
 
-        private async Task ProcessStep(OP20_Automatic_Read automaticRead, OP20_CurrentProduction currentProduction, Func<Task> setRadiatorLabelOK, Func<Task> setRadiatorLabelNOK, Func<Task> setTraceabilityLabelOK, Func<Task> setTraceabilityLabelNOK)
+        private async Task ProcessStep(OP20_Automatic_Read automaticRead, OP20_CurrentProduction currentProduction, Func<Task> setRadiatorLabelOK, Func<Task> setRadiatorLabelNOK, Func<Task> setTraceabilityLabelOK, Func<Task> setTraceabilityLabelNOK, Action<NLog.LogLevel, string> LogMessage)
         {
             string[] stepContent = stepStringDict.GetValueOrDefault(automaticRead.Step, Array.Empty<string>());
             if (stepContent.Length > 0)
@@ -268,15 +275,20 @@ namespace Supervisório_Banco_Renault.ViewModels
             }
 
 
-            if (automaticRead.Step == 102 || automaticRead.Step == 104 || automaticRead.Step == 103)
+            if ((automaticRead.Step == 102 || automaticRead.Step == 104 || automaticRead.Step == 103) && IsScrapEnabled)
             {
                 currentProduction.StepText += ". Insira o produto na gaiola de refugo antes de prosseguir.";
+
+                LogMessage(NLog.LogLevel.Info, "Peça reprovada, produto enviado para a gaiola de refugo.");
             }
 
 
             if (automaticRead.Step == 0)
             {
                 currentProduction = new OP20_CurrentProduction();
+
+                LogMessage(NLog.LogLevel.Info, "Iniciando novo produto.");
+
             }
 
 
@@ -285,6 +297,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             if (automaticRead.Step == 20)
             {
+                LogMessage(NLog.LogLevel.Trace, "Verificando se OP10 foi executada e se o produto já foi testado.");
 
                 currentProduction.RadiatorCode = automaticRead.RadiatorLabel.Trim();
 
@@ -294,6 +307,7 @@ namespace Supervisório_Banco_Renault.ViewModels
                 if (currentProduction.OP10 != null && currentProduction.OP10.OP20_Executed == false)
                 {
                     await setRadiatorLabelOK();
+                    LogMessage(NLog.LogLevel.Info, "OP10 executada e produto ainda não testado.");
                 }
                 else
                 {
@@ -303,10 +317,12 @@ namespace Supervisório_Banco_Renault.ViewModels
                     if (currentProduction.OP10 == null)
                     {
                         allowScreenVM.Message = "Operação 10 ainda não realizada, favor retirar o produto ou solicitar a aprovação da liderança.";
+                        LogMessage(NLog.LogLevel.Info, "OP10 ainda não realizada.");
                     }
                     else if (currentProduction.OP10.OP20_Executed == true)
                     {
                         allowScreenVM.Message = "Operação 20 já realizada, para repetição do teste favor solicitar aprovação da liderança";
+                        LogMessage(NLog.LogLevel.Info, "OP10 realizada, porém o produto já foi testado.");
                     }
 
                     AllowScreen allowScreen = new()
@@ -329,10 +345,13 @@ namespace Supervisório_Banco_Renault.ViewModels
                     if (allowScreenVM.IsAllowed)
                     {
                         await setRadiatorLabelOK();
+                        LogMessage(NLog.LogLevel.Info, "Produção autorizada pela liderança.");
                     }
                     else
                     {
                         await setRadiatorLabelNOK();
+
+                        LogMessage(NLog.LogLevel.Info, "Produção não autorizada pela liderança.");
                     }
 
                 }
@@ -454,6 +473,14 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         }
 
+        private async void SendRecipeToPLC(Recipe selectedRecipe)
+        {
+                if (!await _plcConnection.WriteOP20Recipe(selectedRecipe))
+                {
+                    SelectedRecipe = null;
+                }
+        }
+
         // Method to load recipes async
         public async void Start()
         {
@@ -462,14 +489,10 @@ namespace Supervisório_Banco_Renault.ViewModels
 
             if (SelectedRecipe != null)
             {
-                _ = _plcConnection.WriteOP20Recipe(SelectedRecipe);
+                SendRecipeToPLC(SelectedRecipe);
             }
 
             _ = Task.Run(() => MonitorPLCAsync(_cancellationTokenSource.Token));
-            if (SelectedRecipe != null)
-            {
-                await _plcConnection.ActivateOP20Automatic();
-            }
 
             IsScrapEnabled = await _plcConnection.ReadScrapCageStatus();
 
@@ -572,6 +595,24 @@ namespace Supervisório_Banco_Renault.ViewModels
             mainVM.ScreenControl = true;
 
             return allowScreenVM.IsAllowed;
+        }
+
+        private void LogMessageL1(NLog.LogLevel level, string message)
+        {
+            if (_lastLogMessageL1 != message)
+            {
+                _lastLogMessageL1 = message;
+                logger.Log(level, $"[OP20 - L1] {message}");
+            }
+        }
+
+        private void LogMessageL2(NLog.LogLevel level, string message)
+        {
+            if (_lastLogMessageL2 != message)
+            {
+                _lastLogMessageL2 = message;
+                logger.Log(level, $"[OP20 - L2] {message}");
+            }
         }
 
     }

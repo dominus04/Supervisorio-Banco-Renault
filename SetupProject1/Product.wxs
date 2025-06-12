@@ -65,6 +65,9 @@
       <Component Id="WPFGraphics" Directory="INSTALLFOLDER" Guid="*">
         <File Source="../Supervisório Banco Renault/publish/wpfgfx_cor3.dll" />
       </Component>
+      <Component Id="NLog" Directory="INSTALLFOLDER" Guid="*">
+        <File Source="../Supervisório Banco Renault/publish/NLog.config" />
+      </Component>
     </ComponentGroup>
 	</Fragment>
 </Wix>

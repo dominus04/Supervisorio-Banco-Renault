@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NLog;
 using Supervisório_Banco_Renault.Models;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Supervisório_Banco_Renault.Data.Repositories
 {
@@ -18,6 +20,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
     public class RecipeRepository : IRecipeRepository
     {
         public readonly AppDbContext _context;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public RecipeRepository(AppDbContext context)
         {
@@ -71,7 +74,7 @@ namespace Supervisório_Banco_Renault.Data.Repositories
                 throw new Exception("Verificação do radiador ativa.\nPrograma do ATEQ não pode ser nulo.");
             if (recipe.AteqCondenserProgram <= 0 && recipe.VerifyCondenser == true)
                 throw new Exception("Verificação do condensador ativa.\nPrograma do ATEQ não pode ser nulo.");
-            if (recipe.RadiatorPSMinimum == 0 && recipe.VerifyRadiator == true)
+            if (recipe.RadiatorPSMinimum == 0 && recipe.VerifyRadiator == true) 
                 throw new Exception("Verificação do radiador ativa.\nPressão mínima de radiador não pode ser nula");
             if (recipe.RadiatorPSMaximum == 0 && recipe.VerifyRadiator == true)
                 throw new Exception("Verificação do radiador ativa.\nPressão máxima de radiador não pode ser nula");

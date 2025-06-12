@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="C:\Users\Dominus04\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config" />
     <None Remove="UserControls\Logo Denso Resized.png" />
     <None Remove="UserControls\Logo Indusbras Resized.png" />
   </ItemGroup>
@@ -36,6 +37,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageReference Include="ModernWpfUI" Version="0.9.6" />
+    <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="NLog.Config" Version="4.7.15" />
+    <PackageReference Include="NLog.Schema" Version="5.4.0" />
     <PackageReference Include="S7netplus" Version="0.20.0" />
   </ItemGroup>
 
@@ -50,6 +54,12 @@
     </None>
     <None Update="Migrations\**\*.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

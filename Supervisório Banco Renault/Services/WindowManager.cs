@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NLog;
 using Supervisório_Banco_Renault.ViewModels;
 using Supervisório_Banco_Renault.Views;
 using System.Windows;
@@ -12,6 +13,7 @@ namespace Supervisório_Banco_Renault.Services
         private readonly WindowMapper _windowMapper;
         private readonly UserControlMapper _userControlMapper;
         private readonly IServiceProvider _serviceProvider;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public WindowManager(WindowMapper windowMapper, IServiceProvider serviceProvider)
         {
@@ -51,8 +53,7 @@ namespace Supervisório_Banco_Renault.Services
                 return window;
 
             }
-
-            return null;
+                return null;
         }
 
 
@@ -70,6 +71,7 @@ namespace Supervisório_Banco_Renault.Services
 
                 grid.Children.Clear();
                 grid.Children.Add(page);
+                logger.Trace($"Foi chamada a página {pageType.ToString().Split(".")[2]}");
             }
         }
     }

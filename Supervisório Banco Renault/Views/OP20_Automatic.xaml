@@ -19,7 +19,7 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" BorderThickness="0, 0, .5, 1" BorderBrush="#AFAFAF">
-                <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0" ItemsSource="{Binding Recipes}" DisplayMemberPath="ModuleCode " SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}"/>
+                <ComboBox x:Name="RecipeComboBox" FontSize="24" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="45, 0" ItemsSource="{Binding Recipes}" DisplayMemberPath="ModuleCode " SelectedItem="{Binding SelectedRecipe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
 
             <Border Grid.Column="1" BorderThickness=".5, 0, .5, 1" BorderBrush="#AFAFAF" DataContext="{Binding OP20AutomaticCommomR}">

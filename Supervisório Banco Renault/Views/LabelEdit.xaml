@@ -23,7 +23,7 @@
                 <RowDefinition Height="15"/>
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="1" Text="{Binding Label.Name}" ui:ControlHelper.Header="Nome da Etiqueta: " FontSize="14" Margin="15, 5"/>
+            <TextBox Grid.Row="1" Text="{Binding Label.Name, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Nome da Etiqueta: " FontSize="14" Margin="15, 5"/>
 
             <Grid Margin="15, 5" Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -32,17 +32,17 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="*"/>
-                    <!--<ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>-->
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" SelectedValue="{Binding Label.DateFormat}" ItemsSource="{Binding DateFormats}" ui:ControlHelper.Header="Formato da Data no QR Code: " HorizontalAlignment="Stretch"/>
+                <ComboBox Grid.Column="0" SelectedValue="{Binding Label.DateFormat}" ItemsSource="{Binding DateFormats}" ui:ControlHelper.Header="Formato Data QR Code: " HorizontalAlignment="Stretch"/>
 
                 <ComboBox Grid.Column="2" SelectedValue="{Binding Label.JulianDateFormat}" ItemsSource="{Binding JulianDateFormats}" ui:ControlHelper.Header="Formato da Data Juliana: " HorizontalAlignment="Stretch"/>
 
                 <ComboBox Grid.Column="4" SelectedValue="{Binding Label.TimeFormat}" ItemsSource="{Binding TimeFormats}" ui:ControlHelper.Header="Formato da Hora: " HorizontalAlignment="Stretch"/>
 
-                <ComboBox Grid.Column="6" SelectedValue="{Binding Label.SequentialFormat}" ui:ControlHelper.Header="Nº dígitos sequenciais:" HorizontalAlignment="Stretch" ItemsSource="{Binding SequentialFormats}" Visibility="Collapsed"/>
+                <ComboBox Grid.Column="6" SelectedValue="{Binding Label.SequentialFormat}" ui:ControlHelper.Header="Nº dígitos sequenciais:" HorizontalAlignment="Stretch" ItemsSource="{Binding SequentialFormats}"/>
             </Grid>
 
             <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="15, 5">
@@ -92,22 +92,22 @@
 
                 <GroupBox Grid.Column="0" Header="Turno 1" FontSize="16" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel VerticalAlignment="Center">
-                        <TextBox Text="{Binding Label.Tunr1Init}" ui:ControlHelper.Header="Hora Início (hh:mm):"/>
-                        <TextBox Text="{Binding Label.Tunr1End}" ui:ControlHelper.Header="Hora Fim: (hh:mm)"/>
+                        <TextBox Text="{Binding Label.Tunr1Init, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Hora Início (hh:mm):"/>
+                        <TextBox Text="{Binding Label.Tunr1End, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Hora Fim: (hh:mm)"/>
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Grid.Column="2" Header="Turno 2" FontSize="16" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel VerticalAlignment="Center">
-                        <TextBox Text="{Binding Label.Tunr2Init}" ui:ControlHelper.Header="Hora Início (hh:mm):"/>
-                        <TextBox Text="{Binding Label.Tunr2End}" ui:ControlHelper.Header="Hora Fim: (hh:mm)"/>
+                        <TextBox Text="{Binding Label.Tunr2Init, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Hora Início (hh:mm):"/>
+                        <TextBox Text="{Binding Label.Tunr2End, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Hora Fim: (hh:mm)"/>
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Grid.Column="4" Header="Turno 3" FontSize="16" Style="{x:Null}" BorderBrush="DarkGray">
                     <StackPanel VerticalAlignment="Center">
-                        <TextBox Text="{Binding Label.Tunr3Init}" ui:ControlHelper.Header="Hora Início (hh:mm):"/>
-                        <TextBox Text="{Binding Label.Tunr3End}" ui:ControlHelper.Header="Hora Fim: (hh:mm)"/>
+                        <TextBox Text="{Binding Label.Tunr3Init, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Hora Início (hh:mm):"/>
+                        <TextBox Text="{Binding Label.Tunr3End, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Hora Fim: (hh:mm)"/>
                     </StackPanel>
                 </GroupBox>
 

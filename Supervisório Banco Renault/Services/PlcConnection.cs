@@ -1,18 +1,29 @@
-﻿using S7.Net;
+﻿using NLog;
+using S7.Net;
 using Supervisório_Banco_Renault.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Eventing.Reader;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace Supervisório_Banco_Renault.Services
 {
     public class PlcConnection
     {
-        public Plc Plc { get; private set; }
+        internal IPlcRaw Plc { get; private set; }
+
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public PlcConnection(CpuType cpuType, string ipAdress, short rack, short slot)
         {
-            Plc = new Plc(cpuType, ipAdress, rack, slot);
+            logger.Trace("Iniciando conexão com o plc");
+            bool mock = true;
+
+            if (mock)
+                Plc = new PlcMock();
+            else
+                Plc = new PlcWrapper(cpuType, ipAdress, rack, slot);
+
             Connect();
         }
 
@@ -21,16 +32,20 @@ namespace Supervisório_Banco_Renault.Services
             try
             {
                 Plc.Open();
+                logger.Info("Conexão bem sucedida.");
             }
             catch (Exception e)
             {
+                logger.Error(e, "Não foi possível se conectar com o PLC");
                 MessageBox.Show("Não foi possível se conectar ao PLC feche o sistema, regularize a situação do dispositivo e abra novamente.");
+                System.Environment.Exit(1);
             }
         }
 
         public void Disconnect()
         {
             Plc.Close();
+            logger.Info("PLC desconectado.");
         }
 
         public bool IsConnected()
@@ -38,36 +53,61 @@ namespace Supervisório_Banco_Renault.Services
             return Plc.IsConnected;
         }
 
+        private async Task SetPlcBitAsync(S7.Net.DataType dataType, int db, int startByteAdr, int bitAdr, bool value, [CallerMemberName] string? caller = null)
+        {
+            try
+            {
+                if (!Plc.IsConnected)
+                    throw new Exception("Plc is not connected.");
+                await Plc.WriteBitAsync(dataType, db, startByteAdr, bitAdr, value);
+                //logger.Trace($"[{caller}] Bit escrito: DB{db}, Byte{startByteAdr}, BitOffset{bitAdr}, Valor: {value}");
+            }
+            catch (Exception e) 
+            {
+                logger.Error(e, $"[{caller}] Erro ao escrever bit: DB{db}, Byte{startByteAdr}, BitOffset{bitAdr}, Valor: {value}");
+                throw;
+            }
+        }
+
         #region OP20
 
         internal async Task<bool> WriteOP20Recipe(Recipe recipe)
         {
-            await ActivateOP20Automatic();
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyRadiatorLabel);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityLabel);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyCondenserCovers);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyRadiator);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 0, recipe.ReadRadiatorLabel);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 6, recipe.VerifyCondenser);
-            ushort radiatorProgramTemp = Conversion.ConvertToUshort(recipe.AteqRadiatorProgram);
-            ushort condenserProgramTemp = Conversion.ConvertToUshort(recipe.AteqCondenserProgram);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 2, --radiatorProgramTemp);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 4, --condenserProgramTemp);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 6, (float)recipe.RadiatorPSMinimum);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 10, (float)recipe.RadiatorPSMaximum);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 14, (float)recipe.CondenserPSMinimum);
-            await Plc.WriteAsync(DataType.DataBlock, 8, 18, (float)recipe.CondenserPSMaximum);
-            return true;
+            try 
+            { 
+                await ActivateOP20Automatic();
+                await SetPlcBitAsync(DataType.DataBlock, 8, 0, 2, recipe.VerifyRadiatorLabel);
+                await SetPlcBitAsync(DataType.DataBlock, 8, 0, 3, recipe.VerifyTraceabilityLabel);
+                await SetPlcBitAsync(DataType.DataBlock, 8, 0, 4, recipe.VerifyCondenserCovers);
+                await SetPlcBitAsync(DataType.DataBlock, 8, 0, 5, recipe.VerifyRadiator);
+                await SetPlcBitAsync(DataType.DataBlock, 8, 22, 0, recipe.ReadRadiatorLabel);
+                await SetPlcBitAsync(DataType.DataBlock, 8, 0, 6, recipe.VerifyCondenser);
+                ushort radiatorProgramTemp = Conversion.ConvertToUshort(recipe.AteqRadiatorProgram);
+                ushort condenserProgramTemp = Conversion.ConvertToUshort(recipe.AteqCondenserProgram);
+                await Plc.WriteAsync(DataType.DataBlock, 8, 2, --radiatorProgramTemp);
+                await Plc.WriteAsync(DataType.DataBlock, 8, 4, --condenserProgramTemp);
+                await Plc.WriteAsync(DataType.DataBlock, 8, 6, (float)recipe.RadiatorPSMinimum);
+                await Plc.WriteAsync(DataType.DataBlock, 8, 10, (float)recipe.RadiatorPSMaximum);
+                await Plc.WriteAsync(DataType.DataBlock, 8, 14, (float)recipe.CondenserPSMinimum);
+                await Plc.WriteAsync(DataType.DataBlock, 8, 18, (float)recipe.CondenserPSMaximum);
+                logger.Info($"Produto {recipe.ModuleCode} selecionado com sucesso na OP20.");
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Não foi possível enviar a receita selecionada ao PLC, favor selecionar novamente.", "Erro na seleçao de receitas", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
 
         internal async Task EnableScrapCage()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 1, true);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 22, 1, true);
         }
 
         internal async Task DisableScrapCage()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 1, false);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 22, 1, false);
         }
 
         internal async Task<bool> ReadScrapCageStatus()
@@ -81,13 +121,13 @@ namespace Supervisório_Banco_Renault.Services
 
         internal async Task ActivateOP20Automatic()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, false);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, true);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 0, 1, false);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 0, 0, true);
         }
 
         internal async Task DeactivateOP20Automatic()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, false);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 0, 0, false);
         }
 
         internal async Task<OP20_Automatic_Read?> ReadOP20AutomaticL1()
@@ -112,20 +152,29 @@ namespace Supervisório_Banco_Renault.Services
 
         internal async Task ActivateOP20Manual()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 0, false);
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, true);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 0, 0, false);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 0, 1, true);
         }
 
         internal async Task DeactivateOP20Manual()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 0, 1, false);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 0, 1, false);
         }
 
         internal async Task WriteToManual(ObservableCollection<ManualButton> manualButtons)
         {
-            foreach (var button in manualButtons)
+            ManualButton ?tempButton = null;
+            try
             {
-                await Plc.WriteBitAsync(DataType.DataBlock, 5, button.ByteIndex, button.BitIndex, button.IsChecked);
+                foreach (var button in manualButtons)
+                {
+                    tempButton = button;
+                    await Plc.WriteBitAsync(DataType.DataBlock, 5, button.ByteIndex, button.BitIndex, button.IsChecked);
+                }
+            }
+            catch (Exception ex) 
+            {
+                logger.Error(ex, $"[WriteToManual] Erro ao escrever bit: DB5, Byte{tempButton?.ByteIndex}, BitOffset{tempButton?.BitIndex}, Valor: {tempButton?.IsChecked}");
             }
         }
 
@@ -135,42 +184,42 @@ namespace Supervisório_Banco_Renault.Services
 
         internal async Task SetL1RadiatorLabelOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 0, true);
+            await SetPlcBitAsync(DataType.DataBlock, 101, 0, 0, true);
         }
 
         internal async Task SetL1RadiatorLabelNOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 1, true);
+            await SetPlcBitAsync(DataType.DataBlock, 101, 0, 1, true);
         }
 
         internal async Task SetL2RadiatorLabelOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 0, true);
+            await SetPlcBitAsync(DataType.DataBlock, 103, 0, 0, true);
         }
 
         internal async Task SetL2RadiatorLabelNOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 1, true);
+            await SetPlcBitAsync(DataType.DataBlock, 103, 0, 1, true);
         }
 
         internal async Task SetL1TraceabilityLabelOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 2, true);
+            await SetPlcBitAsync(DataType.DataBlock, 101, 0, 2, true);
         }
 
         internal async Task SetL1TraceabilityLabelNOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 101, 0, 3, true);
+            await SetPlcBitAsync(DataType.DataBlock, 101, 0, 3, true);
         }
 
         internal async Task SetL2TraceabilityLabelOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 2, true);
+            await SetPlcBitAsync(DataType.DataBlock, 103, 0, 2, true);
         }
 
         internal async Task SetL2TraceabilityLabelNOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 103, 0, 3, true);
+            await SetPlcBitAsync(DataType.DataBlock, 103, 0, 3, true);
         }
 
         #endregion
@@ -192,17 +241,17 @@ namespace Supervisório_Banco_Renault.Services
 
         internal async Task SetLabelPrinted()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 8, 22, 2, true);
+            await SetPlcBitAsync(DataType.DataBlock, 8, 22, 2, true);
         }
 
         internal async Task ResetOP20ProductsCount()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 1, true);
+            await SetPlcBitAsync(DataType.DataBlock, 5, 0, 1, true);
         }
 
         public async Task ResetScrapCage()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 5, 0, 0, true);
+            await SetPlcBitAsync(DataType.DataBlock, 5, 0, 0, true);
         }
 
         #endregion
@@ -214,55 +263,55 @@ namespace Supervisório_Banco_Renault.Services
 
         public async Task ActivateOP10Automatic()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, false);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 1, false);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 0, true);
         }
 
         public async Task WriteOP10Recipe(Recipe recipe)
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 6, recipe.ReadRadiatorLabelOP10);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 7, recipe.ReadCondenserLabelOP10);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 6, recipe.ReadRadiatorLabelOP10);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 7, recipe.ReadCondenserLabelOP10);
         }
 
         public async Task DeactivateOP10Automatic()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, false);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 0, false);
         }
 
         public async Task ActivateOP10Manual()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 0, false);
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 0, false);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 1, true);
         }
 
         public async Task DeactivateOP10Manual()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 1, false);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 1, false);
         }
 
         public async Task EndCycle()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 2, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 2, true);
         }
 
         public async Task SetOP10DataSaved()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 3, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 3, true);
         }
 
         public async Task SetOP10DataProblem()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 1, 0, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 1, 0, true);
         }
 
         public async Task SetOP10RadiatorLabelOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 4, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 4, true);
         }
 
         public async Task SetOP10RadiatorLabelNOK()
         {
-            await Plc.WriteBitAsync(DataType.DataBlock, 111, 0, 5, true);
+            await SetPlcBitAsync(DataType.DataBlock, 111, 0, 5, true);
         }
 
     }

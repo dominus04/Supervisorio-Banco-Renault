@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NLog;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.Views;
@@ -11,6 +12,7 @@ namespace Supervisório_Banco_Renault.ViewModels
 
         public IServiceProvider _serviceProvider;
         public UserRepository _userRepository;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public LoginVM(IServiceProvider serviceProvider, IUserRepository userRepository)
         {
@@ -43,12 +45,14 @@ namespace Supervisório_Banco_Renault.ViewModels
                 {
                     OP10_MainWindowVM vm = _serviceProvider.GetRequiredService<OP10_MainWindowVM>();
                     vm.LoggedUser = user;
+                    logger.Info($"O usuário {user.Name} fez login na OP10.");
                     vm.ChangePage("OP10_Automatic");
                 }
                 else
                 {
                     OP20_MainWindowVM vm = _serviceProvider.GetRequiredService<OP20_MainWindowVM>();
                     vm.LoggedUser = user;
+                    logger.Info($"O usuário {user.Name} fez login na OP20.");
                     vm.ChangePage("OP20_Automatic");
                 }
             }

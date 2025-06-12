@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog;
 using S7.Net;
 using Supervisório_Banco_Renault.Data;
 using Supervisório_Banco_Renault.Data.Repositories;
 using Supervisório_Banco_Renault.Services;
 using Supervisório_Banco_Renault.ViewModels;
 using Supervisório_Banco_Renault.Views;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -21,14 +24,51 @@ namespace Supervisório_Banco_Renault
         public OP20_MainWindow? _mainWindowOP20;
         private readonly IServiceCollection services = new ServiceCollection();
         public readonly IServiceProvider _serviceProvider;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public App()
         {
+            //  Create log folder and delete odl
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string logFolderPath = Path.Combine(appDataPath, "Supervisorio Banco Renault", "logs");
+
+            if (!Directory.Exists(logFolderPath))
+                Directory.CreateDirectory(logFolderPath);
+
+            try
+            {
+                if (Directory.Exists(logFolderPath))
+                {
+                    var arquivos = Directory.GetFiles(logFolderPath, "*.log");
+
+                    foreach (var arquivo in arquivos)
+                    {
+                        var info = new FileInfo(arquivo);
+                        if (info.LastWriteTime < DateTime.Now.AddDays(-7))
+                        {
+                            info.Delete();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Erro ao limpar logs antigos");
+            }
+
+
+            // Get Unhandled Exceptions
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            logger.Trace("Aplicação iniciada.");
 
             ConfigureServices();
 
             // Building the service
             _serviceProvider = services.BuildServiceProvider();
+
+            logger.Trace("Services da injeção de dependência configurados.");
 
             // Timer responsible for update hour and date each one minute
             _watchTimer = new DispatcherTimer
@@ -40,11 +80,14 @@ namespace Supervisório_Banco_Renault
 
             // Updating db if migration is needed
             ApplyMigration();
+            logger.Trace("Migrations do banco aplicadas.");
+
 
             // Getting the injected WindowManager from the service provider and opening the two screens
             var windowManager = _serviceProvider.GetRequiredService<WindowManager>();
             _mainWindowOP20 = (OP20_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP20_MainWindowVM>())!;
             _mainWindowOP10 = (OP10_MainWindow)windowManager.ShowWindow(_serviceProvider.GetRequiredService<OP10_MainWindowVM>())!;
+            logger.Trace("Telas abertas.");
 
             WatchTimerTick(this, EventArgs.Empty);
         }
@@ -128,5 +171,37 @@ namespace Supervisório_Banco_Renault
 
             base.OnExit(e);
         }
+
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            logger.Error(e.Exception, "Unhandled UI exception occurred!");
+
+            // Optionally inform the user in the UI
+            MessageBox.Show($"Um erro não esperado aconteceu com a interface:\n\n{e.Exception.Message}\n\nPor favor verifique os logs para mais detalhes.",
+                            "Erro na aplicação", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Prevent the application from crashing immediately.
+            // Setting e.Handled = true; tells WPF that you've dealt with the exception.
+            // Use this with caution, as the application's state might be inconsistent.
+            e.Handled = true;
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            logger.Fatal(ex, "Unhandled non-UI exception occurred!");
+
+            MessageBox.Show("Um erro crítico aconteceu nos processamentos internos da aplicação. Ela pode estar instável e deve ser reiniciada.",
+                            "Erro crítico", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // In many cases, for unhandled non-UI exceptions, it's safer to allow the application to terminate.
+            // If e.IsTerminating is true, the runtime is already planning to shut down.
+            if (e.IsTerminating)
+            {
+                logger.Info("Application is terminating due to an unhandled non-UI exception.");
+                // Perform any final cleanup before termination.
+            }
+        }
+
     }
 }

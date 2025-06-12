@@ -66,7 +66,7 @@ namespace Supervisório_Banco_Renault.ViewModels
         private ObservableCollection<string> _timeFormats =
         [
             "HH:mm:ss",
-            "hh:mm"
+            "HH:mm"
         ];
 
         public ObservableCollection<string> TimeFormats
@@ -142,9 +142,9 @@ namespace Supervisório_Banco_Renault.ViewModels
                 }
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                MessageBox.Show("Erro ao adicionar ou atualizar a etiqueta", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Erro ao adicionar ou atualizar a etiqueta.\n{e.ToString()}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
