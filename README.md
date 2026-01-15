@@ -3,7 +3,9 @@
 ## Sistema de Teste de Estanqueidade (Radiadores)
 Foco: Qualidade, Rastreabilidade e Integração de Hardware.
 
-Título: Industrial Leak Test Supervisor – C# / WPF
+**Stack:** C# / WPF
+
+**Bibliotecas:** Entity Framework, Microsoft Dependecy Injection, ModernWpfUI, NLog e S7netplus
 
 Descrição: > Sistema desenvolvido para automatizar o processo de teste de vazamento em radiadores, eliminando o erro humano e garantindo 100% de rastreabilidade. O software gerencia desde a entrada do serial da peça até a impressão da etiqueta de aprovação, integrando-se diretamente ao PLC da máquina.
 
